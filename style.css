@@ -6,13 +6,14 @@ body {
   margin: 3% 10% 3% 10%; /* top right bottom left */
 }
 
-ul,li {
+ul,
+li {
   padding: 2px;
   margin-left: 8px;
 }
 
 ul {
-   margin-top: 2px;
+  margin-top: 2px;
 }
 
 .heavy {
@@ -20,44 +21,48 @@ ul {
 }
 
 b {
-    color: #202020;
+  color: #202020;
 }
 
 h1 {
-    font-family: "Merriweather", serif;
-    font-size: 36px;
-    color: #404040;
-    margin: 0em;
+  font-family: "Alegreya", serif;
+  font-size: 32px;
+  color: #404040;
+  margin: 0em;
 }
 
-h2, h3, h4, h5 {
-    margin: 0.5em;
-    margin-left: 0em;
-    color: #202020;
+h2,
+h3,
+h4,
+h5 {
+  margin: 0.5em;
+  margin-left: 0em;
+  color: #202020;
 }
 
 .contact {
   /*font-weight: bold;*/
-    margin-top: 8px;
-    color: #404040;
+  margin-top: 8px;
+  color: #404040;
 }
 
-.title, .author {
+.title,
+.author {
   display: none;
 }
 
 a:link {
-    color: #108888;
-    font-weight: 400;
-    text-decoration: none;
+  color: #108888;
+  font-weight: 400;
+  text-decoration: none;
 }
 
 a:visited {
-    color: #206677;
+  color: #206677;
 }
 
 a:hover {
-  color: #00AAAA;
+  color: #00aaaa;
   text-decoration: underline;
 }
 
@@ -91,14 +96,14 @@ a:hover {
 }
 
 .footer {
-    font-size: 90%;
-    color: #ababab;
-    text-align: right;
-    line-height: 150%;
+  font-size: 90%;
+  color: #ababab;
+  text-align: right;
+  line-height: 150%;
 }
 
 hr.footer {
-    margin-top: 5%;
+  margin-top: 5%;
 }
 
 table {
@@ -112,8 +117,9 @@ td {
   padding: 4px 0px 8px 0px; /* top right bottom left */
 }
 
-.code, pre {
-    font-family: "Courier New";
-    font-size: 11pt;
-    line-height: 110%;
+.code,
+pre {
+  font-family: "Courier New";
+  font-size: 11pt;
+  line-height: 110%;
 }
