@@ -2,9 +2,9 @@ body {
   /* font-family: "Helvetica", sans-serif; */
   /* font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI","KaiTi", "楷体", STKaiti, "华文楷体", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
   font-family:  "KaiTi", "楷体", "STKaiti", "华文楷体", "Roboto", sans-serif;
-  font-size: 16px;  /* font-size: 16px; */
+  font-size: 18px;  /* font-size: 16px; */
   background-color: #fae6d1;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 125%;
   margin: 3% 6% 3% 1%; /* top right bottom left */
 }
@@ -52,6 +52,7 @@ h5 {
 
 .title,
 .author {
+  font: "Helvetica Neue", sans-serif;
   display: none;
 }
 
