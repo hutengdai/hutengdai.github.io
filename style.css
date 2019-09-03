@@ -6,7 +6,7 @@ body {
   background-color: #fae6d1;
   font-weight: 300;
   line-height: 125%;
-  margin: 3% 10% 3% 10%; /* top right bottom left */
+  margin: 3% 3% 3% 1%; /* top right bottom left */
 }
 
 ul,
