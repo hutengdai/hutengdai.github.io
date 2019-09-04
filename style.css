@@ -10,7 +10,8 @@ body {
 }
 
 p.a {
-  font: 18px "KaiTi", "楷体", "STKaiti", "华文楷体";
+  font-size: 19px; 
+  font-family: "KaiTi", "楷体", "STKaiti", "华文楷体";
 }
 /* 
 p.B {
