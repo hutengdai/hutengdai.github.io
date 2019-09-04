@@ -11,7 +11,8 @@ body {
 
 p.a {
   font-size: 19px; 
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 125%;
   font-family: "KaiTi", "楷体", "STKaiti", "华文楷体";
 }
 /* 
