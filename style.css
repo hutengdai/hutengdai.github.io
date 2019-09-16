@@ -83,10 +83,10 @@ a:hover {
 }
 
 .nav {
-  width: 10%;
+  width: 15%;
   margin: 0;
   margin-top: 3px;
-  padding: 10px 10px;
+  padding: 5px 5px;
   list-style-type: none;
   text-align: right;
   float: left;
