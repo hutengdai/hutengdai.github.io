@@ -83,7 +83,7 @@ a:hover {
 }
 
 .nav {
-  width: 15%;
+  width: 10%;
   margin: 0;
   margin-top: 3px;
   padding: 10px 10px;
@@ -98,7 +98,7 @@ a:hover {
   padding: 1px 5px;
   color: #505060;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 20px;
   text-decoration: none;
 }
 
