@@ -21,7 +21,7 @@
 
 <body>
 
-<div style="margin-left:19.2%">
+<div style="margin-left:19.2%" class="header">
 
 <h1 id="huteng-dai">Huteng Dai &nbsp
     <!-- <div style="text-align:right"> -->
@@ -152,5 +152,26 @@ Last updated: Sep 15 2019<br>
   pageTracker._trackPageview();
   } catch(err) {}
 </script>  -->
+
+<script>
+
+  // When the user scrolls the page, execute myFunction
+  window.onscroll = function() {myFunction()};
+  
+  // Get the header
+  var header = document.getElementById("myHeader");
+  
+  // Get the offset position of the navbar
+  var sticky = header.offsetTop;
+  
+  // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+  function myFunction() {
+    if (window.pageYOffset > sticky) {
+      header.classList.add("sticky");
+    } else {
+      header.classList.remove("sticky");
+    }
+  }
+  </script>
 </body>
 </html>
