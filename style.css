@@ -41,7 +41,7 @@ b {
 }
 
 h1 {
-  font-family: "Alegreya", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 32px;
   color: #404040;
   margin-left: 0em;
@@ -98,6 +98,7 @@ a:hover {
   display: block;
   padding: 1px 5px;
   color: #505060;
+  font-family: "Helvetica Neue", sans-serif;
   font-weight: 700;
   font-size: 20px;
   text-decoration: none;
