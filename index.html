@@ -21,7 +21,7 @@
 
 <body>
 
-<div style="margin-left:12%">
+<div style="margin-left:19.2%" class="header">
 
 <h1 id="huteng-dai">Huteng Dai &nbsp
     <!-- <div style="text-align:right"> -->
@@ -30,13 +30,14 @@
         <a href="https://osf.io/vubs4/"><span class="icon"><i class="ai ai-osf" style="font-size:25px"></i></span></a>
         <!-- <a href="https://scholar.google.ca/citations?user=t3d9bz8AAAAJ&hl=en&oi=ao"><span class="icon"><i class="ai ai-google-scholar" style="font-size:36px"></i></span></a> -->
       <!-- <div> -->
-<!-- </div> -->
+
 </h1>  
 
 <p class="contact">
 <b>Department of Linguistics, Rutgers University</b><br>
 18 Seminary Pl, New Brunswick, NJ 08901-1184, USA<br>
 <a href="mailto:hutengdai@gmail.com">hutengdai[*]gmail.com</a></p>
+</div>
 
 <ul class="nav">
   <li><a href="index.html">Home</a></li>
@@ -49,13 +50,21 @@
 
 </ul>
 
-<div style="margin-left:18%;padding:1px 16px;">
 
-    <p> <img src="files/me.jpg" alt="Huteng's photo" style="float:right;height:200px;margin:10px 20px;border-radius: 8px "> 
-        
+
+  <div class="sidenav">
+    <img src="files/me.jpg" alt="Huteng's photo" style="float:right;height:200px;margin:20px 20px;border-radius: 8px " hspace="50"/> </a>
+  </div>
+  
+  <div style="margin-left:18%;padding:1px 16px;" 
+  word-wrap: break-word;
+  width: 30px;>    
+    <p> 
         I'm a second year PhD student at the Rutgers <a href="https://ling.rutgers.edu">Department of Linguistics</a>.
         My name is Huteng Dai (xu˨˩.tʰəŋ˧˥.tai˥˨; or Dai Huteng <p.a style="font: 16px/1.5 'KaiTi', '楷体', 'STKaiti', '华文楷体'"> 戴虎腾</p.a> in Chinese order. Fun fact: my name literally means <a href="https://www.pinterest.com/pin/267471665340910977/?autologin=true">'tiger is soaring/jumping'</a>).
     </p>
+      
+
     <p class="p1"><span class="s1">My research interests center on phonology and its interfaces. </span>I am also interested in computational linguistics, especially the works by <a href="http://idiom.ucsd.edu/~bakovic/compphon/">Delaware school</a> 
         and the computational models in Optimality Theory and its variants. 
         Laboratory phonology and phonetics <span class="s1">provide a fine-grained and dynamic perspective for my research. 
@@ -82,13 +91,19 @@
         <h4 style="text-align: left;">Narrow:</h4>
             <ul>
                 <li>Formal language theory</li>
-                <li>Information Theory</li>
+                <li>Information-theoretic linguistics</li>
                 <li>Optimization-based models: Maximum Entropy Model, and Noisy Harmonic Grammar in general</li>
                 <li>Consonant harmony, especially laryngeal harmony</li>
                 <li>Tone, especially tone sandhi, and Prosody in general</li>
                 <li>Historical Chinese phonology</li>
-            </ul></div></div>
-        <!-- </div></div></div></div></div></div> -->
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
         <!-- <p> </p>wp:paragraph<p> </p>/wp:paragraph -->
       
       <h3>Resources:</h3>
@@ -116,6 +131,8 @@
             <!-- <li>  -->
         </ul>
     </div>
+  </div>
+</div>
       <!-- <h3>Collaborators:</h3>
      -->
 <br/>
@@ -135,5 +152,25 @@ Last updated: Sep 15 2019<br>
   pageTracker._trackPageview();
   } catch(err) {}
 </script>  -->
+
+<script>
+  // When the user scrolls the page, execute myFunction
+  window.onscroll = function() {myFunction()};
+  
+  // Get the header
+  var header = document.getElementById("myHeader");
+  
+  // Get the offset position of the navbar
+  var sticky = header.offsetTop;
+  
+  // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+  function myFunction() {
+    if (window.pageYOffset > sticky) {
+      header.classList.add("sticky");
+    } else {
+      header.classList.remove("sticky");
+    }
+  }
+  </script>
 </body>
 </html>
