@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "C:\\Program Files\\Python37\\python.exe"
+    "python.pythonPath": "C:\\Program Files\\Python37\\python.exe",
+    "workbench.colorTheme": "Default Light+",
+    "csv-preview.theme": "cleanlight"
 }
