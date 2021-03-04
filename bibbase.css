@@ -132,6 +132,7 @@ display:none;
 }
 
 span.selection {
+  font-style: normal;
 font-size:80%;
   /*background-color:#D3D3D3;*/
   border: 3px #767676 solid;
@@ -140,7 +141,7 @@ font-size:80%;
   padding-left:1em;
   padding-right:1em;
   margin:3px;
-  text-align:center;
+  text-align:left;
   line-height: 2em;
   cursor: pointer;
 } 
