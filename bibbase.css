@@ -27,7 +27,7 @@
   font-style: italic;
 }
 #type {
-  font-style: normal;
+  font-style: italic;
 }
 
 #doi {
@@ -123,6 +123,8 @@ margin-left:0px;
 
 #bibbase_header {
 display:none;
+font-style: normal;
+
 }
 
 .bibbase_amazon {
