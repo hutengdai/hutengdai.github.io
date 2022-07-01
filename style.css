@@ -1,13 +1,15 @@
 body {
   /* font-family: "Helvetica", sans-serif; */
   /* font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI","KaiTi", "楷体", STKaiti, "华文楷体", "Roboto", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; */
-  font-family: "Fira Sans","Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",Muli,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
-  font-size: 16px; font-size: 16px;
+  font-family:Muli,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  /* padding-top:54px; */
+  font-size: 12.361px;
+  color:#5b6168;  
   /* background-color: #eee6dc; */
   /* background-image: url("files/blue-planet-ii.jpg"); */
   /* background-image: linear-gradient(to bottom right, #d5e5f6, white); */
-  font-weight: 300;
-  line-height: 125%;
+  /* font-weight: 300; */
+  /* line-height: 125%; */
   margin: 3% 6% 3% 1%; /* top right bottom left */
 }
 
@@ -26,10 +28,11 @@ ul,
 li {
   padding: 2px;
   margin-left: 8px;
+
 }
 
 ul {
-  margin-top: 2px;
+  margin-top: -1em;
 }
 
 .heavy {
@@ -41,21 +44,40 @@ b {
 }
 
 h1 {
-  font-family: "Fira Sans", sans-serif,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei";
+  font-family:'Saira Extra Condensed',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  font-weight:700;
   font-size: 32px;
   color: #404040;
   margin-left: 0em;
-  margin-bottom: 0.5em;
+  margin: 0em;
+  margin-bottom: 0em;
+  /* text-transform:uppercase; */
 }
 
 h2,
-h3,
 h4,
-h5 {
-  margin: 0.5em;
+ {
+  font-family:'Saira Extra Condensed',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  font-weight:700;
+  text-transform:uppercase;
+  color:#404040;
+  font-size: 20px;
+  margin: 0em;
   margin-left: 0em;
-  color: #404040;
+  margin-bottom: -0.9em;
 }
+
+h5{
+  font-family:'Saira Extra Condensed',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  font-weight:700;
+  /* text-transform:uppercase; */
+  color:#5b6168;
+  font-size: 12.361px;
+  margin: 0em;
+  margin-left: 0em;
+  /* margin-bottom: -0.5em; */
+}
+
 
 .contact {
   /*font-weight: bold;*/
@@ -98,8 +120,8 @@ a:hover {
   display: block;
   padding: 1px 5px;
   color: #505060;
-  font-family: "Fira Sans", sans-serif;
-  font-weight: 700;
+  font-family:'Saira Extra Condensed',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  font-weight:700;
   font-size: 20px;
   text-decoration: none;
 }
