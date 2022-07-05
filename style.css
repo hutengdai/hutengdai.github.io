@@ -9,7 +9,7 @@ body {
   /* background-image: url("files/blue-planet-ii.jpg"); */
   /* background-image: linear-gradient(to bottom right, #d5e5f6, white); */
   /* font-weight: 300; */
-  /* line-height: 125%; */
+  line-height: 125%;
   margin: 3% 6% 3% 1%; /* top right bottom left */
 }
 
