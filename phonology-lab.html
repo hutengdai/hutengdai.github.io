@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phonology Lab</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4f1;--bg2:#ebe7e0;--fg:#1e1a14;--fg2:#6b5e4e;--green:#2d7a3a;--red:#b5412a;--blue:#2e6b8a;--gold:#a67c28;--border:#cfc7ba;--card:#fdfcfa;--shadow:0 2px 12px rgba(30,26,20,.08);--radius:6px;--accent:#5b2e8f;--accent2:#7b4fb5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--bg);color:var(--fg);line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem 2rem}
+
+/* === Top-level lab switcher === */
+.lab-switcher{display:flex;justify-content:center;gap:0;margin:1.5rem auto .5rem;max-width:520px}
+.lab-btn{flex:1;text-align:center;padding:.7rem 1.2rem;font-family:'Crimson Pro',serif;font-size:1.1rem;
+  font-weight:700;cursor:pointer;border:2px solid var(--border);background:var(--bg2);color:var(--fg2);
+  transition:all .2s;letter-spacing:.01em}
+.lab-btn:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.lab-btn:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.lab-btn:not(:first-child):not(:last-child){border-radius:0}
+.lab-btn.active{color:#fff;border-color:var(--accent)}
+.lab-btn[data-lab="home"].active{background:#3a6b4e;border-color:#3a6b4e}
+.lab-btn[data-lab="maxent"].active{background:#8b4513;border-color:#8b4513}
+.lab-btn[data-lab="ot"].active{background:#5b2e8f;border-color:#5b2e8f}
+.lab-panel{display:none}
+.lab-panel.active{display:block}
+
+/* Lab accent overrides */
+.lab-panel[data-lab="home"]{--accent:#3a6b4e;--accent2:#4a8a62}
+.lab-panel[data-lab="maxent"]{--accent:#8b4513;--accent2:#c0713a}
+.lab-panel[data-lab="ot"]{--accent:#5b2e8f;--accent2:#7b4fb5}
+
+header{text-align:center;padding:1.5rem 0 1rem;border-bottom:2px solid var(--accent);margin-bottom:1.5rem}
+header h1{font-size:2.2rem;font-weight:700;letter-spacing:-.02em;color:var(--accent)}
+header .sub{font-size:1rem;color:var(--fg2);margin-top:.2rem;font-style:italic}
+
+section{margin-bottom:2rem}
+section h2{font-size:1.35rem;font-weight:600;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:.35rem;margin-bottom:.8rem}
+section h3{font-size:1.1rem;font-weight:600;color:var(--fg);margin:.8rem 0 .4rem}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.3rem;box-shadow:var(--shadow);margin-bottom:1rem}
+textarea{width:100%;min-height:150px;font-family:'JetBrains Mono',monospace;font-size:.82rem;border:1px solid var(--border);border-radius:var(--radius);padding:.65rem;background:var(--bg);color:var(--fg);resize:vertical;line-height:1.5}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(91,46,143,.12)}
+
+.btn-row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin:.6rem 0}
+button{font-family:'Crimson Pro',serif;font-size:.92rem;padding:.45rem 1.1rem;border-radius:var(--radius);border:1px solid var(--border);cursor:pointer;transition:all .15s;font-weight:600}
+button:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--card);color:var(--accent)}
+.btn-small{font-size:.83rem;padding:.3rem .7rem}
+
+.file-upload{display:inline-block;position:relative;overflow:hidden}
+.file-upload input[type=file]{position:absolute;top:0;left:0;opacity:0;width:100%;height:100%;cursor:pointer}
+
+/* Tables */
+table.results-table,table.ot{width:100%;border-collapse:collapse;font-size:.86rem;margin:.6rem 0}
+table.results-table th,table.results-table td,table.ot th,table.ot td{padding:.35rem .5rem;border:1px solid var(--border);text-align:center}
+table.results-table th,table.ot th{background:var(--bg2);font-weight:600;font-size:.8rem}
+.num,td.mono{font-family:'JetBrains Mono',monospace;font-size:.78rem}
+tr.winner,tr.winner-row{background:rgba(45,122,58,.07)}
+td.violation{color:var(--red)}
+table.ot th.ranked-border,table.ot td.ranked-border{border-left:2.5px solid var(--fg)}
+table.ot th.unranked-border,table.ot td.unranked-border{border-left:2px dashed var(--border)}
+
+.W{color:var(--green);font-weight:700}.L{color:var(--red);font-weight:700}.e{color:var(--fg2)}
+
+.weights-display{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.weight-chip{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:.25rem .7rem;font-size:.83rem;font-family:'JetBrains Mono',monospace}
+.weight-chip .name{font-family:'Crimson Pro',serif;font-weight:600;color:var(--accent)}
+
+.slider-group{display:flex;align-items:center;gap:.5rem;margin:.35rem 0;flex-wrap:wrap}
+.slider-group label{min-width:85px;font-weight:600;font-size:.92rem}
+.slider-group input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.slider-group .val{font-family:'JetBrains Mono',monospace;font-size:.83rem;min-width:35px}
+
+.toggle-row{display:flex;gap:.4rem;margin:.4rem 0}
+.toggle-btn{padding:.35rem .9rem;border-radius:20px;font-size:.86rem;background:var(--bg2);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.toggle-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.chart-wrap{position:relative;max-width:550px;margin:.8rem auto}
+canvas{max-width:100%}
+
+.info{font-size:.88rem;color:var(--fg2);font-style:italic;margin:.4rem 0}
+.formula-block{background:var(--bg2);border-left:3px solid var(--accent);padding:.7rem .9rem;margin:.6rem 0;font-size:.9rem;font-family:'JetBrains Mono',monospace;line-height:1.65;border-radius:0 var(--radius) var(--radius) 0}
+
+.status{padding:.45rem .7rem;border-radius:var(--radius);font-size:.86rem;margin:.4rem 0}
+.status.ok{background:rgba(45,122,58,.1);color:var(--green);border:1px solid rgba(45,122,58,.25)}
+.status.err{background:rgba(181,65,42,.1);color:var(--red);border:1px solid rgba(181,65,42,.25)}
+
+select{font-family:'Crimson Pro',serif;font-size:.9rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}
+
+.exercise-box{background:rgba(139,69,19,.05);border:1px dashed var(--accent);border-radius:var(--radius);padding:.8rem 1rem;margin:.6rem 0}
+.exercise-box h4{color:var(--accent);margin-bottom:.3rem}
+
+.stratum-badge{display:inline-block;color:#fff;font-size:.73rem;padding:.12rem .45rem;border-radius:12px;margin-right:.25rem;font-weight:600}
+.stratum-badge.s1{background:#5b2e8f}.stratum-badge.s2{background:#2e6b8a}.stratum-badge.s3{background:#a67c28}.stratum-badge.s4{background:#b5412a}
+
+.step-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;margin:.5rem 0;border-left:3px solid var(--accent)}
+.step-box h4{color:var(--accent);font-size:.95rem;margin-bottom:.25rem}
+.step-box .action{color:var(--fg2);font-size:.88rem}
+.step-box .ranked{color:var(--green);font-weight:600}
+.step-box .discarded{color:var(--red);font-size:.86rem}
+
+.ranking-display{font-size:1.1rem;font-weight:600;color:var(--accent);text-align:center;padding:.8rem;margin:.8rem 0;background:rgba(91,46,143,.06);border-radius:var(--radius);border:1px solid rgba(91,46,143,.2)}
+.ranking-display .gg{color:var(--fg);margin:0 .2rem}
+
+.constraint-type-row{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0;align-items:center}
+.ct-chip{font-size:.8rem;padding:.18rem .55rem;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s;user-select:none}
+.ct-chip.M{background:rgba(91,46,143,.1);border-color:rgba(91,46,143,.3);color:var(--accent)}
+.ct-chip.F{background:rgba(46,107,138,.1);border-color:rgba(46,107,138,.3);color:var(--blue)}
+
+.tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:.8rem}
+.tab{padding:.4rem 1rem;cursor:pointer;font-weight:600;color:var(--fg2);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-size:.92rem}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--accent)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+.cite-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;margin:.6rem 0;font-size:.88rem;line-height:1.5}
+.cite-block code{font-family:'JetBrains Mono',monospace;font-size:.78rem;display:block;white-space:pre-wrap;margin-top:.4rem;color:var(--fg2)}
+
+@keyframes stepFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+details.impl{margin:.6rem 0}
+details.impl summary{cursor:pointer;font-weight:600;color:var(--accent);font-size:.95rem;padding:.4rem 0;user-select:none}
+details.impl summary:hover{color:var(--accent2)}
+details.impl pre{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;
+  font-family:'JetBrains Mono',monospace;font-size:.74rem;line-height:1.55;overflow-x:auto;white-space:pre;color:var(--fg);margin:.4rem 0}
+details.impl pre .cmt{color:#6a737d}
+details.impl pre .kw{color:#d73a49}
+details.impl pre .fn{color:#6f42c1}
+details.impl pre .str{color:#032f62}
+
+.ref-list{margin:.4rem 0;padding:0;list-style:none}
+.ref-list li{font-size:.88rem;line-height:1.5;margin:.35rem 0;padding-left:1.2em;text-indent:-1.2em}
+.ref-list details{display:inline}
+.ref-list details summary{display:inline;cursor:pointer;color:var(--accent);font-size:.78rem;font-weight:600;margin-left:.3rem;user-select:none}
+.ref-list details summary:hover{text-decoration:underline}
+.ref-list details[open] summary{margin-bottom:.2rem}
+.ref-list details pre{display:block;text-indent:0;margin:.3rem 0 .2rem 0;padding:.5rem .7rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.45;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);white-space:pre-wrap;color:var(--fg2)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===================== LAB SWITCHER ===================== -->
+<div class="lab-switcher">
+  <div class="lab-btn active" data-lab="home" onclick="switchLab('home')">Home</div>
+  <div class="lab-btn" data-lab="ot" onclick="switchLab('ot')">OT Lab</div>
+  <div class="lab-btn" data-lab="maxent" onclick="switchLab('maxent')">MaxEnt Lab</div>
+</div>
+
+<!-- ========================================================
+     HOME
+     ======================================================== -->
+<div class="lab-panel active" data-lab="home">
+<header>
+  <h1>Phonology Lab</h1>
+  <div class="sub"><em>Huteng Dai</em> (University of Michigan)</div>
+</header>
+
+<section>
+  <div class="card">
+    <p>Interactive tools for doing phonology. The long-term goal is to use this same UI to incorporate other foundational computational models in phonology.</p>
+    <p style="margin-top:.4rem">The motivation behind this project is to reduce the friction in learning and using these models, and to pave the way for future research in computational phonology. It is often difficult for people to understand algorithms just from reading a paper—sometimes it feels as though we are speaking entirely different languages. Building interactive tools is one step toward making the field more accessible, not to mention how valuable they can be for students. As a long-term goal, I plan to release some of the software from my own papers on this website as well—stay tuned!</p>
+
+    <div style="display:flex;gap:.8rem;margin:.8rem 0;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:220px;cursor:pointer;border-left:3px solid #5b2e8f" onclick="switchLab('ot')">
+        <h3 style="color:#5b2e8f;margin:0 0 .2rem">OT →</h3>
+        <p style="font-size:.86rem;color:var(--fg2)">Constraint ranking via Recursive Constraint Demotion, with optional BCD bias.</p>
+      </div>
+      <div class="card" style="flex:1;min-width:220px;cursor:pointer;border-left:3px solid #8b4513" onclick="switchLab('maxent')">
+        <h3 style="color:#8b4513;margin:0 0 .2rem">MaxEnt →</h3>
+        <p style="font-size:.86rem;color:var(--fg2)">Learn constraint weights from frequency data; explore the weight–probability mapping.</p>
+      </div>
+    </div>
+
+    <div class="cite-block">
+      If you find this tool useful, you are welcome to cite:
+      <br>Dai, H. (2026). <em>Phonology Lab</em>. Retrieved January 28, 2026, from <a href="https://hutengdai.com/phonology-lab.html" style="color:var(--accent)">hutengdai.com/phonology-lab.html</a>.
+      <br>Feedback is welcome! If you'd like to suggest or contribute new features or improvement, feel free to email me at <a href="mailto:huteng@umich.edu" style="color:var(--accent)">huteng@umich.edu</a>.
+    </div>
+
+    <div style="margin-top:.6rem">
+      <strong style="font-size:.92rem">References</strong>
+      <ul class="ref-list">
+        <li>Hayes, B. &amp; Moore-Cantwell, C. (2025). A guide to analysis in MaxEnt Optimality Theory. <em>Lingbuzz</em> 008790. <a href="https://ling.auf.net/lingbuzz/008790" style="color:var(--accent);font-size:.82rem">lingbuzz</a></li>
+        <li>Prince, A. (2002). Entailed ranking arguments. <em>ROA</em> 500.</li>
+        <li>Prince, A. &amp; Tesar, B. (2004). Learning phonotactic distributions. In R. Kager, J. Pater &amp; W. Zonneveld (Eds.), <em>Constraints in Phonological Acquisition</em>, 245–291. Cambridge University Press.</li>
+        <li>Tesar, B. &amp; Smolensky, P. (2000). <em>Learnability in Optimality Theory</em>. MIT Press.</li>
+      </ul>
+      <details class="impl">
+        <summary>All BibTeX entries</summary>
+<pre>@misc{DaiPhonologyLab,
+  author       = {Dai, Huteng},
+  title        = {Phonology Lab},
+  note         = {Accessed: 2026-01-28},
+  url          = {https://hutengdai.com/phonology-lab.html}
+}
+
+@unpublished{HayesMooreCantwell2025,
+  author = {Hayes, Bruce and Moore-Cantwell, Claire},
+  title  = {A Guide to Analysis in {MaxEnt} {Optimality Theory}},
+  year   = {2025},
+  url    = {https://ling.auf.net/lingbuzz/008790}
+}
+
+@unpublished{Prince2002,
+  author = {Prince, Alan},
+  title  = {Entailed Ranking Arguments},
+  year   = {2002},
+  note   = {Rutgers Optimality Archive, ROA-500}
+}
+
+@incollection{PrinceTesar2004,
+  author    = {Prince, Alan and Tesar, Bruce},
+  title     = {Learning Phonotactic Distributions},
+  booktitle = {Constraints in Phonological Acquisition},
+  editor    = {Kager, Ren\'{e} and Pater, Joe and Zonneveld, Wim},
+  year      = {2004},
+  pages     = {245--291},
+  publisher = {Cambridge University Press}
+}
+
+@book{TesarSmolensky2000,
+  author    = {Tesar, Bruce and Smolensky, Paul},
+  title     = {Learnability in {Optimality Theory}},
+  year      = {2000},
+  publisher = {MIT Press},
+  address   = {Cambridge, MA}
+}</pre>
+      </details>
+    </div>
+  </div>
+</section>
+</div><!-- /home panel -->
+
+<!-- ========================================================
+     MAXENT LAB
+     ======================================================== -->
+<div class="lab-panel" data-lab="maxent">
+<header>
+  <h1>MaxEnt Lab</h1>
+  <div class="sub">Maximum Entropy Grammar</div>
+</header>
+
+<section>
+  <h2>1. MaxEnt Grammar</h2>
+  <div class="card">
+    <p>A MaxEnt grammar assigns each candidate a <em>Harmony</em> score from its violation profile and learned weights, then converts to probabilities via softmax:</p>
+    <div class="formula-block">
+H(candidate) = violations &middot; weights<br>
+P(candidate) = exp(H) / &Sigma; exp(H<sub>j</sub>)
+    </div>
+    <p>Violations are <strong>negative</strong> (&minus;1, &minus;2, …). Weights &ge; 0. More violations &times; higher weight = more negative Harmony = lower probability. We assume <em>w</em> &gt; 0.</p>
+    <h3>Worked example</h3>
+    <p>Two candidates with Harmony scores H = [&minus;1, &minus;2]:</p>
+    <div class="formula-block">
+exp(H) = [exp(&minus;1), exp(&minus;2)] = [0.368, 0.135]<br>
+Z = 0.368 + 0.135 = 0.503<br>
+P = [0.368/0.503, 0.135/0.503] = [<strong>0.731</strong>, <strong>0.269</strong>]
+    </div>
+    <p>The candidate with the less negative Harmony gets higher probability.</p>
+  </div>
+</section>
+
+<section>
+  <h2>2. Your Data</h2>
+  <div class="card">
+    <p>Upload CSV or paste a tableau. Columns: <span style="font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--bg2);padding:.1rem .3rem;border-radius:3px">Input, Output, Count, Constraint1, …</span> Violations are negative (0, &minus;1, &minus;2). Count = 0 for prediction only.</p>
+
+    <div class="btn-row">
+      <div class="file-upload"><button class="btn-secondary btn-small">Upload CSV</button><input type="file" id="me-fileInput" accept=".csv,.tsv,.txt"></div>
+      <button class="btn-secondary btn-small" onclick="meLoadExample()">Load Example</button>
+    </div>
+    <textarea id="me-dataInput" spellcheck="false"></textarea>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="meRunAnalysis()">Analyse</button>
+      <button class="btn-secondary" onclick="mePlotFit()">Plot Fit</button>
+      <select id="me-inputFilter"><option value="__all__">All Inputs</option></select>
+      <button class="btn-secondary btn-small" onclick="meDownloadCSV()">Download CSV</button>
+    </div>
+    <div id="me-status"></div>
+    <div id="me-results"></div>
+    <div class="chart-wrap" style="max-width:480px;width:100%;aspect-ratio:1;margin:.8rem auto"><canvas id="me-fitChart"></canvas></div>
+  </div>
+</section>
+
+<section>
+  <h2>3. K3: Function Word Lenition</h2>
+  <div class="card">
+    <p style="margin-bottom:.4rem">K3 and K4 come from <a href="https://ling.auf.net/lingbuzz/008790" style="color:var(--accent)">Hayes &amp; Moore-Cantwell (2025)</a> — check it out and cite them!</p>
+    <p><strong>Target:</strong> 73% [p] / 27% [w].</p>
+    <div class="slider-group"><label>*p :</label><input type="range" id="k3_wp" min="0" max="10" step="0.1" value="1.0"><span class="val" id="k3_wp_v">1.0</span></div>
+    <div class="slider-group"><label>Ident(son) :</label><input type="range" id="k3_wi" min="0" max="10" step="0.1" value="2.0"><span class="val" id="k3_wi_v">2.0</span></div>
+    <div id="tableau-k3"></div>
+    <div class="exercise-box">
+      <h4>Exercises</h4>
+      <p>1. *p = 1.0, Ident = 2.0 &rarr; &approx;73%/27%. &ensp; 2. Equal weights? &ensp; 3. *p &gt;&gt; Ident?</p>
+      <p>Multiple solutions exist — e.g. *p = 3.0, Ident = 4.0 also works.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>4. K4: Perturbers</h2>
+  <div class="card">
+    <p>A <strong>perturber</strong> is context-dependent. *V[&minus;son] is only active after a vowel.</p>
+    <div class="slider-group"><label>*p :</label><input type="range" id="k4_wp" min="0" max="10" step="0.1" value="1.0"><span class="val" id="k4_wp_v">1.0</span></div>
+    <div class="slider-group"><label>Ident :</label><input type="range" id="k4_wi" min="0" max="10" step="0.1" value="2.0"><span class="val" id="k4_wi_v">2.0</span></div>
+    <div class="slider-group"><label>*V[&minus;son] :</label><input type="range" id="k4_wv" min="0" max="10" step="0.1" value="3.0"><span class="val" id="k4_wv_v">3.0</span></div>
+    <div class="toggle-row">
+      <button class="toggle-btn active" id="ctx_C" onclick="meSetCtx('C')">After C</button>
+      <button class="toggle-btn" id="ctx_V" onclick="meSetCtx('V')">After V</button>
+    </div>
+    <div id="tableau-k4"></div>
+  </div>
+</section>
+
+<section>
+  <h2>5. Sigmoid Curve</h2>
+  <div class="card">
+    <div class="formula-block">P(non-violating) = 1 / (1 + e<sup>&minus;w</sup>) = sigmoid(w)</div>
+    <div class="slider-group"><label>Weight :</label><input type="range" id="sig_w" min="-5" max="5" step="0.1" value="0"><span class="val" id="sig_w_v">0.0</span></div>
+    <div class="chart-wrap"><canvas id="sigmoidChart"></canvas></div>
+  </div>
+</section>
+
+<section>
+  <h2>6. Implementation</h2>
+  <div class="card">
+
+    <details class="impl">
+      <summary>maxent_probs — compute candidate probabilities</summary>
+<pre><span class="kw">def</span> <span class="fn">maxent_probs</span>(violations, weights):
+    <span class="str">"""Compute MaxEnt probabilities from violations and weights.
+    Violations are NEGATIVE (e.g., -1, -2).
+    H = violations @ weights  (Harmony: more negative = worse).
+    P ∝ exp(H)."""</span>
+    H  = violations @ weights      <span class="cmt"># Harmony scores</span>
+    eH = np.exp(H)                 <span class="cmt"># exp(H)</span>
+    Z  = np.sum(eH)                <span class="cmt"># partition function</span>
+    probs = eH / Z
+    <span class="kw">return</span> {<span class="str">'H'</span>: H, <span class="str">'eH'</span>: eH, <span class="str">'Z'</span>: Z, <span class="str">'probs'</span>: probs}</pre>
+    </details>
+
+    <details class="impl">
+      <summary>neg_log_likelihood — objective function</summary>
+<pre><span class="kw">def</span> <span class="fn">neg_log_likelihood</span>(weights, violations_list, counts_list):
+    <span class="str">"""Negative log-likelihood across multiple tableaux."""</span>
+    total_ll = <span class="kw">0</span>
+    <span class="kw">for</span> violations, counts <span class="kw">in</span> zip(violations_list, counts_list):
+        <span class="kw">if</span> np.sum(counts) == <span class="kw">0</span>:
+            <span class="kw">continue</span>                <span class="cmt"># skip prediction-only tableaux</span>
+        result = maxent_probs(violations, weights)
+        log_probs = np.log(result[<span class="str">'probs'</span>] + <span class="kw">1e-10</span>)
+        total_ll += np.sum(counts * log_probs)
+    <span class="kw">return</span> -total_ll</pre>
+    </details>
+
+    <details class="impl">
+      <summary>fit_weights — L-BFGS-B with Gaussian prior</summary>
+<pre><span class="kw">def</span> <span class="fn">fit_weights</span>(violations_list, counts_list, n_constraints,
+                mu=<span class="kw">0</span>, sigma=<span class="kw">10</span>, maxiter=<span class="kw">1000</span>, min_weight=<span class="kw">0</span>):
+    <span class="str">"""Fit weights using L-BFGS-B with Gaussian prior."""</span>
+    <span class="kw">def</span> <span class="fn">objective</span>(w):
+        nll   = neg_log_likelihood(w, violations_list, counts_list)
+        prior = np.sum((w - mu)**<span class="kw">2</span>) / (<span class="kw">2</span> * sigma**<span class="kw">2</span>)
+        <span class="kw">return</span> nll + prior
+
+    x0     = np.ones(n_constraints)
+    bounds = [(min_weight, <span class="kw">None</span>) <span class="kw">for</span> _ <span class="kw">in</span> range(n_constraints)]
+
+    result = minimize(objective, x0,
+                      method=<span class="str">'L-BFGS-B'</span>,
+                      bounds=bounds,
+                      options={<span class="str">'maxiter'</span>: maxiter, <span class="str">'gtol'</span>: <span class="kw">1e-8</span>})
+
+    fitted = np.maximum(result.x, min_weight)
+    ll     = -neg_log_likelihood(fitted, violations_list, counts_list)
+    <span class="kw">return</span> fitted, ll</pre>
+    </details>
+  </div>
+</section>
+</div><!-- /maxent panel -->
+
+
+<!-- ========================================================
+     OT LAB
+     ======================================================== -->
+<div class="lab-panel" data-lab="ot">
+<header>
+  <h1>OT Lab</h1>
+  <div class="sub">Optimality Theory &middot; Recursive Constraint Demotion</div>
+</header>
+
+<section>
+  <h2>1. Algorithm</h2>
+  <div class="card">
+    <div class="formula-block">
+<strong>1.</strong> Extract <strong>winner~loser pairs</strong> → comparative tableau (W / L / e).<br>
+<strong>2.</strong> <strong>RCD</strong>: rank every constraint with no L, discard won pairs, repeat.<br>
+<strong>3.</strong> Verify winners are correctly selected.
+    </div>
+    <p style="margin-top:.3rem"><strong>BCD</strong> (Prince &amp; Tesar 2004): bias eligible constraints by class. <strong>M&nbsp;≫&nbsp;F</strong> = markedness first; <strong>F&nbsp;≫&nbsp;M</strong> = reverse.</p>
+  </div>
+</section>
+
+<section>
+  <h2>2. Your Data</h2>
+  <div class="card">
+    <p>Columns: <span style="font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--bg2);padding:.1rem .3rem;border-radius:3px">Input, Output, Optimal, Constraint1, …</span> &ensp; Optimal = 1 for winner. Violations: integers, stars (*), or empty.</p>
+    <div class="btn-row">
+      <div class="file-upload"><button class="btn-secondary btn-small">Upload CSV</button><input type="file" id="ot-fileInput" accept=".csv,.tsv,.txt"></div>
+      <button class="btn-secondary btn-small" onclick="otLoadExample1()">Example 1</button>
+      <button class="btn-secondary btn-small" onclick="otLoadExample2()">Example 2</button>
+    </div>
+    <textarea id="ot-dataInput" spellcheck="false"></textarea>
+    <div id="ot-constraintTypes"></div>
+    <div class="btn-row" style="align-items:center">
+      <label for="ot-biasSelect" style="font-size:.9rem;font-weight:600">Bias:</label>
+      <select id="ot-biasSelect">
+        <option value="none">No bias (plain RCD)</option>
+        <option value="MF">M ≫ F (markedness high)</option>
+        <option value="FM">F ≫ M (faithfulness high)</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="otRunRCD()">Run RCD</button>
+      <button class="btn-secondary btn-small" onclick="otDownload()">Download Results</button>
+    </div>
+    <div id="ot-status"></div>
+  </div>
+</section>
+
+<section id="ot-resultsSection" style="display:none">
+  <h2>3. Results</h2>
+  <div class="tabs">
+    <div class="tab active" onclick="otSwitchTab('ot-inputTab')">Input Tableaux</div>
+    <div class="tab" onclick="otSwitchTab('ot-compTab')">Comparative Tableau</div>
+    <div class="tab" onclick="otSwitchTab('ot-rcdTab')">RCD Steps</div>
+    <div class="tab" onclick="otSwitchTab('ot-verifyTab')">Verification</div>
+  </div>
+  <div id="ot-inputTab" class="tab-content active card"></div>
+  <div id="ot-compTab" class="tab-content card"></div>
+  <div id="ot-rcdTab" class="tab-content card"></div>
+  <div id="ot-verifyTab" class="tab-content card"></div>
+</section>
+
+<section>
+  <h2>4. Implementation</h2>
+  <div class="card">
+
+    <details class="impl">
+      <summary>Comparative tableau — extract W~L pairs</summary>
+<pre><span class="kw">def</span> <span class="fn">extract_pairs</span>(tableaux, constraints):
+    <span class="str">"""Build comparative tableau from winner–loser pairs."""</span>
+    pairs = []
+    <span class="kw">for</span> tableau <span class="kw">in</span> tableaux:
+        winner = [c <span class="kw">for</span> c <span class="kw">in</span> tableau <span class="kw">if</span> c.optimal][<span class="kw">0</span>]
+        <span class="kw">for</span> loser <span class="kw">in</span> tableau:
+            <span class="kw">if</span> loser.optimal: <span class="kw">continue</span>
+            wl = []
+            <span class="kw">for</span> j, con <span class="kw">in</span> enumerate(constraints):
+                wv, lv = winner.violations[j], loser.violations[j]
+                <span class="kw">if</span>   wv &lt; lv: wl.append(<span class="str">'W'</span>)  <span class="cmt"># winner fewer violations</span>
+                <span class="kw">elif</span> wv &gt; lv: wl.append(<span class="str">'L'</span>)  <span class="cmt"># loser fewer violations</span>
+                <span class="kw">else</span>:         wl.append(<span class="str">'e'</span>)  <span class="cmt"># tie</span>
+            pairs.append((winner, loser, wl))
+    <span class="kw">return</span> pairs</pre>
+    </details>
+
+    <details class="impl">
+      <summary>RCD — Recursive Constraint Demotion (with optional bias)</summary>
+<pre><span class="kw">def</span> <span class="fn">rcd</span>(pairs, constraints, con_types=<span class="kw">None</span>, bias=<span class="str">'none'</span>):
+    <span class="str">"""Recursive Constraint Demotion.
+    bias: 'none', 'MF' (markedness high), 'FM' (faithfulness high)"""</span>
+    remaining = list(range(len(pairs)))
+    unranked  = list(range(len(constraints)))
+    strata    = []
+
+    <span class="kw">def</span> <span class="fn">apply_bias</span>(eligible):
+        <span class="kw">if</span> bias == <span class="str">'none'</span> <span class="kw">or</span> len(eligible) &lt;= <span class="kw">1</span>:
+            <span class="kw">return</span> eligible, []
+        prefer = <span class="str">'M'</span> <span class="kw">if</span> bias == <span class="str">'MF'</span> <span class="kw">else</span> <span class="str">'F'</span>
+        pref = [ci <span class="kw">for</span> ci <span class="kw">in</span> eligible <span class="kw">if</span> con_types[ci] == prefer]
+        <span class="kw">if</span> pref:
+            <span class="kw">return</span> pref, [ci <span class="kw">for</span> ci <span class="kw">in</span> eligible <span class="kw">if</span> ci <span class="kw">not in</span> pref]
+        <span class="kw">return</span> eligible, []
+
+    <span class="kw">while</span> unranked:
+        <span class="cmt"># Find eligible: constraints with no L in any remaining pair</span>
+        eligible = [ci <span class="kw">for</span> ci <span class="kw">in</span> unranked
+                    <span class="kw">if not any</span>(pairs[pi].wl[ci] == <span class="str">'L'</span>
+                               <span class="kw">for</span> pi <span class="kw">in</span> remaining)]
+
+        <span class="kw">if not</span> eligible <span class="kw">and</span> remaining:
+            <span class="kw">raise</span> ValueError(<span class="str">"Inconsistent data"</span>)
+
+        <span class="kw">if not</span> eligible:          <span class="cmt"># no pairs left</span>
+            eligible = unranked[:]
+
+        rank, held = apply_bias(eligible)
+
+        <span class="cmt"># Discard pairs where a ranked constraint bears W</span>
+        remaining = [pi <span class="kw">for</span> pi <span class="kw">in</span> remaining
+                     <span class="kw">if not any</span>(pairs[pi].wl[ci] == <span class="str">'W'</span>
+                                <span class="kw">for</span> ci <span class="kw">in</span> rank)]
+        unranked = [ci <span class="kw">for</span> ci <span class="kw">in</span> unranked <span class="kw">if</span> ci <span class="kw">not in</span> rank]
+        strata.append([constraints[ci] <span class="kw">for</span> ci <span class="kw">in</span> rank])
+
+    <span class="kw">return</span> strata  <span class="cmt"># list of lists: [{S1}, {S2}, …]</span></pre>
+    </details>
+
+    <details class="impl">
+      <summary>OT Eval — verify ranking selects correct winners</summary>
+<pre><span class="kw">def</span> <span class="fn">ot_eval</span>(candidates, constraint_order):
+    <span class="str">"""Find the optimal candidate under strict domination."""</span>
+    alive = list(range(len(candidates)))
+    <span class="kw">for</span> ci <span class="kw">in</span> constraint_order:
+        <span class="kw">if</span> len(alive) &lt;= <span class="kw">1</span>: <span class="kw">break</span>
+        min_v = min(candidates[i].violations[ci] <span class="kw">for</span> i <span class="kw">in</span> alive)
+        alive = [i <span class="kw">for</span> i <span class="kw">in</span> alive
+                 <span class="kw">if</span> candidates[i].violations[ci] == min_v]
+    <span class="kw">return</span> alive[<span class="kw">0</span>]</pre>
+    </details>
+  </div>
+</section>
+</div><!-- /ot panel -->
+
+</div><!-- /container -->
+
+<script>
+// ==============================================================
+//  LAB SWITCHER
+// ==============================================================
+function switchLab(lab) {
+  document.querySelectorAll('.lab-btn').forEach(b => b.classList.toggle('active', b.dataset.lab === lab));
+  document.querySelectorAll('.lab-panel').forEach(p => p.classList.toggle('active', p.dataset.lab === lab));
+}
+
+// ==============================================================
+//  CHART.JS — Journal-standard font defaults (Times New Roman)
+// ==============================================================
+const JOURNAL_FONT = "'Times New Roman', Times, serif";
+Chart.defaults.font.family = JOURNAL_FONT;
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#1e1a14';
+
+// ==============================================================
+//  MAXENT LAB — Core functions
+// ==============================================================
+function maxentProbs(violations, weights) {
+  const H = violations.map(row => row.reduce((s,v,j)=> s+v*weights[j], 0));
+  const eH = H.map(h => Math.exp(h));
+  const Z = eH.reduce((a,b)=>a+b, 0);
+  return {H, eH, Z, probs: eH.map(e => e/Z)};
+}
+
+function fitWeights(tableaux, nC, {mu=1,sigma=100,lr=.5,maxIter=2000,tol=1e-8,minW=.01}={}) {
+  let w = new Array(nC).fill(1);
+  function nll(wt) {
+    let t=0;
+    for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,wt);
+      for(let i=0;i<tb.counts.length;i++)if(tb.counts[i]>0)t-=tb.counts[i]*Math.log(r.probs[i]+1e-15)}
+    for(let j=0;j<wt.length;j++)t+=(wt[j]-mu)**2/(2*sigma*sigma);return t}
+  function grad(wt){const g=new Array(nC).fill(0);
+    for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,wt);
+      for(let j=0;j<nC;j++)for(let i=0;i<tb.counts.length;i++){g[j]-=tb.totalCount*(tb.counts[i]/tb.totalCount-r.probs[i])*tb.violations[i][j]}}
+    for(let j=0;j<nC;j++)g[j]+=(wt[j]-mu)/(sigma*sigma);return g}
+  let prev=nll(w);
+  for(let it=0;it<maxIter;it++){const g=grad(w);let s=lr;const wN=w.map((wi,j)=>Math.max(minW,wi-s*g[j]));
+    let nL=nll(wN);let tr=0;while(nL>prev&&tr<20){s*=.5;for(let j=0;j<nC;j++)wN[j]=Math.max(minW,w[j]-s*g[j]);nL=nll(wN);tr++}
+    w=wN;if(Math.abs(prev-nL)<tol)break;prev=nL}
+  let ll=0;for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,w);
+    for(let i=0;i<tb.counts.length;i++)if(tb.counts[i]>0)ll+=tb.counts[i]*Math.log(r.probs[i]+1e-15)}
+  return{weights:w,ll}}
+
+// --- MaxEnt data parsing ---
+let meState = {tableaux:[],constraints:[],weights:null,ll:null};
+
+function meParseCSV(text){
+  const lines=text.trim().split('\n').map(l=>l.replace(/,\s*$/,'').trim()).filter(l=>l&&!l.startsWith('#'));
+  if(lines.length<2)throw new Error('Need header + data rows');
+  const hdr=lines[0].split(',').map(s=>s.trim());const req=['Input','Output','Count'];
+  for(const r of req)if(!hdr.includes(r))throw new Error('Missing column: '+r);
+  const cons=hdr.filter(c=>!req.includes(c));const rows=[];
+  for(let i=1;i<lines.length;i++){const p=lines[i].split(',').map(s=>s.trim());if(p.length<hdr.length)continue;
+    const o={};hdr.forEach((h,j)=>o[h]=p[j]);rows.push(o)}
+  const grp={};for(const r of rows){if(!grp[r.Input])grp[r.Input]=[];grp[r.Input].push(r)}
+  const tab=[];for(const[inp,g]of Object.entries(grp)){
+    tab.push({input:inp,outputs:g.map(r=>r.Output),counts:g.map(r=>parseFloat(r.Count)||0),
+      violations:g.map(r=>cons.map(c=>parseFloat(r[c])||0)),totalCount:g.reduce((a,r)=>a+(parseFloat(r.Count)||0),0)})}
+  return{tableaux:tab,constraints:cons}}
+
+function meLoadExample(){
+  document.getElementById('me-dataInput').value=`Input,Output,Count,*p,Ident(son)
+/poɮən/,[poɮən],300,-1,0
+/poɮən/,[woɮən],110,0,-1
+/paɮen/,[paɮen],330,-1,0
+/paɮen/,[waɮen],100,0,-1
+/pilon/,[pilon],250,-1,0
+/pilon/,[wilon],50,0,-1`}
+
+function meRunAnalysis(){
+  const text=document.getElementById('me-dataInput').value;
+  const st=document.getElementById('me-status'),res=document.getElementById('me-results');
+  try{const{tableaux:tb,constraints:cs}=meParseCSV(text);const{weights:w,ll}=fitWeights(tb,cs.length);
+    meState={tableaux:tb,constraints:cs,weights:w,ll};
+    st.innerHTML=`<div class="status ok">Loaded ${tb.length} tableaux, ${cs.length} constraints. Log-likelihood: ${ll.toFixed(4)}</div>`;
+    let h='<div class="weights-display">';cs.forEach((c,j)=>h+=`<span class="weight-chip"><span class="name">${c}</span>: ${w[j].toFixed(4)}</span>`);h+='</div>';
+    for(const t of tb){const r=maxentProbs(t.violations,w);const isTr=t.totalCount>0;
+      h+=`<h3>${t.input} <span style="font-size:.78rem;color:var(--fg2)">[${isTr?'training':'prediction'}]</span></h3>`;
+      h+='<table class="results-table"><thead><tr><th>Output</th>';cs.forEach(c=>h+=`<th>${c}</th>`);
+      h+='<th>H</th><th>Observed</th><th>Predicted</th></tr></thead><tbody>';
+      const best=r.probs.indexOf(Math.max(...r.probs));
+      for(let i=0;i<t.outputs.length;i++){const obs=isTr?(t.counts[i]/t.totalCount):null;
+        h+=`<tr class="${i===best?'winner':''}"><td>${i===best?'☞ ':''}${t.outputs[i]}</td>`;
+        for(let j=0;j<cs.length;j++){const v=t.violations[i][j];h+=`<td class="num ${v<0?'violation':''}">${v!==0?v:''}</td>`}
+        h+=`<td class="num">${r.H[i].toFixed(3)}</td><td class="num">${obs!==null?obs.toFixed(3):'—'}</td><td class="num">${r.probs[i].toFixed(3)}</td></tr>`}
+      h+='</tbody></table>'}
+    res.innerHTML=h;
+    const sel=document.getElementById('me-inputFilter');sel.innerHTML='<option value="__all__">All Inputs</option>';
+    tb.filter(t=>t.totalCount>0).forEach(t=>sel.innerHTML+=`<option value="${t.input}">${t.input}</option>`)
+  }catch(e){st.innerHTML=`<div class="status err">Error: ${e.message}</div>`;res.innerHTML=''}}
+
+let meFitChart=null;
+function mePlotFit(){const{tableaux:tb,weights:w}=meState;if(!w)return;
+  const f=document.getElementById('me-inputFilter').value;
+  // tab10 colors
+  const tab10=['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf'];
+  const obs=[],pred=[],labels=[],colors=[];let tIdx=0;
+  for(const t of tb){if(t.totalCount===0){tIdx++;continue}if(f!=='__all__'&&t.input!==f){tIdx++;continue}
+    const r=maxentProbs(t.violations,w);const c=tab10[tIdx%tab10.length];
+    for(let i=0;i<t.outputs.length;i++){obs.push(t.counts[i]/t.totalCount);pred.push(r.probs[i]);
+      labels.push(f==='__all__'?`${t.input}: ${t.outputs[i]}`:t.outputs[i]);colors.push(c)}tIdx++}
+  if(!obs.length)return;
+  const ctx=document.getElementById('me-fitChart').getContext('2d');if(meFitChart)meFitChart.destroy();
+  const jFont={family:"'Times New Roman',Times,serif"};
+  meFitChart=new Chart(ctx,{type:'scatter',data:{datasets:[
+    {label:'Candidates',data:obs.map((o,i)=>({x:o,y:pred[i]})),
+      backgroundColor:colors,borderColor:'#000',borderWidth:1.2,pointRadius:8,pointHoverRadius:10},
+    {label:'Perfect fit',data:[{x:0,y:0},{x:1,y:1}],type:'line',borderColor:'rgba(181,65,42,.5)',borderDash:[6,4],pointRadius:0,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:true,aspectRatio:1,
+    plugins:{title:{display:true,text:f==='__all__'?'Model Fit: All Inputs':'Model Fit: '+f,font:{...jFont,size:14,weight:'bold'}},
+    legend:{display:true,labels:{font:{...jFont,size:11}}},
+    tooltip:{callbacks:{label:c=>labels[c.dataIndex]?`${labels[c.dataIndex]}: obs=${c.raw.x.toFixed(3)}, pred=${c.raw.y.toFixed(3)}`:''}}},
+  scales:{x:{title:{display:true,text:'Observed probability',font:{...jFont,size:12}},min:-.05,max:1.05,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{...jFont,size:10}}},
+    y:{title:{display:true,text:'Predicted probability',font:{...jFont,size:12}},min:-.05,max:1.05,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{...jFont,size:10}}}}},
+  // Custom plugin: draw offset labels with leader lines, matching Python's alternating offsets
+  plugins:[{afterDraw(chart){
+    const{ctx:c,scales:{x:xS,y:yS}}=chart;c.save();
+    const offsets=[[20,20],[20,-25],[-100,20],[-100,-25]];
+    for(let i=0;i<obs.length;i++){
+      const px=xS.getPixelForValue(obs[i]),py=yS.getPixelForValue(pred[i]);
+      const off=offsets[i%4];const tx=px+off[0],ty=py+off[1];
+      // Leader line
+      c.strokeStyle='rgba(128,128,128,.5)';c.lineWidth=.8;c.setLineDash([]);
+      c.beginPath();c.moveTo(px,py);c.lineTo(tx,ty);c.stroke();
+      // Label
+      c.fillStyle='rgba(0,0,0,.75)';c.font='10px "Times New Roman",Times,serif';c.textAlign=off[0]<0?'end':'start';
+      c.fillText(labels[i],tx+(off[0]<0?-3:3),ty+(off[1]<0?-3:12))}
+    c.restore()}}]})}
+
+function meDownloadCSV(){const{tableaux:tb,constraints:cs,weights:w,ll}=meState;if(!w)return;
+  let csv=`# MAXENT RESULTS\n# LL: ${ll.toFixed(6)}\n`;cs.forEach((c,j)=>csv+=`# ${c}: ${w[j].toFixed(6)}\n`);
+  csv+=['Input','Output',...cs,'H','Observed','Predicted'].join(',')+'\n';
+  for(const t of tb){const r=maxentProbs(t.violations,w);for(let i=0;i<t.outputs.length;i++){
+    const obs=t.totalCount>0?(t.counts[i]/t.totalCount).toFixed(4):'';
+    csv+=[t.input,t.outputs[i],...t.violations[i],r.H[i].toFixed(4),obs,r.probs[i].toFixed(4)].join(',')+'\n'}}
+  const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='maxent_results.csv';a.click()}
+
+document.getElementById('me-fileInput').addEventListener('change',function(e){
+  const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=ev=>{document.getElementById('me-dataInput').value=ev.target.result;meRunAnalysis()};rd.readAsText(f)});
+
+// --- K3 ---
+function renderK3(){const wp=parseFloat(document.getElementById('k3_wp').value),wi=parseFloat(document.getElementById('k3_wi').value);
+  document.getElementById('k3_wp_v').textContent=wp.toFixed(1);document.getElementById('k3_wi_v').textContent=wi.toFixed(1);
+  const viol=[[-1,0],[0,-1]],r=maxentProbs(viol,[wp,wi]),cands=['[poɮən]','[woɮən]'],match=Math.abs(r.probs[0]-.73)<.02;
+  let h='<table class="results-table"><thead><tr><th>/poɮən/</th><th>*p ['+wp.toFixed(1)+']</th><th>Ident(son) ['+wi.toFixed(1)+']</th><th>H</th><th>Probability</th></tr></thead><tbody>';
+  for(let i=0;i<2;i++){const best=r.probs[i]===Math.max(...r.probs);
+    h+=`<tr class="${best?'winner':''}"><td>${best?'☞ ':''}${cands[i]}</td><td class="num ${viol[i][0]<0?'violation':''}">${viol[i][0]<0?'−1':''}</td><td class="num ${viol[i][1]<0?'violation':''}">${viol[i][1]<0?'−1':''}</td><td class="num">${r.H[i].toFixed(2)}</td><td class="num"><strong>${(r.probs[i]*100).toFixed(1)}%</strong></td></tr>`}
+  h+='</tbody></table>';h+=`<p class="info" style="color:${match?'var(--green)':'var(--fg2)'}">Target: 73%/27% → Current: ${(r.probs[0]*100).toFixed(1)}%/${(r.probs[1]*100).toFixed(1)}%${match?' ✓':''}</p>`;
+  document.getElementById('tableau-k3').innerHTML=h}
+document.getElementById('k3_wp').addEventListener('input',renderK3);document.getElementById('k3_wi').addEventListener('input',renderK3);
+
+// --- K4 ---
+let k4ctx='C';
+function meSetCtx(c){k4ctx=c;document.getElementById('ctx_C').classList.toggle('active',c==='C');document.getElementById('ctx_V').classList.toggle('active',c==='V');renderK4()}
+function renderK4(){const wp=parseFloat(document.getElementById('k4_wp').value),wi=parseFloat(document.getElementById('k4_wi').value),wv=parseFloat(document.getElementById('k4_wv').value);
+  document.getElementById('k4_wp_v').textContent=wp.toFixed(1);document.getElementById('k4_wi_v').textContent=wi.toFixed(1);document.getElementById('k4_wv_v').textContent=wv.toFixed(1);
+  const viol=k4ctx==='C'?[[-1,0,0],[0,-1,0]]:[[-1,0,-1],[0,-1,0]],r=maxentProbs(viol,[wp,wi,wv]),
+    cands=k4ctx==='C'?['[…Cpoɮən]','[…Cwoɮən]']:['[…Vpoɮən]','[…Vwoɮən]'],
+    title=k4ctx==='C'?'After Consonant (perturber inactive)':'After Vowel (perturber ACTIVE)';
+  let h=`<p style="font-weight:600;color:${k4ctx==='V'?'var(--green)':'var(--fg2)'}">${title}</p>`;
+  h+='<table class="results-table"><thead><tr><th>Candidate</th><th>*p ['+wp.toFixed(1)+']</th><th>Ident ['+wi.toFixed(1)+']</th><th>*V[−son] ['+wv.toFixed(1)+']</th><th>H</th><th>Probability</th></tr></thead><tbody>';
+  for(let i=0;i<2;i++){const best=r.probs[i]===Math.max(...r.probs);
+    h+=`<tr class="${best?'winner':''}"><td>${best?'☞ ':''}${cands[i]}</td>`;
+    for(let j=0;j<3;j++)h+=`<td class="num ${viol[i][j]<0?'violation':''}">${viol[i][j]<0?'−1':''}</td>`;
+    h+=`<td class="num">${r.H[i].toFixed(2)}</td><td class="num"><strong>${(r.probs[i]*100).toFixed(1)}%</strong></td></tr>`}
+  h+='</tbody></table>';document.getElementById('tableau-k4').innerHTML=h}
+document.getElementById('k4_wp').addEventListener('input',renderK4);document.getElementById('k4_wi').addEventListener('input',renderK4);document.getElementById('k4_wv').addEventListener('input',renderK4);
+
+// --- Sigmoid ---
+let sigChart=null;
+function renderSigmoid(){const w=parseFloat(document.getElementById('sig_w').value);document.getElementById('sig_w_v').textContent=w.toFixed(1);
+  const xs=[],ys=[];for(let x=-6;x<=6;x+=.06){xs.push(x);ys.push(1/(1+Math.exp(-x)))}const pC=1/(1+Math.exp(-w));
+  const ctx=document.getElementById('sigmoidChart').getContext('2d');if(sigChart)sigChart.destroy();
+  sigChart=new Chart(ctx,{type:'line',data:{labels:xs,datasets:[{data:ys,borderColor:'#2e6b8a',borderWidth:2.5,pointRadius:0,fill:false,tension:.4}]},
+  options:{responsive:true,animation:{duration:0},plugins:{title:{display:true,text:'The Logistic Sigmoid',font:{family:"'Times New Roman',Times,serif",size:14,weight:'bold'}},legend:{display:false},tooltip:{enabled:false}},
+  scales:{x:{type:'linear',title:{display:true,text:'Weight (w)',font:{family:"'Times New Roman',Times,serif",size:12}},min:-6,max:6,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{family:"'Times New Roman',Times,serif",size:10}}},y:{title:{display:true,text:'P(non-violating)',font:{family:"'Times New Roman',Times,serif",size:12}},min:0,max:1,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{family:"'Times New Roman',Times,serif",size:10}}}}},
+  plugins:[{afterDraw(chart){const{ctx:c,scales:{x:xS,y:yS}}=chart;
+    const px=xS.getPixelForValue(w),py=yS.getPixelForValue(pC);
+    const chartL=xS.left,chartR=xS.right,chartT=yS.top,chartB=yS.bottom;
+    // Red dot
+    c.save();c.fillStyle='#b5412a';c.beginPath();c.arc(px,py,8,0,Math.PI*2);c.fill();
+    // Compute label offset: keep label inside chart area, away from dot
+    const label=`w = ${w.toFixed(1)}, P = ${(pC*100).toFixed(1)}%`;
+    c.font='12px "Times New Roman",Times,serif';const tw=c.measureText(label).width;
+    // Default: to the right and above (matching Python: xytext=(w+1.5, p-0.12))
+    let lx=px+18,ly=py-16;
+    // If label would overflow right, flip to left
+    if(lx+tw+6>chartR){lx=px-tw-18}
+    // If label would overflow top, flip below
+    if(ly-14<chartT){ly=py+24}
+    // If label would overflow bottom, flip above
+    if(ly+4>chartB){ly=py-16}
+    // Arrow from label to dot
+    c.strokeStyle='#b5412a';c.lineWidth=1;c.setLineDash([]);c.beginPath();
+    const ax=lx<px?lx+tw+3:lx-3,ay=ly-4;
+    c.moveTo(ax,ay);c.lineTo(px,py);c.stroke();
+    // Draw arrowhead
+    const ang=Math.atan2(py-ay,px-ax);
+    c.fillStyle='#b5412a';c.beginPath();c.moveTo(px,py);
+    c.lineTo(px-8*Math.cos(ang-0.35),py-8*Math.sin(ang-0.35));
+    c.lineTo(px-8*Math.cos(ang+0.35),py-8*Math.sin(ang+0.35));c.closePath();c.fill();
+    // Label text
+    c.fillStyle='#1e1a14';c.textAlign='left';c.fillText(label,lx,ly);
+    // Reference lines
+    c.strokeStyle='rgba(0,0,0,.15)';c.setLineDash([4,4]);
+    c.beginPath();c.moveTo(xS.getPixelForValue(0),yS.getPixelForValue(0));c.lineTo(xS.getPixelForValue(0),yS.getPixelForValue(1));c.stroke();
+    c.beginPath();c.moveTo(xS.getPixelForValue(-6),yS.getPixelForValue(.5));c.lineTo(xS.getPixelForValue(6),yS.getPixelForValue(.5));c.stroke();
+    c.restore()}}]})}
+document.getElementById('sig_w').addEventListener('input',renderSigmoid);
+
+// ==============================================================
+//  OT LAB
+// ==============================================================
+let otState={tableaux:[],constraints:[],constraintTypes:{},pairs:[],strata:[],bias:'none'};
+let otPendingTypes={};
+
+function otParseViolation(s){if(s===undefined||s===null)return 0;s=String(s).trim();if(s===''||s==='0')return 0;
+  const st=s.replace(/\s/g,'');if(/^\*+$/.test(st))return st.length;const n=parseInt(s);return isNaN(n)?0:Math.abs(n)}
+
+function otParseInput(text){
+  const raw=text.split('\n').map(l=>l.trimEnd()).filter(l=>l.trim().length>0&&!l.trim().startsWith('#'));
+  if(raw.length<2)throw new Error('Need header + data rows.');
+  const hdr=raw[0].split(',').map(s=>s.trim()).filter(s=>s.length>0);
+  const req=['Input','Output','Optimal'];for(const r of req)if(!hdr.includes(r))throw new Error('Missing column: '+r);
+  const cons=hdr.filter(c=>!req.includes(c));if(cons.length===0)throw new Error('Need at least one constraint column.');
+  const nC=hdr.length,rows=[];
+  for(let i=1;i<raw.length;i++){const p=raw[i].split(',').map(s=>s.trim());while(p.length<nC)p.push('');
+    const o={};for(let j=0;j<nC;j++)o[hdr[j]]=p[j];rows.push(o)}
+  if(rows.length===0)throw new Error('No data rows.');
+  const grp={},ord=[];
+  for(const r of rows){if(!grp[r.Input]){grp[r.Input]=[];ord.push(r.Input)}
+    grp[r.Input].push({output:r.Output,optimal:r.Optimal==='1'||r.Optimal.toLowerCase()==='true',violations:cons.map(c=>otParseViolation(r[c]))})}
+  const tab=ord.map(inp=>({input:inp,candidates:grp[inp]}));
+  for(const t of tab){const w=t.candidates.filter(c=>c.optimal);if(w.length===0)throw new Error(`No winner for "${t.input}".`);if(w.length>1)throw new Error(`Multiple winners for "${t.input}".`)}
+  return{tableaux:tab,constraints:cons}}
+
+function otExtractPairs(tab,cons){const pairs=[];
+  for(const t of tab){const w=t.candidates.find(c=>c.optimal);for(const l of t.candidates){if(l.optimal)continue;
+    const wl=cons.map((_,j)=>{const wv=w.violations[j],lv=l.violations[j];if(wv<lv)return'W';if(wv>lv)return'L';return'e'});
+    pairs.push({input:t.input,winner:w.output,loser:l.output,wl})}}return pairs}
+
+function otRCDAlgorithm(pairs,cons,cTypes,bias){
+  let rem=pairs.map((_,i)=>i),unr=cons.map((_,i)=>i);const strata=[];
+  function applyBias(el){if(bias==='none'||el.length<=1)return{rank:[...el],held:[]};
+    const pref=bias==='MF'?'M':'F',pr=el.filter(ci=>cTypes[cons[ci]]===pref);
+    if(pr.length>0)return{rank:pr,held:el.filter(ci=>!pr.includes(ci))};return{rank:[...el],held:[]}}
+  while(unr.length>0){
+    const el=unr.filter(ci=>!rem.some(pi=>pairs[pi].wl[ci]==='L'));
+    if(el.length===0&&rem.length>0)return{strata,error:'No eligible constraints but unsettled pairs remain — data may be inconsistent.'};
+    if(el.length===0&&rem.length===0){const{rank,held}=applyBias(unr);
+      strata.push({constraints:rank.map(ci=>cons[ci]),constraintIndices:[...rank],discardedPairs:[],remainingBefore:0,remainingAfter:0,heldBack:held.map(ci=>cons[ci])});
+      unr=unr.filter(ci=>!rank.includes(ci));continue}
+    const{rank:sc,held}=applyBias(el);const disc=[],surv=[];
+    for(const pi of rem){if(sc.some(ci=>pairs[pi].wl[ci]==='W'))disc.push(pi);else surv.push(pi)}
+    strata.push({constraints:sc.map(ci=>cons[ci]),constraintIndices:[...sc],discardedPairs:disc,remainingBefore:rem.length,remainingAfter:surv.length,heldBack:held.map(ci=>cons[ci])});
+    unr=unr.filter(ci=>!sc.includes(ci));rem=surv}
+  return{strata,error:null}}
+
+function otEval(cands,order){let alive=cands.map((_,i)=>i);
+  for(const ci of order){if(alive.length<=1)break;let m=Infinity;for(const i of alive)if(cands[i].violations[ci]<m)m=cands[i].violations[ci];
+    alive=alive.filter(i=>cands[i].violations[ci]===m)}return alive.length>0?alive[0]:0}
+
+function otVerify(tab,cons,strata){const order=[];for(const s of strata)order.push(...s.constraintIndices);
+  return tab.map(t=>{const w=t.candidates.find(c=>c.optimal);const pi=otEval(t.candidates,order);const p=t.candidates[pi];
+    return{input:t.input,candidates:t.candidates,predicted:p.output,expected:w?w.output:'???',correct:w&&p.output===w.output,order}})}
+
+// --- OT Examples ---
+function otLoadExample1(){document.getElementById('ot-dataInput').value=`Input,Output,Optimal,Onset,NoCoda,Dep,Max
+/ami/,[ʔa.mi],1,0,0,1,0
+/ami/,[a.mi],0,1,0,0,0
+/sun/,[su],1,0,0,0,1
+/sun/,[sun],0,0,1,0,0
+/sun/,[su.nə],0,0,0,1,0`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
+
+function otLoadExample2(){document.getElementById('ot-dataInput').value=`Input,Output,Optimal,Onset,NoCoda,Dep,Max
+/ata/,[ʔa.ta],1,,,*,
+/ata/,[a.ta],0,*,,,
+/pan/,[pan],1,,*,,
+/pan/,[pa],0,,,,*
+/pan/,[pa.nə],0,,,*,`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
+
+// --- OT Constraint type chips ---
+function otRenderTypes(cons){const el=document.getElementById('ot-constraintTypes');
+  for(const c of cons){if(otPendingTypes[c])otState.constraintTypes[c]=otPendingTypes[c];
+    else if(!otState.constraintTypes[c]){otState.constraintTypes[c]=/ident|max\b|dep|faith|linearity|uniformity|contiguity|integrity/.test(c.toLowerCase())?'F':'M'}}
+  otPendingTypes={};let h='<p style="font-size:.88rem;margin:.4rem 0"><strong>Constraint types</strong> (click to toggle M↔F):</p><div class="constraint-type-row">';
+  for(const c of cons){const t=otState.constraintTypes[c];h+=`<span class="ct-chip ${t}" onclick="otToggleType(this)" data-name="${c}">${t}: ${c}</span>`}
+  h+='</div>';el.innerHTML=h}
+function otToggleType(el){const c=el.getAttribute('data-name');otState.constraintTypes[c]=otState.constraintTypes[c]==='M'?'F':'M';otRenderTypes(otState.constraints)}
+
+// --- OT Main ---
+function otRunRCD(){const text=document.getElementById('ot-dataInput').value,st=document.getElementById('ot-status'),bias=document.getElementById('ot-biasSelect').value;
+  try{const{tableaux:tab,constraints:cons}=otParseInput(text);otState.tableaux=tab;otState.constraints=cons;otState.bias=bias;
+    otRenderTypes(cons);otState.pairs=otExtractPairs(tab,cons);
+    const{strata,error}=otRCDAlgorithm(otState.pairs,cons,otState.constraintTypes,bias);otState.strata=strata;
+    if(error)st.innerHTML=`<div class="status err">${error}</div>`;
+    else{const rs=strata.map(s=>'{'+s.constraints.join(', ')+'}').join(' ≫ ');st.innerHTML=`<div class="status ok">Ranking: ${rs}</div>`}
+    otRenderAll();document.getElementById('ot-resultsSection').style.display=''}catch(e){st.innerHTML=`<div class="status err">Error: ${e.message}</div>`;console.error(e)}}
+
+function otSwitchTab(id){document.querySelectorAll('#ot-resultsSection .tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('#ot-resultsSection .tab').forEach(el=>el.classList.remove('active'));document.getElementById(id).classList.add('active');
+  const map={'ot-inputTab':0,'ot-compTab':1,'ot-rcdTab':2,'ot-verifyTab':3};
+  if(map[id]!==undefined)document.querySelectorAll('#ot-resultsSection .tab')[map[id]].classList.add('active')}
+
+// --- OT Render: Input Tableaux ---
+function otRenderInput(){let h='<h3>Original Tableaux</h3>';
+  for(const t of otState.tableaux){h+=`<h3 style="margin-top:.8rem">${t.input}</h3><table class="ot"><thead><tr><th></th><th>Candidate</th>`;
+    otState.constraints.forEach(c=>h+=`<th class="unranked-border">${c}</th>`);h+='</tr></thead><tbody>';
+    for(const c of t.candidates){h+=`<tr class="${c.optimal?'winner-row':''}"><td>${c.optimal?'☞':''}</td><td>${c.output}</td>`;
+      c.violations.forEach(v=>h+=`<td class="mono unranked-border" style="color:${v>0?'var(--red)':''}">${v>0?'*'.repeat(v):''}</td>`);h+='</tr>'}h+='</tbody></table>'}
+  document.getElementById('ot-inputTab').innerHTML=h}
+
+// --- OT Render: Comparative Tableau ---
+function otRenderComp(){let h='<h3>Winner ~ Loser Pairs</h3><p class="info">W = prefers winner; L = prefers loser; e = tie.</p>';
+  h+='<table class="ot"><thead><tr><th>#</th><th>Winner ~ Loser</th>';otState.constraints.forEach(c=>h+=`<th>${c}</th>`);h+='</tr></thead><tbody>';
+  otState.pairs.forEach((p,i)=>{h+=`<tr><td class="mono">${i+1}</td><td style="font-size:.83rem">${p.winner} ~ ${p.loser}</td>`;
+    p.wl.forEach(v=>h+=`<td class="mono ${v}">${v}</td>`);h+='</tr>'});h+='</tbody></table>';
+  document.getElementById('ot-compTab').innerHTML=h}
+
+// --- OT Render: RCD Steps (interactive) ---
+let otStepIdx=0;
+function otRenderRCD(){otStepIdx=0;const el=document.getElementById('ot-rcdTab');
+  const bl=otState.bias==='MF'?' (BCD: M ≫ F)':otState.bias==='FM'?' (BCD: F ≫ M)':'';
+  el.innerHTML=`<h3>Recursive Constraint Demotion${bl}</h3><p class="info">${otState.strata.length} iteration${otState.strata.length>1?'s':''} to go.</p>`
+    +'<div id="ot-stepsC"></div><div id="ot-rankC"></div>'
+    +'<div id="ot-btnRow" class="btn-row" style="margin-top:.4rem">'
+    +'<button class="btn-primary" onclick="otAdvance()">Continue</button>'
+    +'<button class="btn-secondary btn-small" onclick="otShowAll()">Show All</button>'
+    +'<button class="btn-secondary btn-small" onclick="otRenderRCD()">Reset</button></div>'}
+
+function otBuildStep(idx){const cols=['s1','s2','s3','s4'],s=otState.strata[idx],col=cols[idx%cols.length];
+  const dBefore=new Set();for(let p=0;p<idx;p++)for(const pi of otState.strata[p].discardedPairs)dBefore.add(pi);
+  const active=otState.pairs.map((_,i)=>i).filter(i=>!dBefore.has(i));
+  let h='<div class="step-box" style="animation:stepFadeIn .3s ease">';
+  h+=`<h4><span class="stratum-badge ${col}">Stratum ${idx+1}</span> Iteration ${idx+1} of ${otState.strata.length}</h4>`;
+  if(active.length>0){h+='<table class="ot" style="font-size:.8rem;margin:.35rem 0"><thead><tr><th style="text-align:left">Pair</th>';
+    otState.constraints.forEach(c=>h+=`<th>${c}</th>`);h+='</tr></thead><tbody>';
+    for(const pi of active){const p=otState.pairs[pi],disc=s.discardedPairs.includes(pi);
+      h+=`<tr style="${disc?'text-decoration:line-through;opacity:.45':''}"><td style="font-size:.76rem;text-align:left">${p.winner}~${p.loser}</td>`;
+      p.wl.forEach(v=>h+=`<td class="mono ${v}">${v}</td>`);h+='</tr>'}
+    h+='<tr style="font-weight:700;border-top:2px solid var(--border)"><td style="text-align:left">Any L?</td>';
+    otState.constraints.forEach((_,ci)=>{const has=active.some(pi=>otState.pairs[pi].wl[ci]==='L');
+      h+=`<td style="color:${has?'var(--red)':'var(--green)'}">${has?'yes':'<strong>no</strong>'}</td>`});
+    h+='</tr></tbody></table>'}
+  h+=`<p class="action"><span class="ranked">Rank:</span> ${s.constraints.join(', ')}</p>`;
+  if(s.heldBack&&s.heldBack.length>0){const ht=otState.bias==='MF'?'faithfulness':otState.bias==='FM'?'markedness':'';
+    h+=`<p class="info" style="color:var(--blue)">Bias held back ${ht}: ${s.heldBack.join(', ')}</p>`}
+  if(s.discardedPairs.length>0){h+=`<p class="discarded">Discard ${s.discardedPairs.length} pair${s.discardedPairs.length>1?'s':''}: `;
+    h+=s.discardedPairs.map(pi=>`${otState.pairs[pi].winner}~${otState.pairs[pi].loser}`).join('; ')+'</p>'}
+  if(s.remainingAfter>0)h+=`<p class="info">${s.remainingAfter} pair${s.remainingAfter>1?'s':''} remaining.</p>`;
+  return h+'</div>'}
+
+function otPartialRank(upto){const cols=['s1','s2','s3','s4'],parts=[];
+  for(let i=0;i<=upto;i++){const s=otState.strata[i];parts.push(`<span class="stratum-badge ${cols[i%cols.length]}">S${i+1}</span>{${s.constraints.join(', ')}}`)}
+  const rem=otState.strata.length-upto-1;return`<div class="ranking-display" style="font-size:1rem">${parts.join(' <span class="gg">≫</span> ')}${rem>0?' <span class="gg">≫</span> <span style="color:var(--fg2)">… ('+rem+' more)</span>':''}</div>`}
+function otFinalRank(){const cols=['s1','s2','s3','s4'];
+  const parts=otState.strata.map((s,i)=>`<span class="stratum-badge ${cols[i%cols.length]}">S${i+1}</span>{${s.constraints.join(', ')}}`);
+  return`<div class="ranking-display">${parts.join(' <span class="gg">≫</span> ')}</div><p style="text-align:center;color:var(--green);font-weight:600;margin-top:.2rem">✓ Complete.</p>`}
+
+function otAdvance(){if(otStepIdx>=otState.strata.length)return;
+  const c=document.getElementById('ot-stepsC'),r=document.getElementById('ot-rankC');
+  c.insertAdjacentHTML('beforeend',otBuildStep(otStepIdx));
+  if(otStepIdx>=otState.strata.length-1){r.innerHTML=otFinalRank();document.getElementById('ot-btnRow').innerHTML='<button class="btn-secondary btn-small" onclick="otRenderRCD()">Reset</button>'}
+  else r.innerHTML=otPartialRank(otStepIdx);otStepIdx++;c.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function otShowAll(){while(otStepIdx<otState.strata.length)otAdvance()}
+
+// --- OT Render: Verification ---
+function otRenderVerify(){const results=otVerify(otState.tableaux,otState.constraints,otState.strata);
+  const order=[],sBounds=new Set();for(const s of otState.strata){if(order.length>0)sBounds.add(order.length);order.push(...s.constraintIndices)}
+  const oNames=order.map(ci=>otState.constraints[ci]);
+  let h='<h3>Verification Tableaux</h3><p class="info">Solid lines separate strata. "!" marks the fatal violation.</p>';let allOk=true;
+  for(const r of results){if(!r.correct)allOk=false;
+    h+=`<h3 style="margin-top:.8rem">${r.input} ${r.correct?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--red)">✗</span>'}</h3>`;
+    h+='<table class="ot"><thead><tr><th></th><th>Candidate</th>';
+    oNames.forEach((c,idx)=>h+=`<th class="${sBounds.has(idx)?'ranked-border':''}">${c}</th>`);h+='</tr></thead><tbody>';
+    const pred=r.candidates.find(c=>c.output===r.predicted);
+    for(const cand of r.candidates){const isP=cand.output===r.predicted;
+      let fatal=-1;if(!isP&&pred){for(let oi=0;oi<order.length;oi++){const ci=order[oi];if(cand.violations[ci]>pred.violations[ci]){fatal=oi;break}if(cand.violations[ci]<pred.violations[ci])break}}
+      h+=`<tr class="${isP?'winner-row':''}"><td>${isP?'☞':''}</td><td>${cand.output}</td>`;
+      order.forEach((ci,oi)=>{const v=cand.violations[ci];h+=`<td class="mono ${sBounds.has(oi)?'ranked-border':''}" style="color:${v>0?'var(--red)':''}">${v>0?'*'.repeat(v):''}${oi===fatal?'!':''}</td>`});
+      h+='</tr>'}h+='</tbody></table>'}
+  h+=allOk?'<div class="status ok" style="margin-top:.8rem">All winners correctly selected. ✓</div>':'<div class="status err" style="margin-top:.8rem">Some winners not correctly selected.</div>';
+  document.getElementById('ot-verifyTab').innerHTML=h}
+
+function otRenderAll(){otRenderInput();otRenderComp();otRenderRCD();otRenderVerify()}
+
+function otDownload(){if(!otState.strata.length)return;
+  let t='OT LAB RESULTS\n'+'='.repeat(60)+'\n\nRANKING: '+otState.strata.map(s=>'{'+s.constraints.join(', ')+'}').join(' >> ')+'\n\n';
+  t+='COMPARATIVE TABLEAU:\n'+['#','Winner~Loser',...otState.constraints].join('\t')+'\n';
+  otState.pairs.forEach((p,i)=>t+=[i+1,`${p.winner}~${p.loser}`,...p.wl].join('\t')+'\n');
+  t+='\nRCD STEPS:\n';otState.strata.forEach((s,i)=>{t+=`  S${i+1}: ${s.constraints.join(', ')}`;if(s.discardedPairs.length)t+=` (disc. ${s.discardedPairs.length})`;t+='\n'});
+  const b=new Blob([t],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ot_results.txt';a.click()}
+
+document.getElementById('ot-fileInput').addEventListener('change',function(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{document.getElementById('ot-dataInput').value=ev.target.result};r.readAsText(f)});
+
+// ==============================================================
+//  INIT
+// ==============================================================
+renderK3(); renderK4(); renderSigmoid(); meLoadExample(); otLoadExample1();
+</script>
+</body>
+</html>
