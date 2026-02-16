@@ -483,13 +483,13 @@ function meParseCSV(text){
   return{tableaux:tab,constraints:cons}}
 
 function meLoadExample(){
-  document.getElementById('me-dataInput').value=`Input,Output,Count,*p,Ident(son)
-/poɮən/,[poɮən],300,-1,0
-/poɮən/,[woɮən],110,0,-1
-/paɮen/,[paɮen],330,-1,0
-/paɮen/,[waɮen],100,0,-1
-/pilon/,[pilon],250,-1,0
-/pilon/,[wilon],50,0,-1`}
+  document.getElementById('me-dataInput').value=`Input  , Output , Count, *p, Ident(son)
+/poɮən/, [poɮən],   300, -1, 0
+/poɮən/, [woɮən],   110,  0, -1
+/paɮen/, [paɮen],   330, -1, 0
+/paɮen/, [waɮen],   100,  0, -1
+/pilon/, [pilon],   250, -1, 0
+/pilon/, [wilon],    50,  0, -1`}
 
 function meRunAnalysis(){
   const text=document.getElementById('me-dataInput').value;
@@ -691,19 +691,19 @@ function otVerify(tab,cons,strata){const order=[];for(const s of strata)order.pu
     return{input:t.input,candidates:t.candidates,predicted:p.output,expected:w?w.output:'???',correct:w&&p.output===w.output,order}})}
 
 // --- OT Examples ---
-function otLoadExample1(){document.getElementById('ot-dataInput').value=`Input,Output,Optimal,Onset,NoCoda,Dep,Max
-/ami/,[ʔa.mi],1,0,0,1,0
-/ami/,[a.mi],0,1,0,0,0
-/sun/,[su],1,0,0,0,1
-/sun/,[sun],0,0,1,0,0
-/sun/,[su.nə],0,0,0,1,0`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
+function otLoadExample1(){document.getElementById('ot-dataInput').value=`Input, Output , Optimal, Onset, NoCoda, Dep, Max
+/ami/, [ʔa.mi],       1,     0,      0,   1,   0
+/ami/, [a.mi] ,       0,     1,      0,   0,   0
+/sun/, [su]   ,       1,     0,      0,   0,   1
+/sun/, [sun]  ,       0,     0,      1,   0,   0
+/sun/, [su.nə],       0,     0,      0,   1,   0`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
 
-function otLoadExample2(){document.getElementById('ot-dataInput').value=`Input,Output,Optimal,Onset,NoCoda,Dep,Max
-/ata/,[ʔa.ta],1,,,*,
-/ata/,[a.ta],0,*,,,
-/pan/,[pan],1,,*,,
-/pan/,[pa],0,,,,*
-/pan/,[pa.nə],0,,,*,`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
+function otLoadExample2(){document.getElementById('ot-dataInput').value=`Input, Output , Optimal, Onset, NoCoda, Dep, Max
+/ata/, [ʔa.ta],       1,      ,      ,   *,
+/ata/, [a.ta] ,       0,     *,      ,    ,
+/pan/, [pan]  ,       1,      ,     *,    ,
+/pan/, [pa]   ,       0,      ,      ,    ,   *
+/pan/, [pa.nə],       0,      ,      ,   *,`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
 
 // --- OT Constraint type chips ---
 function otRenderTypes(cons){const el=document.getElementById('ot-constraintTypes');
