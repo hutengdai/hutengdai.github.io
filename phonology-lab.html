@@ -691,14 +691,14 @@ function otVerify(tab,cons,strata){const order=[];for(const s of strata)order.pu
     return{input:t.input,candidates:t.candidates,predicted:p.output,expected:w?w.output:'???',correct:w&&p.output===w.output,order}})}
 
 // --- OT Examples ---
-function otLoadExample1(){document.getElementById('ot-dataInput').value=`Input, Output , Optimal, Onset, NoCoda, Dep, Max
+function otLoadExample1(){document.getElementById('ot-dataInput').value=`Input, Output , Winner, Onset, NoCoda, Dep, Max
 /ami/, [ʔa.mi],       1,     0,      0,   1,   0
 /ami/, [a.mi] ,       0,     1,      0,   0,   0
 /sun/, [su]   ,       1,     0,      0,   0,   1
 /sun/, [sun]  ,       0,     0,      1,   0,   0
 /sun/, [su.nə],       0,     0,      0,   1,   0`;otPendingTypes={Onset:'M',NoCoda:'M',Dep:'F',Max:'F'};otState.constraintTypes={}}
 
-function otLoadExample2(){document.getElementById('ot-dataInput').value=`Input, Output , Optimal, Onset, NoCoda, Dep, Max
+function otLoadExample2(){document.getElementById('ot-dataInput').value=`Input, Output , Winner, Onset, NoCoda, Dep, Max
 /ata/, [ʔa.ta],       1,      ,      ,   *,
 /ata/, [a.ta] ,       0,     *,      ,    ,
 /pan/, [pan]  ,       1,      ,     *,    ,
