@@ -647,7 +647,7 @@ function otParseInput(text){
   const raw=text.split('\n').map(l=>l.trimEnd()).filter(l=>l.trim().length>0&&!l.trim().startsWith('#'));
   if(raw.length<2)throw new Error('Need header + data rows.');
   const hdr=raw[0].split(',').map(s=>s.trim()).filter(s=>s.length>0);
-  const req=['Input','Output','Optimal'];for(const r of req)if(!hdr.includes(r))throw new Error('Missing column: '+r);
+  const req=['Input','Output','Winner'];for(const r of req)if(!hdr.includes(r))throw new Error('Missing column: '+r);
   const cons=hdr.filter(c=>!req.includes(c));if(cons.length===0)throw new Error('Need at least one constraint column.');
   const nC=hdr.length,rows=[];
   for(let i=1;i<raw.length;i++){const p=raw[i].split(',').map(s=>s.trim());while(p.length<nC)p.push('');
@@ -655,13 +655,13 @@ function otParseInput(text){
   if(rows.length===0)throw new Error('No data rows.');
   const grp={},ord=[];
   for(const r of rows){if(!grp[r.Input]){grp[r.Input]=[];ord.push(r.Input)}
-    grp[r.Input].push({output:r.Output,optimal:r.Optimal==='1'||r.Optimal.toLowerCase()==='true',violations:cons.map(c=>otParseViolation(r[c]))})}
+    grp[r.Input].push({output:r.Output,winner:r.Winner==='1'||r.Winner.toLowerCase()==='true',violations:cons.map(c=>otParseViolation(r[c]))})}
   const tab=ord.map(inp=>({input:inp,candidates:grp[inp]}));
-  for(const t of tab){const w=t.candidates.filter(c=>c.optimal);if(w.length===0)throw new Error(`No winner for "${t.input}".`);if(w.length>1)throw new Error(`Multiple winners for "${t.input}".`)}
+  for(const t of tab){const w=t.candidates.filter(c=>c.winner);if(w.length===0)throw new Error(`No winner for "${t.input}".`);if(w.length>1)throw new Error(`Multiple winners for "${t.input}".`)}
   return{tableaux:tab,constraints:cons}}
 
 function otExtractPairs(tab,cons){const pairs=[];
-  for(const t of tab){const w=t.candidates.find(c=>c.optimal);for(const l of t.candidates){if(l.optimal)continue;
+  for(const t of tab){const w=t.candidates.find(c=>c.winner);for(const l of t.candidates){if(l.winner)continue;
     const wl=cons.map((_,j)=>{const wv=w.violations[j],lv=l.violations[j];if(wv<lv)return'W';if(wv>lv)return'L';return'e'});
     pairs.push({input:t.input,winner:w.output,loser:l.output,wl})}}return pairs}
 
@@ -687,7 +687,7 @@ function otEval(cands,order){let alive=cands.map((_,i)=>i);
     alive=alive.filter(i=>cands[i].violations[ci]===m)}return alive.length>0?alive[0]:0}
 
 function otVerify(tab,cons,strata){const order=[];for(const s of strata)order.push(...s.constraintIndices);
-  return tab.map(t=>{const w=t.candidates.find(c=>c.optimal);const pi=otEval(t.candidates,order);const p=t.candidates[pi];
+  return tab.map(t=>{const w=t.candidates.find(c=>c.winner);const pi=otEval(t.candidates,order);const p=t.candidates[pi];
     return{input:t.input,candidates:t.candidates,predicted:p.output,expected:w?w.output:'???',correct:w&&p.output===w.output,order}})}
 
 // --- OT Examples ---
@@ -732,7 +732,7 @@ function otSwitchTab(id){document.querySelectorAll('#ot-resultsSection .tab-cont
 function otRenderInput(){let h='<h3>Original Tableaux</h3>';
   for(const t of otState.tableaux){h+=`<h3 style="margin-top:.8rem">${t.input}</h3><table class="ot"><thead><tr><th></th><th>Candidate</th>`;
     otState.constraints.forEach(c=>h+=`<th class="unranked-border">${c}</th>`);h+='</tr></thead><tbody>';
-    for(const c of t.candidates){h+=`<tr class="${c.optimal?'winner-row':''}"><td>${c.optimal?'☞':''}</td><td>${c.output}</td>`;
+    for(const c of t.candidates){h+=`<tr class="${c.winner?'winner-row':''}"><td>${c.winner?'☞':''}</td><td>${c.output}</td>`;
       c.violations.forEach(v=>h+=`<td class="mono unranked-border" style="color:${v>0?'var(--red)':''}">${v>0?'*'.repeat(v):''}</td>`);h+='</tr>'}h+='</tbody></table>'}
   document.getElementById('ot-inputTab').innerHTML=h}
 
