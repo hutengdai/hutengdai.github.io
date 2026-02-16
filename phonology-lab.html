@@ -328,62 +328,7 @@ P = [0.368/0.503, 0.135/0.503] = [<strong>0.731</strong>, <strong>0.269</strong>
   </div>
 </section>
 
-<section>
-  <h2>6. Implementation</h2>
-  <div class="card">
 
-    <details class="impl">
-      <summary>maxent_probs — compute candidate probabilities</summary>
-<pre><span class="kw">def</span> <span class="fn">maxent_probs</span>(violations, weights):
-    <span class="str">"""Compute MaxEnt probabilities from violations and weights.
-    Violations are NEGATIVE (e.g., -1, -2).
-    H = violations @ weights  (Harmony: more negative = worse).
-    P ∝ exp(H)."""</span>
-    H  = violations @ weights      <span class="cmt"># Harmony scores</span>
-    eH = np.exp(H)                 <span class="cmt"># exp(H)</span>
-    Z  = np.sum(eH)                <span class="cmt"># partition function</span>
-    probs = eH / Z
-    <span class="kw">return</span> {<span class="str">'H'</span>: H, <span class="str">'eH'</span>: eH, <span class="str">'Z'</span>: Z, <span class="str">'probs'</span>: probs}</pre>
-    </details>
-
-    <details class="impl">
-      <summary>neg_log_likelihood — objective function</summary>
-<pre><span class="kw">def</span> <span class="fn">neg_log_likelihood</span>(weights, violations_list, counts_list):
-    <span class="str">"""Negative log-likelihood across multiple tableaux."""</span>
-    total_ll = <span class="kw">0</span>
-    <span class="kw">for</span> violations, counts <span class="kw">in</span> zip(violations_list, counts_list):
-        <span class="kw">if</span> np.sum(counts) == <span class="kw">0</span>:
-            <span class="kw">continue</span>                <span class="cmt"># skip prediction-only tableaux</span>
-        result = maxent_probs(violations, weights)
-        log_probs = np.log(result[<span class="str">'probs'</span>] + <span class="kw">1e-10</span>)
-        total_ll += np.sum(counts * log_probs)
-    <span class="kw">return</span> -total_ll</pre>
-    </details>
-
-    <details class="impl">
-      <summary>fit_weights — L-BFGS-B with Gaussian prior</summary>
-<pre><span class="kw">def</span> <span class="fn">fit_weights</span>(violations_list, counts_list, n_constraints,
-                mu=<span class="kw">0</span>, sigma=<span class="kw">10</span>, maxiter=<span class="kw">1000</span>, min_weight=<span class="kw">0</span>):
-    <span class="str">"""Fit weights using L-BFGS-B with Gaussian prior."""</span>
-    <span class="kw">def</span> <span class="fn">objective</span>(w):
-        nll   = neg_log_likelihood(w, violations_list, counts_list)
-        prior = np.sum((w - mu)**<span class="kw">2</span>) / (<span class="kw">2</span> * sigma**<span class="kw">2</span>)
-        <span class="kw">return</span> nll + prior
-
-    x0     = np.ones(n_constraints)
-    bounds = [(min_weight, <span class="kw">None</span>) <span class="kw">for</span> _ <span class="kw">in</span> range(n_constraints)]
-
-    result = minimize(objective, x0,
-                      method=<span class="str">'L-BFGS-B'</span>,
-                      bounds=bounds,
-                      options={<span class="str">'maxiter'</span>: maxiter, <span class="str">'gtol'</span>: <span class="kw">1e-8</span>})
-
-    fitted = np.maximum(result.x, min_weight)
-    ll     = -neg_log_likelihood(fitted, violations_list, counts_list)
-    <span class="kw">return</span> fitted, ll</pre>
-    </details>
-  </div>
-</section>
 </div><!-- /maxent panel -->
 
 
@@ -449,85 +394,6 @@ P = [0.368/0.503, 0.135/0.503] = [<strong>0.731</strong>, <strong>0.269</strong>
   <div id="ot-verifyTab" class="tab-content card"></div>
 </section>
 
-<section>
-  <h2>4. Implementation</h2>
-  <div class="card">
-
-    <details class="impl">
-      <summary>Comparative tableau — extract W~L pairs</summary>
-<pre><span class="kw">def</span> <span class="fn">extract_pairs</span>(tableaux, constraints):
-    <span class="str">"""Build comparative tableau from winner–loser pairs."""</span>
-    pairs = []
-    <span class="kw">for</span> tableau <span class="kw">in</span> tableaux:
-        winner = [c <span class="kw">for</span> c <span class="kw">in</span> tableau <span class="kw">if</span> c.optimal][<span class="kw">0</span>]
-        <span class="kw">for</span> loser <span class="kw">in</span> tableau:
-            <span class="kw">if</span> loser.optimal: <span class="kw">continue</span>
-            wl = []
-            <span class="kw">for</span> j, con <span class="kw">in</span> enumerate(constraints):
-                wv, lv = winner.violations[j], loser.violations[j]
-                <span class="kw">if</span>   wv &lt; lv: wl.append(<span class="str">'W'</span>)  <span class="cmt"># winner fewer violations</span>
-                <span class="kw">elif</span> wv &gt; lv: wl.append(<span class="str">'L'</span>)  <span class="cmt"># loser fewer violations</span>
-                <span class="kw">else</span>:         wl.append(<span class="str">'e'</span>)  <span class="cmt"># tie</span>
-            pairs.append((winner, loser, wl))
-    <span class="kw">return</span> pairs</pre>
-    </details>
-
-    <details class="impl">
-      <summary>RCD — Recursive Constraint Demotion (with optional bias)</summary>
-<pre><span class="kw">def</span> <span class="fn">rcd</span>(pairs, constraints, con_types=<span class="kw">None</span>, bias=<span class="str">'none'</span>):
-    <span class="str">"""Recursive Constraint Demotion.
-    bias: 'none', 'MF' (markedness high), 'FM' (faithfulness high)"""</span>
-    remaining = list(range(len(pairs)))
-    unranked  = list(range(len(constraints)))
-    strata    = []
-
-    <span class="kw">def</span> <span class="fn">apply_bias</span>(eligible):
-        <span class="kw">if</span> bias == <span class="str">'none'</span> <span class="kw">or</span> len(eligible) &lt;= <span class="kw">1</span>:
-            <span class="kw">return</span> eligible, []
-        prefer = <span class="str">'M'</span> <span class="kw">if</span> bias == <span class="str">'MF'</span> <span class="kw">else</span> <span class="str">'F'</span>
-        pref = [ci <span class="kw">for</span> ci <span class="kw">in</span> eligible <span class="kw">if</span> con_types[ci] == prefer]
-        <span class="kw">if</span> pref:
-            <span class="kw">return</span> pref, [ci <span class="kw">for</span> ci <span class="kw">in</span> eligible <span class="kw">if</span> ci <span class="kw">not in</span> pref]
-        <span class="kw">return</span> eligible, []
-
-    <span class="kw">while</span> unranked:
-        <span class="cmt"># Find eligible: constraints with no L in any remaining pair</span>
-        eligible = [ci <span class="kw">for</span> ci <span class="kw">in</span> unranked
-                    <span class="kw">if not any</span>(pairs[pi].wl[ci] == <span class="str">'L'</span>
-                               <span class="kw">for</span> pi <span class="kw">in</span> remaining)]
-
-        <span class="kw">if not</span> eligible <span class="kw">and</span> remaining:
-            <span class="kw">raise</span> ValueError(<span class="str">"Inconsistent data"</span>)
-
-        <span class="kw">if not</span> eligible:          <span class="cmt"># no pairs left</span>
-            eligible = unranked[:]
-
-        rank, held = apply_bias(eligible)
-
-        <span class="cmt"># Discard pairs where a ranked constraint bears W</span>
-        remaining = [pi <span class="kw">for</span> pi <span class="kw">in</span> remaining
-                     <span class="kw">if not any</span>(pairs[pi].wl[ci] == <span class="str">'W'</span>
-                                <span class="kw">for</span> ci <span class="kw">in</span> rank)]
-        unranked = [ci <span class="kw">for</span> ci <span class="kw">in</span> unranked <span class="kw">if</span> ci <span class="kw">not in</span> rank]
-        strata.append([constraints[ci] <span class="kw">for</span> ci <span class="kw">in</span> rank])
-
-    <span class="kw">return</span> strata  <span class="cmt"># list of lists: [{S1}, {S2}, …]</span></pre>
-    </details>
-
-    <details class="impl">
-      <summary>OT Eval — verify ranking selects correct winners</summary>
-<pre><span class="kw">def</span> <span class="fn">ot_eval</span>(candidates, constraint_order):
-    <span class="str">"""Find the optimal candidate under strict domination."""</span>
-    alive = list(range(len(candidates)))
-    <span class="kw">for</span> ci <span class="kw">in</span> constraint_order:
-        <span class="kw">if</span> len(alive) &lt;= <span class="kw">1</span>: <span class="kw">break</span>
-        min_v = min(candidates[i].violations[ci] <span class="kw">for</span> i <span class="kw">in</span> alive)
-        alive = [i <span class="kw">for</span> i <span class="kw">in</span> alive
-                 <span class="kw">if</span> candidates[i].violations[ci] == min_v]
-    <span class="kw">return</span> alive[<span class="kw">0</span>]</pre>
-    </details>
-  </div>
-</section>
 </div><!-- /ot panel -->
 
 </div><!-- /container -->
