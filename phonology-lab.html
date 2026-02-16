@@ -254,8 +254,8 @@ details.impl pre .str{color:#032f62}
 H(candidate) = violations &middot; weights<br>
 P(candidate) = exp(H) / &Sigma; exp(H<sub>j</sub>)
     </div>
-    <p>Violations are <strong>negative</strong> (&minus;1, &minus;2, …). Weights &ge; 0. More violations &times; higher weight = more negative Harmony = lower probability. We assume <em>w</em> &gt; 0.</p>
-    <h3>Worked example</h3>
+    <p>Violations are <strong>negative</strong> (&minus;1, &minus;2, …). We assume <em>w</em> &gt; 0. More violations &times; higher weight = more negative Harmony = lower probability. </p>
+    <h3>Example</h3>
     <p>Two candidates with Harmony scores H = [&minus;1, &minus;2]:</p>
     <div class="formula-block">
 exp(H) = [exp(&minus;1), exp(&minus;2)] = [0.368, 0.135]<br>
@@ -322,7 +322,7 @@ P = [0.368/0.503, 0.135/0.503] = [<strong>0.731</strong>, <strong>0.269</strong>
 <section>
   <h2>5. Sigmoid Curve</h2>
   <div class="card">
-    <div class="formula-block">P(non-violating) = 1 / (1 + e<sup>&minus;w</sup>) = sigmoid(w)</div>
+    <div class="formula-block">  sigmoid(w) = 1 / (1 + e<sup>&minus;w</sup>)</div>
     <div class="slider-group"><label>Weight :</label><input type="range" id="sig_w" min="-5" max="5" step="0.1" value="0"><span class="val" id="sig_w_v">0.0</span></div>
     <div class="chart-wrap"><canvas id="sigmoidChart"></canvas></div>
   </div>
@@ -425,8 +425,9 @@ function maxentProbs(violations, weights) {
   return {H, eH, Z, probs: eH.map(e => e/Z)};
 }
 
-function fitWeights(tableaux, nC, {mu=1,sigma=100,lr=.5,maxIter=2000,tol=1e-8,minW=.01}={}) {
+function fitWeights(tableaux, nC, {mu=1,sigma=100,maxIter=200,tol=1e-8,minW=.01,m=8}={}) {
   let w = new Array(nC).fill(1);
+  function proj(x){return x.map(v=>Math.max(minW,v))}
   function nll(wt) {
     let t=0;
     for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,wt);
@@ -436,10 +437,30 @@ function fitWeights(tableaux, nC, {mu=1,sigma=100,lr=.5,maxIter=2000,tol=1e-8,mi
     for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,wt);
       for(let j=0;j<nC;j++)for(let i=0;i<tb.counts.length;i++){g[j]-=tb.totalCount*(tb.counts[i]/tb.totalCount-r.probs[i])*tb.violations[i][j]}}
     for(let j=0;j<nC;j++)g[j]+=(wt[j]-mu)/(sigma*sigma);return g}
-  let prev=nll(w);
-  for(let it=0;it<maxIter;it++){const g=grad(w);let s=lr;const wN=w.map((wi,j)=>Math.max(minW,wi-s*g[j]));
-    let nL=nll(wN);let tr=0;while(nL>prev&&tr<20){s*=.5;for(let j=0;j<nC;j++)wN[j]=Math.max(minW,w[j]-s*g[j]);nL=nll(wN);tr++}
-    w=wN;if(Math.abs(prev-nL)<tol)break;prev=nL}
+  // L-BFGS-B: two-loop recursion with projected Armijo line search
+  const S=[],Y=[];let g=grad(w),fv=nll(w);
+  for(let it=0;it<maxIter;it++){
+    // Two-loop recursion to compute search direction d = -H*g
+    const q=g.slice(),k=S.length,alpha=new Array(k),rho=new Array(k);
+    for(let i=k-1;i>=0;i--){let sy=0,yy=0;for(let j=0;j<nC;j++){sy+=S[i][j]*Y[i][j];yy+=Y[i][j]*Y[i][j]}
+      rho[i]=1/(sy||1e-15);let a=0;for(let j=0;j<nC;j++)a+=rho[i]*S[i][j]*q[j];alpha[i]=a;
+      for(let j=0;j<nC;j++)q[j]-=a*Y[i][j]}
+    // Initial Hessian scaling
+    let gamma=1;if(k>0){let sy=0,yy=0;for(let j=0;j<nC;j++){sy+=S[k-1][j]*Y[k-1][j];yy+=Y[k-1][j]*Y[k-1][j]}gamma=sy/(yy||1e-15)}
+    const d=q.map(v=>v*gamma);
+    for(let i=0;i<k;i++){let b=0;for(let j=0;j<nC;j++)b+=rho[i]*Y[i][j]*d[j];
+      for(let j=0;j<nC;j++)d[j]+=S[i][j]*(alpha[i]-b)}
+    for(let j=0;j<nC;j++)d[j]=-d[j];
+    // Projected Armijo backtracking line search
+    let step=1,wN=proj(w.map((v,j)=>v+step*d[j])),fN=nll(wN);
+    let dg=0;for(let j=0;j<nC;j++)dg+=g[j]*d[j];
+    for(let bt=0;bt<30&&fN>fv+1e-4*step*dg;bt++){step*=.5;wN=proj(w.map((v,j)=>v+step*d[j]));fN=nll(wN)}
+    // Curvature pair
+    const gN=grad(wN),s=wN.map((v,j)=>v-w[j]),y=gN.map((v,j)=>v-g[j]);
+    let sy=0;for(let j=0;j<nC;j++)sy+=s[j]*y[j];
+    if(sy>1e-15){S.push(s);Y.push(y);if(S.length>m){S.shift();Y.shift()}}
+    if(Math.abs(fv-fN)<tol)break;
+    w=wN;g=gN;fv=fN}
   let ll=0;for(const tb of tableaux){if(tb.totalCount===0)continue;const r=maxentProbs(tb.violations,w);
     for(let i=0;i<tb.counts.length;i++)if(tb.counts[i]>0)ll+=tb.counts[i]*Math.log(r.probs[i]+1e-15)}
   return{weights:w,ll}}
@@ -515,8 +536,9 @@ function mePlotFit(){const{tableaux:tb,weights:w}=meState;if(!w)return;
     tooltip:{callbacks:{label:c=>labels[c.dataIndex]?`${labels[c.dataIndex]}: obs=${c.raw.x.toFixed(3)}, pred=${c.raw.y.toFixed(3)}`:''}}},
   scales:{x:{title:{display:true,text:'Observed probability',font:{...jFont,size:12}},min:-.05,max:1.05,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{...jFont,size:10}}},
     y:{title:{display:true,text:'Predicted probability',font:{...jFont,size:12}},min:-.05,max:1.05,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{...jFont,size:10}}}}},
-  // Custom plugin: draw offset labels with leader lines, matching Python's alternating offsets
+  // Custom plugin: draw offset labels with leader lines (individual input only)
   plugins:[{afterDraw(chart){
+    if(f==='__all__')return;
     const{ctx:c,scales:{x:xS,y:yS}}=chart;c.save();
     const offsets=[[20,20],[20,-25],[-100,20],[-100,-25]];
     for(let i=0;i<obs.length;i++){
