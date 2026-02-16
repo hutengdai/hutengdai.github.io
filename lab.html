@@ -1,3 +1,5 @@
+Filesystem is still down. Here's the full file to copy:
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -7,9 +9,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="msvalidate.01" content="1403552B40EDDAD1125E5B43D2D49364" />
   <meta name="author" content="Huteng Dai">
-  <title>Huteng Dai — Why Michigan?</title>
-  <meta name="description" content="Huteng Dai — Why Michigan?">
-  <meta name="keywords" content="Huteng Dai,linguistics,Michigan,phonology,phonetics,computational linguistics">
+  <title>Huteng Dai — Computational Linguistics Lab</title>
+  <meta name="description" content="Computational Linguistics Lab — University of Michigan">
+  <meta name="keywords" content="Huteng Dai,Computational Linguistics Lab,linguistics,computational linguistics,phonology,acquisition">
   <link rel="stylesheet" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
   <script defer src="js/fontawesome-all.js"></script>
   <link rel="stylesheet" href="stylesheets/font-awesome.min.css">
@@ -34,20 +36,29 @@
     nav a{font-family:var(--sans);font-size:.85rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;padding:.4rem .9rem;border-radius:var(--radius);color:var(--fg2);transition:all .15s}
     nav a:hover,nav a.active{background:var(--accent);color:#fff}
     h2.page-title{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--accent);border-bottom:1.5px solid var(--border);padding-bottom:.3rem;margin-bottom:1.2rem}
-    section{margin-bottom:1.8rem}
-    section h3{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--fg);margin-bottom:.4rem}
-    section p,.fact-list li{font-size:.92rem;line-height:1.7}
-    section p{margin-bottom:.5rem}
+    section{margin-bottom:2rem}
+    section p{font-size:.92rem;line-height:1.7;margin-bottom:.5rem}
     .body-link{border-bottom:1px solid rgba(44,95,74,.25);transition:border-color .15s}
     .body-link:hover{border-bottom-color:var(--accent)}
-    .fact-list{list-style:none;margin:.3rem 0}
-    .fact-list li{padding:.2rem 0 .2rem 1rem;position:relative}
-    .fact-list li::before{content:'·';position:absolute;left:0;font-weight:700;color:var(--accent)}
-    .contact-box{background:#fdf0ed;border:1px solid #e8c9c0;border-radius:var(--radius);padding:1rem 1.2rem;margin-top:1.5rem;font-size:.92rem}
-    .contact-box strong{color:#8b3a2a}
-    .conf-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
-    .conf-tags span{font-size:.78rem;font-weight:600;background:var(--accent-light);color:var(--accent);padding:.15rem .5rem;border-radius:3px;letter-spacing:.02em}
-    @media(max-width:640px){.site-header{flex-direction:column;align-items:center;text-align:center}.icon-row{justify-content:center}nav{justify-content:center;flex-wrap:wrap}}
+
+    /* People grid */
+    .group-label{font-family:var(--serif);font-size:1.05rem;font-weight:600;color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:.2rem;margin:1.8rem 0 .8rem}
+    .group-label:first-of-type{margin-top:0}
+    .people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1.2rem .8rem}
+    .person-card{text-align:center}
+    .person-card img{width:110px;height:110px;border-radius:50%;object-fit:cover;display:block;margin:0 auto .5rem}
+    .person-card .person-name{font-weight:600;font-size:.88rem;margin-bottom:.1rem}
+    .person-card .person-name a{color:var(--fg)}
+    .person-card .person-name a:hover{color:var(--accent)}
+    .pi-badge{font-size:.55rem;font-weight:700;background:var(--accent);color:#fff;padding:.1rem .3rem;border-radius:3px;vertical-align:middle;letter-spacing:.03em;margin-left:.15rem}
+    .person-card .person-role{font-size:.72rem;color:var(--fg2);margin-bottom:.3rem}
+    .person-card .person-kw{display:flex;flex-wrap:wrap;justify-content:center;gap:.2rem}
+    .person-card .person-kw span{font-size:.65rem;font-weight:500;padding:.1rem .4rem;border-radius:10px;background:var(--accent-light);color:var(--accent);border:1px solid #c4d9cc}
+    .person-card .person-links{display:flex;justify-content:center;gap:.4rem;margin-top:.3rem}
+    .person-card .person-links a{color:var(--fg2);font-size:13px;transition:color .15s;text-decoration:none !important;border-bottom:none !important}
+    .person-card .person-links a:hover{color:var(--accent)}
+
+    @media(max-width:640px){.site-header{flex-direction:column;align-items:center;text-align:center}.icon-row{justify-content:center}nav{justify-content:center;flex-wrap:wrap}.people-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
@@ -67,54 +78,136 @@
       <nav>
         <a href="index.html">Home</a>
         <a href="publications.html">Publications</a>
-        <a href="lab.html">Lab</a>
-        <a href="michigan.html" class="active">Why Michigan?</a>
+        <a href="lab.html" class="active">Lab</a>
+        <a href="michigan.html">Why Michigan?</a>
       </nav>
     </div>
   </header>
 
-  <h2 class="page-title">Why Apply to Michigan Linguistics?</h2>
+  <h2 class="page-title">Computational Linguistics Lab</h2>
 
   <section>
-    <h3>1. The department</h3>
-    <p>Founded 1963. 15 research faculty. One of the few linguistics departments in the country where  phonetics, phonology, neurolinguistics, and computational linguistics are all core strengths.</p>
-    <p>Strong institutional connections with <a class="body-link" href="https://lsa.umich.edu/weinberginstitute" target="_blank">Weinberg Institute for Cognitive Science</a>, <a class="body-link" href="https://ai.engin.umich.edu/" target="_blank">U&#8209;M AI Lab</a>, <a class="body-link" href="https://sites.lsa.umich.edu/mcaim/" target="_blank">MCAIM</a>, and <a class="body-link" href="https://micde.umich.edu/" target="_blank">MICDE</a> (nation's first PhD in Scientific Computing&mdash;available as a dual degree).</p>
+    <p>We are a lab in the <a class="body-link" href="https://lsa.umich.edu/linguistics">Department of Linguistics</a> at the University of Michigan, dedicated to research on computational models of language acquisition and processing. Room 7351, 105 S State St, Ann Arbor, MI.</p>
+    <p>The lab has access to <a class="body-link" href="https://its.umich.edu/advanced-research-computing">U‑M Advanced Research Computing</a> (GPU hours on Great Lakes HPC), plus an additional 8-way RTX 6000 GPU system.</p>
+    <p>We recruit undergraduate and graduate research assistants, as well as postdocs, who work at the intersection of computational modeling, language acquisition, and theoretical linguistics. New members can request access to lab resources and plans <a class="body-link" href="https://docs.google.com/document/d/1DVECiQFOCqaM4XC2l4ND0Ynx-DVYm2RxxN-EhL_yQus/edit?usp=sharing">here</a>.</p>
+    <p>Regular lab hours: Thursdays 2:30–5:00 PM. We meet and collaborate on projects.</p>
   </section>
 
-  <section>
-    <h3>2. The labs and equiments</h3>
-    <p><a class="body-link" href="https://lsa.umich.edu/linguistics/research/research-labs/phonetics-lab.html" target="_blank">Phonetics & Phonology Lab</a> (EMA, sound booth, ultrasound)</p>
-    <p><a class="body-link" href="https://cnllab.github.io/" target="_blank">Computational Neurolinguistics Lab</a> (EEG, fMRI)</p>
-    <p><a class="body-link" href="https://hutengdai.com/lab.html" target="_blank">Computational Linguistics Lab</a> (8-way RTX 6000 GPU system)</p>
-    <p>Between the three labs you have access to articulatory, neural, and computational infrastructure. Few departments offer this range under one roof.</p>
-  </section>
+  <div class="group-label">Members</div>
+  <div class="people-grid">
+    <div class="person-card">
+      <img src="files/2024-fall.jpg" alt="Huteng Dai">
+      <div class="person-name"><a href="index.html">Huteng Dai</a> <span class="pi-badge">PI</span></div>
+      <div class="person-role">Assistant Professor</div>
+      <div class="person-kw">
+        <span>acquisition</span><span>FLT</span><span>interpretability</span><span>phonology</span>
+      </div>
+      <div class="person-links">
+        <a href="index.html" title="Website"><i class="fas fa-globe"></i></a>
+        <a href="mailto:huteng@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+        <a href="https://github.com/hutengdai" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://orcid.org/0000-0002-9014-7625" title="ORCID"><i class="ai ai-orcid"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/shane.jpg" alt="Shane Storks">
+      <div class="person-name"><a href="http://shanestorks.com">Shane Storks</a></div>
+      <div class="person-role">Postdoc, Weinberg Institute</div>
+      <div class="person-kw">
+        <span>reasoning</span><span>grounding</span><span>NLP</span>
+      </div>
+      <div class="person-links">
+        <a href="http://shanestorks.com" title="Website"><i class="fas fa-globe"></i></a>
+        <a href="http://scr.im/sstorks" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/shunjie.jpg" alt="Shunjie Wang">
+      <div class="person-name"><a href="https://shunjie.wang/">Shunjie Wang</a></div>
+      <div class="person-role">PhD Student</div>
+      <div class="person-kw">
+        <span>FLT</span><span>Transformers</span><span>expressiveness</span>
+      </div>
+      <div class="person-links">
+        <a href="https://shunjie.wang/" title="Website"><i class="fas fa-globe"></i></a>
+        <a href="mailto:shunjiew@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/jenny.jpg" alt="Jenny Blass">
+      <div class="person-name">Jenny Blass</div>
+      <div class="person-role">Undergrad · Ling &amp; CS</div>
+      <div class="person-kw">
+        <span>comp ling</span><span>NLP</span><span>AI</span>
+      </div>
+      <div class="person-links">
+        <a href="mailto:jblass@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/miles.jpg" alt="Miles Gilberti">
+      <div class="person-name">Miles Gilberti</div>
+      <div class="person-role">Undergrad · CogSci &amp; CS</div>
+      <div class="person-kw">
+        <span>psycholing</span><span>emergent comm</span><span>interpretability</span>
+      </div>
+      <div class="person-links">
+        <a href="mailto:milgil@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/Futrell.jpg" alt="Richard Futrell">
+      <div class="person-name"><a href="https://sites.socsci.uci.edu/~rfutrell/">Richard Futrell</a></div>
+      <div class="person-role">Assoc. Prof., UC Irvine</div>
+      <div class="person-kw">
+        <span>information theory</span><span>processing</span><span>typology</span>
+      </div>
+      <div class="person-links">
+        <a href="https://sites.socsci.uci.edu/~rfutrell/" title="Website"><i class="fas fa-globe"></i></a>
+        <a href="mailto:rfutrell@uci.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/Mayer.png" alt="Connor Mayer">
+      <div class="person-name"><a href="https://www.socsci.uci.edu/~cjmayer/">Connor Mayer</a></div>
+      <div class="person-role">Asst. Prof., UC Irvine</div>
+      <div class="person-kw">
+        <span>phonology</span><span>comp modeling</span><span>phonetics</span>
+      </div>
+      <div class="person-links">
+        <a href="https://www.socsci.uci.edu/~cjmayer/" title="Website"><i class="fas fa-globe"></i></a>
+        <a href="mailto:cjmayer@uci.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+  </div>
 
-  <section>
-    <h3>3. The program</h3>
-    <p>Up to 18 credits/term (about 6 courses), no extra tuition&mdash;including courses outside your PhD requirements. CS, engineering, statistics, music, whatever you want. And it just so happens that U-M is leading in almost every field---your learning experience is only bounded by your own imagination and motivation.</p>
-  </section>
-
-  <section>
-    <h3>4. Winter and Ann Arbor</h3>
-    <p>Let's talk about winter. The cold builds character and discipline. Once you get used to it, you look forward to the winter days :) </p>
-    <p> There are plenty to do in Ann Arbor, and the summer is the best season to visit. I will just say this is one of the few college towns that is more crowded during holidays.</p>
-  </section>
-
-  <div class="contact-box">
-    <strong>How to reach me:</strong> Please do not email me about PhD admissions&mdash;they will most likely be ignored and mostly importantly, the admission decision is not decided by individual faculty.
-    <p> Instead, find and talk to me at a conference me or my colleagues often go to: </p>
-    <div class="conf-tags">
-      <span>AMP</span>
-      <span>SCiL</span>
-      <span>ACL</span>
-      <span>EMNLP</span>
-      <span>NeurIPS</span>
-      <span>LSA</span>
-
+  <div class="group-label">Alumni</div>
+  <div class="people-grid">
+    <div class="person-card">
+      <img src="files/Mulchandani_Ashana_035.jpeg" alt="Ashna Mulchandani">
+      <div class="person-name">Ashna Mulchandani</div>
+      <div class="person-role">B.A. Ling, CS &amp; French '25</div>
+      <div class="person-kw">
+        <span>NLP</span><span>comp ling</span>
+      </div>
+      <div class="person-links">
+        <a href="mailto:mashna@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div class="person-card">
+      <img src="files/PratikPatil.jpeg" alt="Pratik Patil">
+      <div class="person-name">Pratik Patil</div>
+      <div class="person-role">Engineer · Climate &amp; Space</div>
+      <div class="person-kw">
+        <span>modeling</span><span>comp math</span><span>sentiment</span>
+      </div>
+      <div class="person-links">
+        <a href="mailto:ppratik@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
     </div>
   </div>
 
 </div>
 </body>
 </html>
-
+```
