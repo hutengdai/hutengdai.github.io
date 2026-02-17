@@ -109,9 +109,8 @@
     nav a{font-family:var(--sans);font-size:.85rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;padding:.4rem .9rem;border-radius:var(--radius);color:var(--fg2);transition:all .15s}
     nav a:hover,nav a.active{background:var(--accent);color:#fff}
     h2.page-title{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--accent);border-bottom:1.5px solid var(--border);padding-bottom:.3rem;margin-bottom:1.2rem}
-    .filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem 1rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
-    .filter-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem .6rem;align-items:end}
-    .filter-grid .full-width{grid-column:1/-1}
+    .filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .8rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+    .filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem .5rem;align-items:end}
     .filter-grid label{display:block;font-size:.72rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.15rem}
     .filter-grid input,.filter-grid select{width:100%;font-family:var(--sans);font-size:.82rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--fg);transition:border-color .15s}
     .filter-grid input:focus,.filter-grid select:focus{outline:none;border-color:var(--accent)}
@@ -138,8 +137,9 @@
         <a href="https://orcid.org/0000-0002-9014-7625" title="ORCID"><i class="ai ai-orcid"></i></a>
         <a href="https://osf.io/vubs4/" title="OSF"><i class="ai ai-osf"></i></a>
         <a href="files/dai_cv.pdf" title="CV (PDF)"><span class="cv-icon">CV</span></a>
+        <a href="mailto:huteng@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
       </div>
-      <div class="contact-line">North Quad 3417, 105 South State Street, Ann Arbor, MI 48109<br>huteng[at]umich.edu</div>
+      <div class="contact-line">North Quad 3417, 105 South State Street, Ann Arbor, MI 48109</div>
       <nav>
         <a href="index.html">Home</a>
         <a href="publications.html" class="active">Publications</a>
@@ -154,7 +154,7 @@
   <div class="filter-bar">
     <form id="publicationForm">
       <div class="filter-grid">
-        <div class="full-width">
+        <div>
           <label for="searchPubs">Search</label>
           <input id="searchPubs" placeholder="Search papers…">
         </div>
