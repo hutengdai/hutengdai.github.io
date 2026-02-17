@@ -109,12 +109,13 @@
     nav a{font-family:var(--sans);font-size:.85rem;font-weight:600;letter-spacing:.02em;text-transform:uppercase;padding:.4rem .9rem;border-radius:var(--radius);color:var(--fg2);transition:all .15s}
     nav a:hover,nav a.active{background:var(--accent);color:#fff}
     h2.page-title{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--accent);border-bottom:1.5px solid var(--border);padding-bottom:.3rem;margin-bottom:1.2rem}
-    .filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.5rem .8rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
-    .filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem .5rem;align-items:end}
+    .filter-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.4rem .6rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
+    .filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.3rem .4rem;align-items:end}
+    .filter-grid>div{min-width:0}
     .filter-grid label{display:block;font-size:.72rem;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.15rem}
-    .filter-grid input,.filter-grid select{width:100%;font-family:var(--sans);font-size:.82rem;padding:.3rem .5rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--fg);transition:border-color .15s}
+    .filter-grid input,.filter-grid select{width:100%;font-family:var(--sans);font-size:.78rem;padding:.25rem .4rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--fg);transition:border-color .15s}
     .filter-grid input:focus,.filter-grid select:focus{outline:none;border-color:var(--accent)}
-    .filter-grid .btn-reset{font-family:var(--sans);font-size:.78rem;font-weight:600;padding:.3rem .8rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--fg2);cursor:pointer;transition:all .15s}
+    .filter-grid .btn-reset{font-family:var(--sans);font-size:.75rem;font-weight:600;padding:.25rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--fg2);cursor:pointer;transition:all .15s;width:100%}
     .filter-grid .btn-reset:hover{border-color:var(--accent);color:var(--accent)}
     /* ── Bibbase: compact ── */
     .bibbase-content{font-family:var(--sans);font-size:.82rem;line-height:1.5}
@@ -122,7 +123,7 @@
     .bibbase-content .bibbase_icon{font-size:.75rem}
     .bibbase-content h2,.bibbase-content .bibbase_group_header{font-size:.95rem;font-family:var(--serif);color:var(--accent);margin:.8rem 0 .3rem}
     .bibbase-content a{font-size:.82rem}
-    @media(max-width:640px){.site-header{flex-direction:column;align-items:center;text-align:center}.icon-row{justify-content:center}nav{justify-content:center;flex-wrap:wrap}.filter-grid{grid-template-columns:1fr}}
+    @media(max-width:640px){.site-header{flex-direction:column;align-items:center;text-align:center}.icon-row{justify-content:center}nav{justify-content:center;flex-wrap:wrap}.filter-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
