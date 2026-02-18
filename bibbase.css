@@ -108,7 +108,7 @@ div[activated=y] {
 }
 
 .bibbase_paper_title {
-  color:#6c757d;        /*change color of paper titles, now dark gray, old color was orange #bd5d38 */ 
+  color:#2c5f4a;        /*change color of paper titles to accent green */
 }
 
 .bibbase_paper_title a {
