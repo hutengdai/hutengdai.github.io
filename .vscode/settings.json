@@ -1,6 +1,6 @@
 {
     "python.pythonPath": "C:\\Program Files\\Python37\\python.exe",
-    "workbench.colorTheme": "Default Light+",
+    "workbench.colorTheme": "Light+",
     "csv-preview.theme": "cleanlight",
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",
