@@ -71,11 +71,6 @@
     .older-news summary::before{content:'▸';font-size:.75rem;transition:transform .15s}
     .older-news[open] summary::before{transform:rotate(90deg)}
     .older-news .activity-list{margin-top:.2rem}
-    .resource-list{list-style:none}
-    .resource-list li{padding:.35rem 0 .35rem 1rem;font-size:.92rem;position:relative}
-    .resource-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.82rem}
-    .resource-list a{border-bottom:1px solid rgba(44,95,74,.25);transition:border-color .15s}
-    .resource-list a:hover{border-bottom-color:var(--accent)}
     @media(max-width:640px){.site-header{flex-direction:column;align-items:center;text-align:center}.header-text{width:100%}.icon-row{justify-content:center}nav{justify-content:center;flex-wrap:wrap}.activity-list li{flex-direction:column;gap:.15rem}.activity-list time{min-width:auto}}
   </style>
 </head>
@@ -191,15 +186,6 @@
     </details>
   </section>
 
-  <section>
-    <h2 class="section-title">Resources</h2>
-    <ul class="resource-list">
-      <li><a href="https://hutengdai.com/phonology-lab.html">Phonology Lab</a> &mdash; An interactive tool for doing phonology.</li>
-      <li><a href="https://github.com/alenaks/SigmaPie">SigmaPie</a> &mdash; Subregular toolkit for language processing.</li>
-      <li><a href="https://beijingpside.wordpress.com">Beijing P-side Group</a> <a href="https://beijingpsideen.wordpress.com">[English Portal]</a> &mdash; I founded this group before entering my PhD program.</li>
-
-    </ul>
-  </section>
 </div>
 </body>
 </html>
