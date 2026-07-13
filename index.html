@@ -41,6 +41,9 @@
     .bio a:hover{border-bottom-color:var(--accent)}
     .affil-line{font-size:.82rem;color:var(--fg2);line-height:1.6;margin-bottom:0}
     .affil-line a{color:var(--accent);border-bottom:none}
+    .principles{list-style:none;counter-reset:principle;margin:.9rem 0 .2rem;padding:.2rem 0 .2rem 1.1rem;border-left:2px solid var(--accent-light)}
+    .principles li{counter-increment:principle;position:relative;padding:.28rem 0 .28rem 2rem;line-height:1.6;color:var(--fg)}
+    .principles li::before{content:counter(principle,decimal-leading-zero);position:absolute;left:0;top:.32rem;font-size:.72rem;font-weight:600;letter-spacing:.04em;color:var(--accent);opacity:.75}
     .keyword-row{display:flex;gap:.5rem;flex-wrap:wrap}
     .keyword{font-size:.9rem;font-weight:500;padding:.35rem .9rem;border-radius:20px;background:var(--accent-light);color:var(--accent);border:1px solid #c4d9cc;transition:all .15s;display:inline-block}
     a.keyword:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
@@ -78,7 +81,7 @@
         <a href="mailto:huteng@umich.edu" title="Email"><i class="fas fa-envelope"></i></a>
       </div>
       <div class="contact-line">North Quad 3417, 105 South State Street, Ann Arbor, MI 48109</div>
-      <p class="affil-line"><a href="https://lsa.umich.edu/linguistics" target="_blank">Linguistics</a> · <a href="https://lsa.umich.edu/weinberginstitute" target="_blank">Weinberg Cognitive Science</a> · <a href="https://ai.engin.umich.edu/people/affiliated-faculty/" target="_blank">AI Lab</a> · <a href="https://sites.lsa.umich.edu/mcaim/people/faculty/" target="_blank">MCAIM</a><br>prev. PhD <a href="https://ling.rutgers.edu">Rutgers</a></p>
+      <p class="affil-line"><a href="https://lsa.umich.edu/linguistics" target="_blank">Linguistics</a> · <a href="https://lsa.umich.edu/weinberginstitute" target="_blank">Weinberg Cognitive Science</a> · <a href="https://ai.engin.umich.edu/people/affiliated-faculty/" target="_blank">AI Lab</a> · <a href="https://midas.umich.edu/" target="_blank">MIDAS</a> · <a href="https://sites.lsa.umich.edu/mcaim/people/faculty/" target="_blank">MCAIM</a><br>prev. PhD <a href="https://ling.rutgers.edu">Rutgers</a></p>
       <nav>
         <a href="index.html" class="active">Home</a>
         <a href="publications.html">Publications</a>
@@ -89,25 +92,34 @@
   </header>
 
   <section class="bio">
-    <p>My name is Huteng Dai ([xu˨˩ tʰəŋ˧˥ tai˥˨] ≈ <i>who-tongue dye</i>; <a href="https://www.pinterest.com/pin/281826889168185122/">meaning</a>). I'm a assistant professor in computational linguistics &amp; phonology at the <a href="https://lsa.umich.edu/linguistics">U‑M Linguistics Department</a>. I study how abstract linguistic knowledge&mdash;mostly phonological but also morphosyntactic&mdash;is acquired by children and machines.</p>
+    <p>My name is Huteng Dai ([xu˨˩ tʰəŋ˧˥ tai˥˨] ≈ <i>who-tongue dye</i>; <a href="https://www.pinterest.com/pin/281826889168185122/">meaning</a>). I'm a assistant professor in computational linguistics &amp; phonology at the <a href="https://lsa.umich.edu/linguistics">U‑M Linguistics Department</a>.<br><br>I take a principle-centered approach to cognitive science and computational linguistics (cf. <a href="https://www.colorado.edu/ics/sites/default/files/attached-files/92-08.pdf">Smolensky et al. 1992</a>), building on a few first principles:</p>
+    <ul class="principles">
+      <li>Language makes infinite use of finite means.</li>
+      <li>Working memory has finite capacity.</li>
+      <li>Language processing is predictive.</li>
+      <li>Generalization is formed over distributed representations, e.g. phonological features.</li>
+      <li>Learning is possible from positive evidence alone.</li>
+    </ul>
+    <p style="margin-top:.9rem">Taken together, these point to a class of theories and models that are memory-bounded and incrementally predictive, symbolic in structure yet distributed in representation&mdash;properties that constitute the inductive biases that make learning possible.</p>
   </section>
 
   <section>
     <h2 class="section-title">Research Interests</h2>
     <div class="keyword-row">
-      <span class="keyword">Phonological theory</span>
+      <span class="keyword">Linguistic theory</span>
       <a href="https://www.ling.upenn.edu/courses/ling5700/" class="keyword">Acquisition</a>
       <a href="files/flt.pdf" class="keyword">Formal Language Theory</a>
       <span class="keyword">Interpretability</span>
             <span class="keyword">Language Models</span>
+      <span class="keyword">Memory</span>
 
     </div>
   </section>
 
   <section>
-    <h2 class="section-title">Recent Activities</h2>
+    <h2 class="section-title">News</h2>
     <ul class="activity-list">
-	<li><time datetime="2026-02">Feb 2026</time><span>I am hiring a postdoc in computational linguistics and language acquisition [<a href="https://careers.umich.edu/job_detail/274470/postdoctoral-research-fellow-computational-linguistics-and-language-acquisition" target="_blank" rel="noopener">apply here</a>]!</span></li>
+	<li><time datetime="2026-09">Fall 2026</time><span><a href="https://joselynrodriguez.com/" target="_blank" rel="noopener">Joselyn Rodriguez</a> will be joining us as a postdoc in computational linguistics and language acquisition. Welcome, Joselyn!</span></li>
 	<li><time datetime="2026-01">Winter 2026</time><span>Teaching LING 513 (Grad Phonology) and LING 702/CS 597/SI 565 (Language & Information).</span></li>
       <li><time datetime="2026-01">Feb 2026</time><span>I created an interactive tool for doing phonology [<a href="https://hutengdai.com/phonology-lab.html" target="_blank" rel="noopener">link</a>].</span></li>
     </ul>
