@@ -41,10 +41,9 @@
     .bio a:hover{border-bottom-color:var(--accent)}
     .affil-line{font-size:.82rem;color:var(--fg2);line-height:1.6;margin-bottom:0}
     .affil-line a{color:var(--accent);border-bottom:none}
-    .principles{list-style:none;counter-reset:principle;margin:1rem 0;padding:.4rem 1.1rem;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .principles li{counter-increment:principle;display:flex;gap:.75rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.94rem;line-height:1.55;color:var(--fg)}
-    .principles li:last-child{border-bottom:none}
-    .principles li::before{content:counter(principle,upper-roman) '.';flex-shrink:0;min-width:1.6rem;text-align:right;font-size:.8rem;font-weight:600;color:var(--accent);opacity:.6}
+    .principles{list-style:none;counter-reset:principle;margin:.9rem 0}
+    .principles li{counter-increment:principle;display:flex;gap:.7rem;align-items:baseline;padding:.32rem 0;line-height:1.6;color:var(--fg)}
+    .principles li::before{content:counter(principle,upper-roman) '.';flex-shrink:0;min-width:1.6rem;text-align:right;font-size:.8rem;font-weight:600;color:var(--accent);opacity:.55}
     .principle-add{margin:-.4rem 0 .2rem}
     .principle-add summary{display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;font-weight:600;color:var(--accent);cursor:pointer;list-style:none;padding:.3rem 0;transition:opacity .15s}
     .principle-add summary::-webkit-details-marker{display:none}
@@ -106,7 +105,24 @@
   </header>
 
   <section class="bio">
-    <p>My name is Huteng Dai ([xu˨˩ tʰəŋ˧˥ tai˥˨] ≈ <i>who-tongue dye</i>; <a href="https://www.pinterest.com/pin/281826889168185122/">meaning</a>). I'm a assistant professor in computational linguistics &amp; phonology at the <a href="https://lsa.umich.edu/linguistics">U‑M Linguistics Department</a>.<br><br>I take a principle-centered approach to cognitive science and computational linguistics (cf. <a href="https://www.colorado.edu/ics/sites/default/files/attached-files/92-08.pdf">Smolensky et al. 1992</a>), building on a few first principles:</p>
+    <p>My name is Huteng Dai ([xu˨˩ tʰəŋ˧˥ tai˥˨] ≈ <i>who-tongue dye</i>; <a href="https://www.pinterest.com/pin/281826889168185122/">meaning</a>). I'm a assistant professor in computational linguistics &amp; phonology at the <a href="https://lsa.umich.edu/linguistics">U‑M Linguistics Department</a>.</p>
+  </section>
+
+  <section>
+    <h2 class="section-title">Research Interests</h2>
+    <div class="keyword-row">
+      <span class="keyword">Linguistic theory</span>
+      <a href="https://www.ling.upenn.edu/courses/ling5700/" class="keyword">Acquisition</a>
+      <a href="files/flt.pdf" class="keyword">Formal Language Theory</a>
+      <span class="keyword">Interpretability</span>
+            <span class="keyword">Language Models</span>
+      <span class="keyword">Memory</span>
+
+    </div>
+  </section>
+
+  <section class="bio">
+    <p>I take a principle-centered approach to cognitive science and computational linguistics (cf. <a href="https://www.colorado.edu/ics/sites/default/files/attached-files/92-08.pdf">Smolensky et al. 1992</a>), building on a few first principles:</p>
     <ul class="principles">
       <li>Language makes infinite use of finite means.</li>
       <li>Working memory has finite capacity.</li>
@@ -140,19 +156,6 @@
       });
     </script>
     <p style="margin-top:.9rem">What I study is the class of theories and models these principles point to: memory-bounded and incrementally predictive, symbolic in structure yet distributed in representation&mdash;properties that constitute the inductive biases that make learning possible.</p>
-  </section>
-
-  <section>
-    <h2 class="section-title">Research Interests</h2>
-    <div class="keyword-row">
-      <span class="keyword">Linguistic theory</span>
-      <a href="https://www.ling.upenn.edu/courses/ling5700/" class="keyword">Acquisition</a>
-      <a href="files/flt.pdf" class="keyword">Formal Language Theory</a>
-      <span class="keyword">Interpretability</span>
-            <span class="keyword">Language Models</span>
-      <span class="keyword">Memory</span>
-
-    </div>
   </section>
 
   <section>
