@@ -44,7 +44,7 @@
     .principles{list-style:none;counter-reset:principle;margin:1rem 0;padding:.4rem 1.1rem;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);box-shadow:var(--shadow)}
     .principles li{counter-increment:principle;display:flex;gap:.75rem;align-items:baseline;padding:.5rem 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.94rem;line-height:1.55;color:var(--fg)}
     .principles li:last-child{border-bottom:none}
-    .principles li::before{content:counter(principle,decimal-leading-zero);flex-shrink:0;font-size:.7rem;font-weight:600;letter-spacing:.05em;color:var(--accent);opacity:.6}
+    .principles li::before{content:counter(principle,upper-roman) '.';flex-shrink:0;min-width:1.6rem;text-align:right;font-size:.8rem;font-weight:600;color:var(--accent);opacity:.6}
     .principle-add{margin:-.4rem 0 .2rem}
     .principle-add summary{display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;font-weight:600;color:var(--accent);cursor:pointer;list-style:none;padding:.3rem 0;transition:opacity .15s}
     .principle-add summary::-webkit-details-marker{display:none}
