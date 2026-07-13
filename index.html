@@ -44,18 +44,17 @@
     .principles{list-style:none;counter-reset:principle;margin:.9rem 0}
     .principles li{counter-increment:principle;display:flex;gap:.7rem;align-items:baseline;padding:.32rem 0;line-height:1.6;color:var(--fg)}
     .principles li::before{content:counter(principle,upper-roman) '.';flex-shrink:0;min-width:1.6rem;text-align:right;font-size:.8rem;font-weight:600;color:var(--accent);opacity:.55}
-    .principle-add{margin:-.4rem 0 .2rem}
-    .principle-add summary{display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;font-weight:600;color:var(--accent);cursor:pointer;list-style:none;padding:.3rem 0;transition:opacity .15s}
-    .principle-add summary::-webkit-details-marker{display:none}
-    .principle-add summary::before{content:'+';font-size:.9rem;line-height:1}
-    .principle-add[open] summary::before{content:'−'}
-    .principle-add summary:hover{opacity:.7}
-    .principle-add form{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
-    .principle-add input{flex:1 1 14rem;min-width:0;font-family:var(--sans);font-size:.88rem;color:var(--fg);background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.45rem .7rem;transition:border-color .15s}
-    .principle-add input[type=email]{flex:0 1 10rem}
-    .principle-add input:focus{outline:none;border-color:var(--accent)}
-    .principle-add button{font-family:var(--sans);font-size:.85rem;font-weight:600;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:var(--radius);padding:.45rem 1.1rem;cursor:pointer;transition:opacity .15s}
-    .principle-add button:hover{opacity:.85}
+    .principles-reveal summary{display:inline-flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:600;color:var(--accent);cursor:pointer;list-style:none;padding:.2rem 0}
+    .principles-reveal summary::-webkit-details-marker{display:none}
+    .principles-reveal summary::before{content:'▸';font-size:.75rem;transition:transform .15s}
+    .principles-reveal[open] summary::before{transform:rotate(90deg)}
+    .principles-reveal form{margin-top:.6rem}
+    .principles-reveal label{display:block;font-size:.85rem;font-weight:600;color:var(--fg2);margin-bottom:.35rem}
+    .principle-fields{display:flex;flex-wrap:wrap;gap:.4rem}
+    .principle-fields input{flex:1 1 14rem;min-width:0;font-family:var(--sans);font-size:.88rem;color:var(--fg);background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:.45rem .7rem;transition:border-color .15s}
+    .principle-fields input[type=email]{flex:0 1 10rem}
+    .principle-fields input:focus{outline:none;border-color:var(--accent)}
+    .principle-fields button{font-family:var(--sans);font-size:.85rem;font-weight:600;color:#fff;background:var(--accent);border:1px solid var(--accent);border-radius:var(--radius);padding:.45rem 1.1rem;cursor:pointer}
     .principle-msg{font-size:.85rem;color:var(--accent);margin-top:.5rem}
     .keyword-row{display:flex;gap:.5rem;flex-wrap:wrap}
     .keyword{font-size:.9rem;font-weight:500;padding:.35rem .9rem;border-radius:20px;background:var(--accent-light);color:var(--accent);border:1px solid #c4d9cc;transition:all .15s;display:inline-block}
@@ -122,21 +121,25 @@
   </section>
 
   <section class="bio">
-    <p>I take a principle-centered approach to cognitive science and computational linguistics (cf. <a href="https://www.colorado.edu/ics/sites/default/files/attached-files/92-08.pdf">Smolensky et al. 1992</a>), building on a few first principles:</p>
-    <ul class="principles">
-      <li>Language makes infinite use of finite means.</li>
-      <li>Working memory has finite capacity.</li>
-      <li>Language processing is predictive.</li>
-      <li>Generalization is formed over distributed representations, e.g. phonological features.</li>
-      <li>Learning is possible from positive evidence alone.</li>
-    </ul>
+    <p>I take a principle-centered approach to cognitive science and computational linguistics (cf. <a href="https://www.colorado.edu/ics/sites/default/files/attached-files/92-08.pdf">Smolensky et al. 1992</a>), building on a few first principles.</p>
 
-    <details class="principle-add">
-      <summary>What's your first principle?</summary>
+    <details class="principles-reveal">
+      <summary>See the principles</summary>
+      <ul class="principles">
+        <li>Language makes infinite use of finite means.</li>
+        <li>Working memory has finite capacity.</li>
+        <li>Language processing is predictive.</li>
+        <li>Generalization is formed over distributed representations, e.g. phonological features.</li>
+        <li>Learning is possible from positive evidence alone.</li>
+      </ul>
+
       <form id="principle-form" action="https://formspree.io/f/meeyqpwb" method="POST">
-        <input type="text" name="principle" placeholder="e.g. Language acquisition is not memorization." required maxlength="200">
-        <input type="email" name="email" placeholder="Your email (optional)">
-        <button type="submit">Send</button>
+        <label for="principle-input">What's your first principle?</label>
+        <div class="principle-fields">
+          <input id="principle-input" type="text" name="principle" placeholder="e.g. Language acquisition is not memorization." required maxlength="200">
+          <input type="email" name="email" placeholder="Your email (optional)">
+          <button type="submit">Send</button>
+        </div>
       </form>
       <p class="principle-msg" hidden>Thanks&mdash;principle received.</p>
     </details>
