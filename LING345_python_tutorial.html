@@ -140,8 +140,7 @@ duration = ...          # how long the recording lasts, in seconds.
 
 
 frequency = {&quot;no&quot;: 4, &quot;go&quot;: 2}
-up_frequency = ...      # the frequency of &quot;up&quot;. Try frequency[&#x27;up&#x27;]. It is not in the table,
-                        # and the answer is 0, not a crash.</textarea>
+no_frequency = ...      # how many times &quot;no&quot; was said, looked up in the table above</textarea>
   <div class="row"><button id="chk_types" disabled
     onclick="checkSec('types')">Run and check</button></div>
   <pre class="out" id="secout_types" hidden></pre>
@@ -284,6 +283,25 @@ print(&quot;mystery -&gt;&quot;, features(demo_mystery))    # so which of the tw
 </textarea>
   </details>
   <div class="notice">I essentially wrote a function called <code>zero_crossings</code> to count how often the wave crosses zero. The idea is that [g] crosses the zero more often than [n]. We call this kind of information features, and we store them with the function <code>features</code> into a list of values.</div>
+  <div class="lab">Run this first</div>
+  <p class="teach">Step 3 goes through the words one at a time and holds on to the best one so far. Run this to watch that idea on its own, before you meet it inside the recognizer.</p>
+  <textarea id="demo_asr" spellcheck="false">scores = {&quot;no&quot;: 0.42, &quot;go&quot;: 0.07, &quot;up&quot;: 0.31}   # one distance per word
+
+best_word = None              # nothing chosen yet
+best_score = float(&quot;inf&quot;)     # bigger than every real number
+
+for word in scores:                    # one word at a time
+    print(&quot;looking at&quot;, word, scores[word])
+    if scores[word] &lt; best_score:      # closer than the best so far?
+        best_word = word               # then this is the new best
+        best_score = scores[word]      # and this is the score to beat now
+
+print()
+print(&quot;the closest word:&quot;, best_word)</textarea>
+  <div class="row"><button class="ghost" id="run_asr" disabled
+    onclick="runDemo('asr')">Run</button></div>
+  <pre class="out" id="demoout_asr" hidden></pre>
+  <div class="notice"><code>float(&quot;inf&quot;)</code> is infinity. Every real number is below it, so the first word always wins and leaves the rest something to beat. Starting at <code>0</code> would break this, because a distance is never below zero, so no word could ever win.</div>
   <div class="lab">Your turn &mdash; fill in every <code>...</code></div>
   <textarea id="code_asr" spellcheck="false"># STEP 2, TRAINING. The model is everything the machine knows about each
 # word, and ours is just those 8 numbers.
@@ -291,17 +309,20 @@ print(&quot;mystery -&gt;&quot;, features(demo_mystery))    # so which of the tw
 model = {&quot;no&quot;: features(demo_no), &quot;go&quot;: features(demo_go)}   # one entry per word
 
 
-# STEP 3, TESTING.
+# STEP 3, TESTING. The loop below has the same shape as the demo above.
 
 def recognize(recording, model):
-    best_word = None             # no answer yet
-    best_score = None            # and no score to beat yet
+    # do not change these two lines
+    best_word = None             # nothing chosen yet
+    best_score = float(&quot;inf&quot;)    # bigger than every real distance
+
     for word in model:           # &quot;no&quot;, then &quot;go&quot;
         score = distance(features(recording), model[word])
-        if best_score is None or ...:    # try score &lt; best_score
-            best_word = ...              # try word
-            best_score = score           # and this is the score to beat now
-    return best_word             # whichever word ended up closest
+        if score &lt; best_score:   # closer than the best so far?
+            best_word = word     # then this is the new best
+            best_score = score   # and this is the score to beat now
+
+    return ...                   # hand back whichever word ended up closest
 </textarea>
   <div class="row"><button id="chk_asr" disabled
     onclick="checkSec('asr')">Run and check</button></div>
@@ -539,6 +560,8 @@ def grade(payload, name, uniq, today):
         head = "All done. You are set for this course."
     elif right >= total - 2:
         head = "Almost there. One or two things to look at."
+    elif right >= total // 2:
+        head = "Fine for this course. A few things worth a second look."
     else:
         head = "Worth another go before we start."
     return json.dumps({"sections": out, "right": right, "n": total,
@@ -607,7 +630,7 @@ _SEC = {
       ('last_sample', 0.1, [], None),
       ('first_three', [0.0, 0.3, -0.7], [(lambda v: v == [0.0, 0.3], 'slice', 'samples[:3] takes three, not two. Python stops BEFORE the number you write.'), (lambda v: v == [0.0, 0.3, -0.7, 0.9], 'slice', 'samples[:3] stops before position 3, so it gives you three.')], 'slice'),
       ('duration', 0.000375, [(lambda v: v == 0, 'intdiv', 'You used // , which throws away the decimal part. Six samples at 16000 a second really is a tiny fraction of a second, and you need / to see it.')], 'intdiv'),
-      ('up_frequency', 0, [(lambda v: v == 2, 'dictget', 'That is the count for "go". Look at which key you asked for.')], 'dictget'),
+      ('no_frequency', 4, [(lambda v: v == 2, 'dictget', 'That is the count for "go". Look at which key you asked for.'), (lambda v: v == 0, 'dictget', 'A 0 means the key you asked for was not in the table. "no" is in there, so ask for it by name.')], 'dictget'),
     ],
   },
   'cond': {
@@ -631,7 +654,7 @@ _SEC = {
             'answer_self = recognize(demo_no, model)\n',
     "checks": [
       ('distance_to_no', 0.054343, [], 'accum'),
-      ('answer', 'go', [(lambda v: v == 'no', 'cond', 'It picked the further one, so the comparison is the wrong way round. You want the smallest distance, not the largest.'), (lambda v: v is None, 'cond', 'It never picked anything, so the if inside the loop was never true. Remember best_score starts out as None.')], 'cond'),
+      ('answer', 'go', [(lambda v: v == 'no', 'cond', 'It picked the further one, so the comparison is the wrong way round. You want the smallest distance, not the largest.'), (lambda v: v is None, 'cond', 'It never picked a word. best_word was still None at the end, so hand back the variable the loop filled in.'), (lambda v: isinstance(v, int) and not isinstance(v, bool) and v == 0, 'cond', 'A 0 means no word ever won. Put the two lines at the top back the way they were: a distance is never below 0, so a best_score that starts at 0 can never be beaten.'), (lambda v: isinstance(v, float), 'cond', 'That is the winning distance, not the winning word. The score lives in best_score; the word that earned it lives in best_word.'), (lambda v: not isinstance(v, str), 'cond', 'recognize has to hand back a word, as text. Return the variable holding the winning word.')], 'cond'),
       ('answer_self', 'no', [(lambda v: v == 'go', 'cond', 'A stored recording has to recognize itself. Its distance from its own entry in the model is exactly 0 and nothing can beat that.')], 'cond'),
     ],
   },
