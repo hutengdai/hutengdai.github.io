@@ -1,0 +1,969 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LING 345 &middot; Python self-check &middot; Answer key</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"></script>
+<style>
+:root{--ink:#1b1b1b;--mute:#6a6a6a;--rule:#e3e0da;--bg:#fbfaf8;
+ --accent:#7c3aed;--good:#137333;--bad:#b3261e;--ok:#8a6d00}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+ font:16px/1.55 "Charter","Georgia",serif}
+main{max-width:50rem;margin:0 auto;padding:2.5rem 1.2rem 7rem}
+h1{font-size:1.55rem;margin:0 0 .15rem}
+.sub{color:var(--mute);margin:0 0 1.6rem;font-size:.94rem}
+.sec{border:1px solid var(--rule);background:#fff;border-radius:6px;
+ padding:1.1rem 1.3rem 1.3rem;margin:0 0 1.4rem}
+.sec>h2{font-size:1.08rem;margin:0 0 .1rem}
+.sec>h2 .num{color:var(--accent);font-weight:700;margin-right:.45rem}
+.goal{color:var(--mute);font-size:.82rem;margin:0 0 .8rem;
+ font-family:ui-monospace,Menlo,monospace}
+.teach{margin:0 0 .9rem}
+.lab{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+ color:var(--mute);font-weight:700;margin:1rem 0 .35rem}
+textarea{width:100%;font:13px/1.5 ui-monospace,"SFMono-Regular",Menlo,
+ monospace;border:1px solid var(--rule);border-radius:4px;padding:.7rem;
+ background:#fcfcfb;color:var(--ink);resize:vertical;tab-size:4}
+textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+textarea[readonly]{background:#f4f3f0;color:#3f3f3f}
+.given{margin-top:1rem}
+.given>summary{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+ color:var(--mute);font-weight:700;cursor:pointer;margin-bottom:.35rem}
+.given>summary:hover{color:var(--ink)}
+.mic input{font:inherit;font-size:.88rem;padding:.28rem .5rem;width:7rem;
+ border:1px solid var(--rule);border-radius:4px;background:#fff;color:var(--ink)}
+.mic .say{color:var(--mute);font-size:.85rem}
+.mic .row{margin-top:.45rem}
+button.rec[data-on="1"]{background:var(--bad);border-color:var(--bad);color:#fff}
+button{font:inherit;font-size:.86rem;padding:.32rem .85rem;border-radius:4px;
+ border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+button.ghost{background:#fff;color:var(--ink)}
+button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:.5rem;align-items:center;margin-top:.5rem;
+ flex-wrap:wrap}
+.notice{background:#fff8ec;border:1px solid #f0dcb4;border-radius:4px;
+ padding:.6rem .8rem;margin:.8rem 0 0;font-size:.9rem}
+pre.out{background:#f4f3f0;border:1px solid var(--rule);border-radius:4px;
+ padding:.6rem .8rem;margin:.5rem 0 0;font:12.5px/1.5 ui-monospace,Menlo,
+ monospace;white-space:pre-wrap;overflow-x:auto}
+pre.out.bad{background:#fdf0ef;border-color:#f3c9c5}
+table.chk{border-collapse:collapse;width:100%;margin:.6rem 0 0;
+ font:12.5px/1.5 ui-monospace,Menlo,monospace}
+table.chk td,table.chk th{padding:.25rem .45rem;border-bottom:1px solid
+ var(--rule);text-align:left}
+table.chk th{font:.68rem/1 "Charter",serif;letter-spacing:.07em;
+ text-transform:uppercase;color:var(--mute)}
+tr.y td{color:var(--good)} tr.n td{color:var(--bad)} tr.b td{color:var(--mute)}
+.fixmsg{font-family:"Charter",serif;font-size:.88rem;margin:.5rem 0 0;
+ padding-left:.8rem;border-left:3px solid var(--bad)}
+.done{font-family:"Charter",serif;font-size:.88rem;margin:.5rem 0 0;
+ padding-left:.8rem;border-left:3px solid var(--good);color:var(--good)}
+#bar{position:sticky;bottom:0;background:rgba(251,250,248,.97);
+ border-top:1px solid var(--rule);padding:.7rem 1.2rem;display:flex;
+ gap:.6rem;align-items:center;flex-wrap:wrap;backdrop-filter:blur(6px)}
+#bar input{font:inherit;font-size:.86rem;padding:.28rem .5rem;
+ border:1px solid var(--rule);border-radius:4px;width:9.5rem}
+#status{color:var(--mute);font-size:.85rem;margin-left:auto}
+.pips{display:flex;gap:.28rem}
+.pip{width:.62rem;height:.62rem;border-radius:50%;background:#dcd8d1}
+.pip.y{background:var(--good)} .pip.n{background:var(--bad)}
+.pip.p{background:var(--ok)}
+.key{font:.62rem/1 "Charter",serif;letter-spacing:.11em;text-transform:uppercase;vertical-align:.32em;padding:.24rem .45rem;border-radius:3px;background:#efe7ff;color:var(--accent);font-weight:700}
+.why{margin-top:1rem}
+.why>summary{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;
+ color:var(--accent);font-weight:700;cursor:pointer;margin-bottom:.35rem}
+.why>summary:hover{color:var(--ink)}
+.why p{margin:.45rem 0;font-size:.92rem}
+.why code{background:#f4f3f0;padding:.05rem .22rem;border-radius:3px;
+ font:12.5px/1.4 ui-monospace,Menlo,monospace}
+.l345r h1{font-size:1.2rem} .l345r h2{font-size:.95rem;margin:1.1rem 0 .3rem}
+.l345r .v{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ padding:.1rem .4rem;border-radius:3px;background:#eee;margin-left:.4rem}
+.l345r .v.good{background:#e2f0e4;color:var(--good)}
+.l345r .v.ok{background:#fbf1d4;color:var(--ok)}
+.l345r .v.bad{background:#fbe3e1;color:var(--bad)}
+.l345r .v.none{background:#eee;color:var(--mute)}
+.l345r table{border-collapse:collapse;width:100%;font:12px/1.45 ui-monospace,
+ Menlo,monospace;margin:.3rem 0 .5rem}
+.l345r td,.l345r th{padding:.2rem .4rem;border-bottom:1px solid #e3e0da;
+ text-align:left}
+.l345r .score{font-size:1.05rem}
+.l345r .fix{font-family:"Charter",serif;font-size:.9rem;
+ border-left:3px solid #b3261e;padding-left:.8rem;margin:.4rem 0}
+.l345r .who,.l345r .foot{color:#6a6a6a;font-size:.85rem}
+.flowwrap{counter-reset:job;margin:.1rem 0 1.1rem}
+.flow{list-style:none;padding:0;margin:0}
+.flow li{position:relative;border:1px solid var(--rule);border-radius:4px;
+ background:#fcfcfb;padding:.5rem .8rem .6rem 2.3rem;margin:0 0 1.3rem}
+.flow li::before{counter-increment:job;content:counter(job);position:absolute;
+ left:.8rem;top:.52rem;font:700 1rem/1 "Charter",serif;color:var(--accent)}
+.flow li::after{content:"\2193";position:absolute;left:50%;bottom:-1.1rem;
+ transform:translateX(-50%);color:var(--mute);font-size:.95rem;line-height:1}
+.flow li:last-child{margin-bottom:0}
+.flow li:last-child::after{content:none}
+.flow b{display:block;font-size:.7rem;letter-spacing:.09em;font-weight:700;
+ text-transform:uppercase;color:var(--accent)}
+.flow .what{display:block;font-size:.97rem}
+@media print{#bar,button{display:none}body{background:#fff}
+ body.printing main{display:none}
+ body.printing #report{padding:0;margin:0}}
+</style></head><body>
+<main>
+<h1> A minimalistic Python self-check <span class="key">Answer key</span></h1>
+<p class="sub">Every blank is filled in below, and every answer has been checked: <b>12 of 12</b>. Press <b>Run and check</b> in any section to see it come out green, or open <b>Why this answer</b> under a section to read what each line is doing and which near-misses the checker is watching for. The student copy of this page is <a href="LING345_python_tutorial.html">LING345_python_tutorial.html</a>.</p>
+
+<div class="sec" id="sec_types">
+  <h2><span class="num">1</span>Numbers, text, lists, and dictionaries</h2>
+  <p class="goal">int, float, str, list, dict</p>
+  <p class="teach">A recording is just a list of numbers. Each one is a sample: how far the sound wave sits from zero at that moment.</p>
+  <div class="lab">Run this first</div>
+  <textarea id="demo_types" spellcheck="false">samples = [0.0, 0.3, -0.7, 0.9, -0.2, 0.1]
+sample_rate = 16000             # int: samples per second
+word = &quot;no&quot;                     # str: text goes in quotes
+
+print(&quot;how many samples:&quot;, len(samples))
+print(&quot;the first one:   &quot;, samples[0])
+print(&quot;the last one:    &quot;, samples[-1])
+print(&quot;the first three: &quot;, samples[:3])
+print(&quot;how long, seconds:&quot;, len(samples) / sample_rate)
+
+# a dictionary is a lookup table:
+frequency = {&quot;no&quot;: 4, &quot;go&quot;: 2}
+print(&quot;the frequency of &#x27;no&#x27;:&quot;, frequency[&quot;no&quot;])
+print(&quot;the frequency of  &#x27;up&#x27;:&quot;, frequency.get(&quot;up&quot;, 0))   # missing -&gt; 0, not a crash</textarea>
+  <div class="row"><button class="ghost" id="run_types" disabled
+    onclick="runDemo('types')">Run</button></div>
+  <pre class="out" id="demoout_types" hidden></pre>
+  <div class="notice"><code>samples[-1]</code> counts from the end. And <code>.get(key, 0)</code> gets you a fallback value 0 instead of an error when the value is missing for the key.</div>
+  <div class="lab">The exercise &mdash; filled in</div>
+  <textarea id="code_types" spellcheck="false">samples = [0.0, 0.3, -0.7, 0.9, -0.2, 0.1]
+sample_rate = 16000
+
+num_samples = len(samples)            # how many samples there are
+last_sample = samples[-1]             # the last sample, WITHOUT using len()
+first_three = samples[:3]             # a list of the first three samples
+duration = len(samples) / sample_rate # how long the recording lasts, in seconds.
+                        # This one must come out as a decimal, not a whole
+                        # number, so think about which kind of division.
+
+
+frequency = {&quot;no&quot;: 4, &quot;go&quot;: 2}
+no_frequency = frequency[&quot;no&quot;]        # how many times &quot;no&quot; was said, looked up in the table above</textarea>
+  <div class="row"><button id="chk_types" disabled
+    onclick="checkSec('types')">Run and check</button></div>
+  <pre class="out" id="secout_types" hidden></pre>
+  <div id="secres_types"></div>
+  <details class="why"><summary>Why this answer</summary>
+  <p><code>num_samples = len(samples)</code> &mdash; <code>len()</code> counts
+  the items in a list. Six of them, so <code>6</code>.</p>
+  <p><code>last_sample = samples[-1]</code> &mdash; a negative index counts back from
+  the end, so <code>-1</code> is the last one. <code>samples[len(samples) - 1]</code>
+  gets the same <code>0.1</code>, but the exercise asks for the version that does not
+  need <code>len()</code>.</p>
+  <p><code>first_three = samples[:3]</code> &mdash; a slice stops <i>before</i> the
+  number you write, so <code>:3</code> hands back positions 0, 1 and 2. Off by one in
+  either direction is the usual slip: <code>[:2]</code> gives two, <code>[:4]</code>
+  gives four.</p>
+  <p><code>duration = len(samples) / sample_rate</code> &mdash; one slash, not two.
+  <code>/</code> keeps the decimal part and gives <code>0.000375</code>;
+  <code>//</code> throws it away and gives <code>0</code>. That <code>0</code> is not a
+  near miss: six samples at 16000 a second really is a tiny fraction of a second, and
+  only <code>/</code> lets you see it.</p>
+  <p><code>no_frequency = frequency["no"]</code> &mdash; square brackets look a key up
+  in a dictionary. <code>4</code>. <code>frequency.get("no", 0)</code> gets there too,
+  because <code>"no"</code> is in the table. Getting <code>2</code> means you asked for
+  <code>"go"</code>; getting <code>0</code> means you asked <code>.get()</code> for a
+  key the table does not have &mdash; the <code>.get("up", 0)</code> from the demo
+  above &mdash; and it handed you the fallback instead of crashing.</p>
+  </details>
+</div>
+
+<div class="sec" id="sec_cond">
+  <h2><span class="num">2</span>Making a decision</h2>
+  <p class="goal">if / elif / else, and conditions</p>
+  <p class="teach"> The <code>if</code> statement is used to make decisions in Python.  You can use it to classify a recording as &quot;loud&quot;, &quot;speech&quot;, or &quot;silence&quot; from its peak level: how far the loudest sample gets from zero. Indentation matters here. After a line that ends in a colon, hit <kbd>Tab</kbd> before you write the next line.</p>
+  <div class="lab">Run this first</div>
+  <textarea id="demo_cond" spellcheck="false">def describe(level):
+    if level &gt; 0.5:
+        return &quot;loud&quot;
+    elif level &gt; 0.05:
+        return &quot;speech&quot;
+    else:
+        return &quot;silence&quot;
+
+
+for x in [0.9, 0.2, 0.01]:
+    print(x, &quot;-&gt;&quot;, describe(x))</textarea>
+  <div class="row"><button class="ghost" id="run_cond" disabled
+    onclick="runDemo('cond')">Run</button></div>
+  <pre class="out" id="demoout_cond" hidden></pre>
+  <div class="lab">The exercise &mdash; filled in</div>
+  <textarea id="code_cond" spellcheck="false">def describe(level):
+    &quot;&quot;&quot;Three answers: &quot;loud&quot; above 0.5, &quot;speech&quot; above 0.05,
+    otherwise &quot;silence&quot;.
+    &quot;&quot;&quot;
+    if level &gt; 0.5:
+        return &quot;loud&quot;
+    elif level &gt; 0.05:
+        return &quot;speech&quot;
+    else:
+        return &quot;silence&quot;
+
+
+# do not change these four lines
+label_loud = describe(0.9)
+label_speech = describe(0.2)
+label_quiet = describe(0.01)
+label_edge = describe(0.05)</textarea>
+  <div class="row"><button id="chk_cond" disabled
+    onclick="checkSec('cond')">Run and check</button></div>
+  <pre class="out" id="secout_cond" hidden></pre>
+  <div id="secres_cond"></div>
+  <details class="why"><summary>Why this answer</summary>
+  <p>Order is the whole exercise. <code>0.9</code> is above
+  <code>0.05</code> as well as above <code>0.5</code>, so if the <code>&gt; 0.05</code>
+  test is written first it swallows every loud level and <code>"loud"</code> can never
+  be reached. Narrow test first, wide test second.</p>
+  <p><code>&gt;</code> and not <code>&gt;=</code>. The docstring says <i>above</i>
+  0.05, and <code>describe(0.05)</code> is checked on purpose: 0.05 is not above 0.05,
+  so it falls through to <code>"silence"</code>. Writing <code>&gt;=</code> makes that
+  one case come back <code>"speech"</code> &mdash; the only test that catches it.</p>
+  <p>The <code>else</code> needs no condition. Everything that failed both tests lands
+  there, which is exactly the silent case.</p>
+  <p>Expected: <code>label_loud</code> &rarr; <code>"loud"</code>,
+  <code>label_speech</code> &rarr; <code>"speech"</code>,
+  <code>label_quiet</code> &rarr; <code>"silence"</code>,
+  <code>label_edge</code> &rarr; <code>"silence"</code>.</p>
+  </details>
+</div>
+
+<div class="sec" id="sec_asr">
+  <h2><span class="num">3</span>Your first speech recognizer</h2>
+  <p class="goal">everything above, in one small program</p>
+  <p class="teach">Now let's build our first speech recognizer.</p>
+  <div class="lab">First &mdash; record your own data</div>
+  <p class="teach">Press Record, then say <b>no</b> into the microphone once. Do this three times, then the same for <b>go</b>. That is your training data.</p>
+  <div class="mic" id="mic">
+    <div class="row"><input id="mic_word_a" value="no" spellcheck="false">
+      <button class="ghost rec" id="mic_rec_a" disabled>Record</button>
+      <button class="ghost" id="mic_clear_a" disabled>Clear</button>
+      <span class="say" id="mic_say_a">no takes yet</span></div>
+    <div class="row"><input id="mic_word_b" value="go" spellcheck="false">
+      <button class="ghost rec" id="mic_rec_b" disabled>Record</button>
+      <button class="ghost" id="mic_clear_b" disabled>Clear</button>
+      <span class="say" id="mic_say_b">no takes yet</span></div>
+    <pre class="out" id="mic_out" hidden></pre>
+  </div>
+  <div class="flowwrap">
+  <div class="lab">Training &mdash; done once, from examples</div>
+  <ol class="flow">
+    <li><b>Data processing</b>
+      <span class="what">Every recording is cut into eight slices, and each slice becomes one number: how often the wave crosses zero there. That is what hears n against g.</span></li>
+    <li><b>Training</b>
+      <span class="what">Work out what each word looks like. Ours just stores the numbers.</span></li>
+  </ol>
+  <div class="lab">Testing &mdash; done for every new recording</div>
+  <ol class="flow">
+    <li><b>Testing</b>
+      <span class="what">A recording it has never seen goes through step 1 again, gets scored against every word in the model, and the best score is the answer.</span></li>
+  </ol>
+  </div>
+  <p class="teach">A function can be reused over and over. It takes something in (the input), and it hands something back with <code>return</code>. Now let's write some functions as the core components of our recognizer.</p>
+  <p class="teach">First, imagine we have recordings of &quot;no&quot; averaged into <code>demo_no</code>, and recordings of &quot;go&quot; averaged into <code>demo_go</code>. Now we have a new recording stored in <code>demo_mystery</code>, and our job is to recognize whether it is a no or a go.</p>
+  <details class="given" id="given_box">
+  <summary>Provided code</summary>
+  <textarea id="given_asr" spellcheck="false" readonly># STEP 1, DATA PROCESSING. Three demo recordings: two to learn from, and
+# one to be recognized. They are typed out by hand rather than recorded,
+# so the answers below always come out the same for everybody. Your own
+# voice goes through the very same code afterwards.
+
+demo_no = [0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5,    # n: one slow swing, up then down
+           0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,    # then the vowel: a faster wave
+           0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8]    # 24 samples in all
+
+demo_go = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5,    # g: a burst, up down up down
+           0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,    # then the very same vowel
+           0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8]    # 24 samples in all
+
+demo_mystery = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5,          # a burst again, a shorter one
+                0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,   # and the vowel
+                0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,
+                0.8, 0.8]                                 # 24 samples, so which word is it?
+
+
+def zero_crossings(recording):                   # how often the wave changes sign
+    crossings = 0                                # nothing counted yet
+    for i in range(1, len(recording)):           # every sample except the first
+        if recording[i - 1] * recording[i] &lt; 0:  # one up and the next down: a crossing
+            crossings = crossings + 1            # count it
+    return round(crossings / len(recording), 3)  # per sample, so length does not matter
+
+
+def slices(recording, how_many):                 # cut a recording into equal pieces
+    size = len(recording) // how_many            # how many samples in each piece
+    pieces = []                                  # collect them here
+    for i in range(how_many):                    # one piece at a time
+        pieces.append(recording[i * size:(i + 1) * size])   # from here up to there
+    return pieces                                # the pieces, in order
+
+
+def features(recording):                         # describe one recording with 8 numbers
+    numbers = []                                 # start with none
+    for piece in slices(recording, 8):           # walk the word from start to end
+        numbers.append(zero_crossings(piece))    # how fast the wave wiggles in this piece
+    total = sum(numbers)                         # one voice can wiggle more than another
+    if total == 0:                               # a silent recording: nothing to scale
+        return numbers
+    return [round(n / total, 3) for n in numbers]   # so compare the shape, not the size
+
+
+def distance(a, b):                              # two lists of eight numbers
+    total = 0.0                                  # nothing added up yet
+    for i in range(len(a)):                      # a[0] against b[0], and so on
+        total = total + (a[i] - b[i]) ** 2       # squared, so + and - cannot cancel
+    return total                                 # a small total means the two look alike
+
+
+print(&quot;no      -&gt;&quot;, features(demo_no))         # read these three lines before you go on
+print(&quot;go      -&gt;&quot;, features(demo_go))         # the first numbers are where they differ
+print(&quot;mystery -&gt;&quot;, features(demo_mystery))    # so which of the two does this look like?
+</textarea>
+  </details>
+  <div class="notice">I essentially wrote a function called <code>zero_crossings</code> to count how often the wave crosses zero. The idea is that [g] crosses the zero more often than [n]. We call this kind of information features, and we store them with the function <code>features</code> into a list of values.</div>
+  <div class="lab">Run this first</div>
+  <p class="teach">Step 3 goes through the words one at a time and holds on to the best one so far. Run this to watch that idea on its own, before you meet it inside the recognizer.</p>
+  <textarea id="demo_asr" spellcheck="false">scores = {&quot;no&quot;: 0.42, &quot;go&quot;: 0.07, &quot;up&quot;: 0.31}   # one distance per word
+
+best_word = None              # nothing chosen yet
+best_score = float(&quot;inf&quot;)     # bigger than every real number
+
+for word in scores:                    # one word at a time
+    print(&quot;looking at&quot;, word, scores[word])
+    if scores[word] &lt; best_score:      # closer than the best so far?
+        best_word = word               # then this is the new best
+        best_score = scores[word]      # and this is the score to beat now
+
+print()
+print(&quot;the closest word:&quot;, best_word)</textarea>
+  <div class="row"><button class="ghost" id="run_asr" disabled
+    onclick="runDemo('asr')">Run</button></div>
+  <pre class="out" id="demoout_asr" hidden></pre>
+  <div class="notice"><code>float(&quot;inf&quot;)</code> is infinity. Every real number is below it, so the first word always wins and leaves the rest something to beat. Starting at <code>0</code> would break this, because a distance is never below zero, so no word could ever win.</div>
+  <div class="lab">The exercise &mdash; filled in</div>
+  <textarea id="code_asr" spellcheck="false"># STEP 2, TRAINING. The model is everything the machine knows about each
+# word, and ours is just those 8 numbers.
+
+model = {&quot;no&quot;: features(demo_no), &quot;go&quot;: features(demo_go)}   # one entry per word
+
+
+# STEP 3, TESTING. The loop below has the same shape as the demo above.
+
+def recognize(recording, model):
+    # do not change these two lines
+    best_word = None             # nothing chosen yet
+    best_score = float(&quot;inf&quot;)    # bigger than every real distance
+
+    for word in model:           # &quot;no&quot;, then &quot;go&quot;
+        score = distance(features(recording), model[word])
+        if score &lt; best_score:   # closer than the best so far?
+            best_word = word     # then this is the new best
+            best_score = score   # and this is the score to beat now
+
+    return best_word             # hand back whichever word ended up closest</textarea>
+  <div class="row"><button id="chk_asr" disabled
+    onclick="checkSec('asr')">Run and check</button></div>
+  <pre class="out" id="secout_asr" hidden></pre>
+  <div id="secres_asr"></div>
+  <details class="why"><summary>Why this answer</summary>
+  <p>One blank: <code>return best_word</code>.</p>
+  <p><code>best_word</code>, not <code>best_score</code>. The loop keeps two things in
+  step &mdash; the smallest distance seen so far, and the word that earned it &mdash;
+  and a recognizer has to hand back the word. Returning <code>best_score</code> answers
+  <code>0.007777</code> instead of <code>"go"</code>, and the checker turns that down
+  because a number is not a word.</p>
+  <p>Return it <i>after</i> the loop, at the function's own indentation. Put the
+  <code>return</code> inside the <code>for</code> body and the function quits on the
+  first word it looks at, which here is always <code>"no"</code>.</p>
+  <p>Why the answer is <code>"go"</code>: the mystery recording opens with a burst that
+  changes sign on nearly every sample, and that is exactly what <code>features()</code>
+  measures. Its first two slices come out at <code>0.2</code>, close to
+  <code>"go"</code>'s <code>0.182</code> and far from <code>"no"</code>'s <code>0.0</code>
+  opening. The distances bear that out: <code>0.007777</code> to <code>"go"</code>
+  against <code>0.054343</code> to <code>"no"</code>, and the smaller one wins.
+  <code>answer_self</code> is the sanity case: <code>demo_no</code> scored against a
+  model built from <code>demo_no</code> has distance exactly <code>0</code>, so a
+  working recognizer has to call it <code>"no"</code>.</p>
+  </details>
+  <div class="lab">Now say either &quot;go&quot; or &quot;no&quot;</div>
+  <p class="teach">Record yourself and see how well the recognizer does. No worries if this simplified model makes mistakes! The accuracy will improve if you go back and record more takes.</p>
+  <div class="mic">
+    <div class="row"><button class="rec" id="mic_rec_test" disabled>Record and recognize</button>
+      <span class="say" id="mic_say_test"></span></div>
+    <pre class="out" id="mic_test_out" hidden></pre>
+  </div>
+</div>
+</main>
+<div id="bar">
+  <input id="name" placeholder="your name" autocomplete="name">
+  <input id="uniq" placeholder="uniqname" autocomplete="username">
+  <button id="go" disabled>Make my report</button>
+  <button id="dl" class="ghost" hidden>Save as PDF</button>
+  <div class="pips" id="pips"><span class="pip" id="pip_types" title="Numbers, text, lists, and tables"></span><span class="pip" id="pip_cond" title="Making a decision"></span><span class="pip" id="pip_asr" title="Your first speech recognizer"></span></div>
+  <span id="status">Starting Python&hellip;</span>
+</div>
+<div id="report" style="max-width:50rem;margin:0 auto;padding:0 1.2rem 4rem">
+</div>
+<script type="text/plain" id="grader">
+import ast
+import io
+import json
+import contextlib
+import traceback
+
+def _blank(v):
+    """A leftover ... is not an answer. Neither is a list with one in it."""
+    if v is Ellipsis:
+        return True
+    if isinstance(v, (list, tuple)):
+        return any(x is Ellipsis for x in v)
+    return False
+
+
+def _same(a, b, strict=False):
+    if isinstance(a, bool) != isinstance(b, bool):
+        return False
+    if strict and isinstance(b, float) and not isinstance(a, float):
+        return False
+    if isinstance(a, float) or isinstance(b, float):
+        try:
+            return abs(a - b) < 1e-9
+        except TypeError:
+            return False
+    return a == b
+
+
+def _show(v):
+    if _blank(v):
+        return "-"
+    r = repr(v)
+    return r if len(r) <= 46 else r[:43] + "..."
+
+
+def _exec(src, extra=None):
+    """Run one section. Returns (namespace, printed, error, line)."""
+    ns = dict(extra or {})
+    buf = io.StringIO()
+    try:
+        code = compile(src, "your code", "exec")
+    except SyntaxError as e:
+        return None, "", "%s" % e.msg, e.lineno
+    try:
+        with contextlib.redirect_stdout(buf):
+            exec(code, ns)
+    except Exception as e:
+        tb = traceback.extract_tb(e.__traceback__)
+        line = tb[-1].lineno if tb else None
+        return ns, buf.getvalue(), "%s: %s" % (type(e).__name__, e), line
+    return ns, buf.getvalue(), None, None
+
+
+def run_demo(src):
+    ns, out, err, line = _exec(src)
+    return json.dumps({"out": out, "err": err, "line": line})
+
+
+def run_section(tag, given, src):
+    """Run a student's section and report the checks for that section only.
+
+    The provided code runs first, on its own, so that the line numbers in
+    any error belong to what the student actually wrote.
+    """
+    sec = _SEC[tag]
+    _MIC["ns"] = None
+    gns, gout, gerr, gline = _given(given)
+    if gerr is not None:
+        return json.dumps({"syntax": True, "msg": "the provided code broke: %s" % gerr,
+                           "line": gline, "out": gout})
+    ns, out, err, line = _exec(src + "\n" + sec.get("tail", ""), gns)
+    out = gout + out
+    if ns is not None:
+        _MIC["ns"] = ns          # the microphone buttons run this same code
+    if ns is None:
+        return json.dumps({"syntax": True, "msg": err, "line": line,
+                           "out": ""})
+    rows, notes = _mark(sec, ns)
+    right = sum(1 for r in rows if r["ok"])
+    tried = sum(1 for r in rows if not r["blank"])
+    return json.dumps({"out": out, "err": err, "line": line, "rows": rows,
+                       "notes": notes, "right": right, "n": len(rows),
+                       "tried": tried})
+
+
+_MIC = {"ns": None, "takes": {}}
+
+
+def mic_store(word, samples):
+    """Keep one take, as sound. The student's features() runs on it later,
+    so recording works before any code has been written."""
+    _MIC["takes"].setdefault(word, []).append(list(samples))
+    return json.dumps({"word": word, "takes": len(_MIC["takes"][word]),
+                       "samples": len(_MIC["takes"][word][-1]),
+                       "words": sorted(_MIC["takes"])})
+
+
+def mic_clear(word):
+    _MIC["takes"].pop(word, None)
+    return json.dumps({"word": word, "words": sorted(_MIC["takes"])})
+
+
+def mic_recognize(samples):
+    """Recognize a recording with the student's own code."""
+    ns = _MIC["ns"]
+    if ns is None or "recognize" not in ns:
+        return json.dumps({"err": "Run and check your code first. This button "
+                                  "uses the functions you wrote."})
+    if len(_MIC["takes"]) < 2:
+        return json.dumps({"err": "Record both words at the top of this section first."})
+    scores = {}
+    try:
+        model = {}
+        for word, takes in _MIC["takes"].items():
+            each = [ns["features"](t) for t in takes]
+            model[word] = [sum(f[i] for f in each) / len(each)
+                           for i in range(len(each[0]))]
+        rec = list(samples)
+        f = ns["features"](rec)
+        answer = ns["recognize"](rec, dict(model))
+        for word in model:
+            d = ns["distance"](f, model[word])
+            scores[word] = round(d, 4) if isinstance(d, (int, float)) else "-"
+    except Exception as e:
+        return json.dumps({"err": "%s: %s" % (type(e).__name__, e)})
+    if not isinstance(answer, str):
+        return json.dumps({"err": "Your recognize did not hand back a word, so there "
+                                  "is nothing to show. Fill in the blanks above, hit "
+                                  "Run and check, then record again."})
+    return json.dumps({"answer": answer, "scores": scores,
+                       "takes": dict((w, len(t)) for w, t in _MIC["takes"].items())})
+
+
+def _given(src):
+    """Run the read-only block. Returns (namespace, printed, error, line)."""
+    if not src or not src.strip():
+        return {}, "", None, None
+    ns, out, err, line = _exec(src)
+    return (ns or {}), out, err, line
+
+
+def _mark(sec, ns):
+    rows, notes = [], []
+    for name, want, hints, key in sec["checks"]:
+        got = ns.get(name, Ellipsis)
+        blank = name not in ns or _blank(got)
+        strict = name in sec.get("strict", [])
+        ok = (not blank) and _same(got, want, strict)
+        rows.append({"name": name, "got": _show(got),
+                     "want": "-" if blank else _show(want),
+                     "ok": ok, "blank": blank})
+        if ok or blank or not hints:
+            continue
+        for test, ckey, msg in hints:
+            try:
+                hit = test(got)
+            except Exception:
+                hit = False
+            if hit:
+                notes.append({"name": name, "msg": msg,
+                              "bites": _BITES.get(ckey, "")})
+                break
+    return rows, notes
+
+
+def grade(payload, name, uniq, today):
+    secs = json.loads(payload)
+    out = []
+    total = tried = right = 0
+    all_notes = []
+    for tag, given, src in secs:
+        sec = _SEC[tag]
+        gns, gprinted, gerr, gline = _given(given)
+        ns, printed, err, line = _exec(src + "\n" + sec.get("tail", ""), gns)
+        printed = gprinted + printed
+        if ns is None:
+            out.append({"tag": tag, "title": sec["title"], "broken": err,
+                        "line": line, "rows": [], "verdict": "will not run"})
+            total += len(sec["checks"])
+            continue
+        rows, notes = _mark(sec, ns)
+        r = sum(1 for x in rows if x["ok"])
+        t = sum(1 for x in rows if not x["blank"])
+        total += len(rows)
+        right += r
+        tried += t
+        all_notes.extend(notes)
+        if err and t == 0:
+            # it stopped part-way, which is not the same as untouched: a
+            # student who crashed has done work and needs the line number,
+            # not the words "not started"
+            out.append({"tag": tag, "title": sec["title"], "rows": rows,
+                        "right": r, "n": len(rows), "verdict": "stopped",
+                        "broken": err, "line": line})
+            continue
+        if t == 0:
+            verdict = "not started"
+        elif r == len(rows):
+            verdict = "solid"
+        elif r >= len(rows) - 1:
+            verdict = "nearly"
+        else:
+            verdict = "shaky"
+        out.append({"tag": tag, "title": sec["title"], "rows": rows,
+                    "right": r, "n": len(rows), "verdict": verdict,
+                    "broken": None})
+    if tried == 0:
+        head = "Not finished yet."
+    elif right == total:
+        head = "All done. You are set for this course."
+    elif right >= total - 2:
+        head = "Almost there. One or two things to look at."
+    elif right >= total // 2:
+        head = "Fine for this course. A few things worth a second look."
+    else:
+        head = "Worth another go before we start."
+    return json.dumps({"sections": out, "right": right, "n": total,
+                       "tried": tried, "verdict": head, "notes": all_notes,
+                       "html": _report(out, right, total, tried, head,
+                                       all_notes, name, uniq, today)})
+
+
+def _e(s):
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;")
+            .replace(">", "&gt;"))
+
+
+def _report(secs, right, total, tried, head, notes, name, uniq, today):
+    p = ['<div class="l345r">']
+    p.append('<h1>LING 345 &middot; Python tutorial</h1>')
+    p.append('<p class="who">%s &middot; %s &middot; %s</p>'
+             % (_e(name or "(no name given)"), _e(uniq or "(no uniqname)"),
+                _e(today)))
+    p.append('<p class="score"><b>%d of %d</b> &mdash; %s</p>'
+             % (right, total, _e(head)))
+    for s in secs:
+        if s["broken"] and s["verdict"] != "stopped":
+            p.append('<h2>%s <span class="v bad">will not run</span></h2>'
+                     % _e(s["title"]))
+            p.append('<p class="note">Line %s: %s</p>'
+                     % (s["line"], _e(s["broken"])))
+            continue
+        cls = {"solid": "good", "nearly": "ok", "shaky": "bad",
+               "not started": "none", "stopped": "bad"}[s["verdict"]]
+        p.append('<h2>%s <span class="v %s">%s &middot; %d/%d</span></h2>'
+                 % (_e(s["title"]), cls, _e(s["verdict"]), s["right"],
+                    s["n"]))
+        p.append('<table><tr><th>answer</th><th>you wrote</th>'
+                 '<th>expected</th><th></th></tr>')
+        for r in s["rows"]:
+            mark = "&#10003;" if r["ok"] else ("&ndash;" if r["blank"]
+                                               else "&#10007;")
+            p.append('<tr class="%s"><td><code>%s</code></td><td>%s</td>'
+                     '<td>%s</td><td>%s</td></tr>'
+                     % ("y" if r["ok"] else ("b" if r["blank"] else "n"),
+                        _e(r["name"]), _e(r["got"]), _e(r["want"]), mark))
+        p.append("</table>")
+        if s["broken"]:
+            p.append('<p class="fix">It stopped at line %s: %s</p>'
+                     % (s.get("line"), _e(s["broken"])))
+    if notes:
+        p.append("<h2>Worth another look</h2>")
+        for nte in notes:
+            p.append('<p class="fix"><code>%s</code> &mdash; %s%s</p>'
+                     % (_e(nte["name"]), _e(nte["msg"]),
+                        (" <i>This bites in %s.</i>" % _e(nte["bites"]))
+                        if nte["bites"] else ""))
+    p.append('<p class="foot">Submit this on Canvas by Sep 3. You get the marks '
+             'for turning it in, not for the score.</p></div>')
+    return "\n".join(p)
+
+_BITES = {'intdiv': 'session 6, when a frame length in samples has to come out of a duration in seconds', 'alias': 'session 13, where a list you thought you had copied gets changed underneath you', 'slice': 'session 6, because cutting a recording into frames IS slicing', 'return': 'session 1, the first time you try to use what a function worked out', 'cond': 'session 14, where a condition that is accidentally always true makes a recognizer that always answers the same word', 'accum': 'session 13, where every feature you compute is a loop that accumulates', 'dictget': 'session 15, where a missing pair in an n-gram table must not crash the whole sentence'}
+
+_SEC = {
+  'types': {
+    "title": 'Numbers, text, lists, and tables',
+    "strict": ['duration'],
+    "checks": [
+      ('num_samples', 6, [], None),
+      ('last_sample', 0.1, [], None),
+      ('first_three', [0.0, 0.3, -0.7], [(lambda v: v == [0.0, 0.3], 'slice', 'samples[:3] takes three, not two. Python stops BEFORE the number you write.'), (lambda v: v == [0.0, 0.3, -0.7, 0.9], 'slice', 'samples[:3] stops before position 3, so it gives you three.')], 'slice'),
+      ('duration', 0.000375, [(lambda v: v == 0, 'intdiv', 'You used // , which throws away the decimal part. Six samples at 16000 a second really is a tiny fraction of a second, and you need / to see it.')], 'intdiv'),
+      ('no_frequency', 4, [(lambda v: v == 2, 'dictget', 'That is the count for "go". Look at which key you asked for.'), (lambda v: v == 0, 'dictget', 'A 0 means the key you asked for was not in the table. "no" is in there, so ask for it by name.')], 'dictget'),
+    ],
+  },
+  'cond': {
+    "title": 'Making a decision',
+    "strict": [],
+    "checks": [
+      ('label_loud', 'loud', [(lambda v: v == 'speech', 'cond', 'The wide test ran first, so the narrow one below it can never be reached. Put `> 0.5` above `> 0.05`.')], 'cond'),
+      ('label_speech', 'speech', [], None),
+      ('label_quiet', 'silence', [], None),
+      ('label_edge', 'silence', [(lambda v: v == 'speech', 'cond', 'You used >= somewhere. Exactly 0.05 is not ABOVE 0.05.')], 'cond'),
+    ],
+  },
+  'asr': {
+    "title": 'Your first speech recognizer',
+    "strict": [],
+    # Run after the student's code, out of sight: these are what the checks read, and
+    # they are boilerplate rather than exercise, so they only clutter the editor. Kept
+    # at the end so a traceback still points at the line the student actually wrote.
+    "tail": 'distance_to_no = distance(features(demo_mystery), model["no"])\n'
+            'answer = recognize(demo_mystery, model)\n'
+            'answer_self = recognize(demo_no, model)\n',
+    "checks": [
+      ('distance_to_no', 0.054343, [], 'accum'),
+      ('answer', 'go', [(lambda v: v == 'no', 'cond', 'It picked the further one, so the comparison is the wrong way round. You want the smallest distance, not the largest.'), (lambda v: v is None, 'cond', 'It never picked a word. best_word was still None at the end, so hand back the variable the loop filled in.'), (lambda v: isinstance(v, int) and not isinstance(v, bool) and v == 0, 'cond', 'A 0 means no word ever won. Put the two lines at the top back the way they were: a distance is never below 0, so a best_score that starts at 0 can never be beaten.'), (lambda v: isinstance(v, float), 'cond', 'That is the winning distance, not the winning word. The score lives in best_score; the word that earned it lives in best_word.'), (lambda v: not isinstance(v, str), 'cond', 'recognize has to hand back a word, as text. Return the variable holding the winning word.')], 'cond'),
+      ('answer_self', 'no', [(lambda v: v == 'go', 'cond', 'A stored recording has to recognize itself. Its distance from its own entry in the model is exactly 0 and nothing can beat that.')], 'cond'),
+    ],
+  },
+}
+</script>
+<script>
+const TAGS = ["types", "cond", "asr"];
+let py = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                          .replace(/>/g,'&gt;');
+
+function fit(t){ t.style.height='auto'; t.style.height=(t.scrollHeight+4)+'px'; }
+
+async function boot(){
+  try{
+    py = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' });
+    py.runPython($('grader').textContent);
+    $('status').textContent = 'Ready.';
+    $('go').disabled = false;
+    TAGS.forEach(t => { const r = $('run_'+t); if (r) r.disabled = false;
+                        $('chk_'+t).disabled = false; });
+    ['a', 'b', 'test'].forEach(w => { $('mic_rec_'+w).disabled = false; });
+    ['a', 'b'].forEach(w => { $('mic_clear_'+w).disabled = false; });
+  }catch(e){
+    $('status').textContent = 'Python could not start.';
+    $('report').innerHTML = '<pre class="out bad">Python could not start in '
+      + 'this page. It downloads Python the first time, so it needs the '
+      + 'internet for a few seconds.\n\n1. Reload the page.\n2. Open it '
+      + 'from the Canvas link rather than from your Downloads folder.\n\n'
+      + 'If neither works, email me which browser you are using and stop '
+      + 'there. It is my problem, not your evening.\n\n' + esc(String(e))
+      + '</pre>';
+  }
+}
+
+function callPy(fn, args){
+  const f = py.globals.get(fn);
+  const r = JSON.parse(f(...args));
+  f.destroy();
+  return r;
+}
+
+function runDemo(tag){
+  const o = $('demoout_'+tag);
+  o.hidden = false; o.className = 'out'; o.textContent = 'Running\u2026';
+  setTimeout(() => {
+    let r;
+    try { r = callPy('run_demo', [$('demo_'+tag).value]); }
+    catch(e){ o.className='out bad'; o.textContent=String(e); return; }
+    if (r.err){ o.className = 'out bad';
+      o.textContent = (r.out||'') + '\n' + r.err
+        + (r.line ? '\n  at line ' + r.line : ''); }
+    else { o.textContent = r.out || '(nothing was printed)'; }
+  }, 20);
+}
+
+function givenSrc(tag){ const g = $('given_'+tag); return g ? g.value : ''; }
+
+function checkSec(tag){
+  const o = $('secout_'+tag), res = $('secres_'+tag);
+  o.hidden = false; o.className='out'; o.textContent = 'Running\u2026';
+  res.innerHTML = '';
+  setTimeout(() => {
+    let r;
+    try { r = callPy('run_section', [tag, givenSrc(tag), $('code_'+tag).value]); }
+    catch(e){ o.className='out bad'; o.textContent=String(e); return; }
+    if (r.syntax){
+      o.className='out bad';
+      o.textContent = 'Line ' + r.line + ': ' + r.msg
+        + '\n\nPython could not read this yet, so nothing ran.';
+      pip(tag,'n'); return;
+    }
+    o.textContent = r.out || '(nothing was printed)';
+    if (r.err){ o.className='out bad';
+      o.textContent = (r.out||'') + '\n' + r.err
+        + (r.line ? '\n  at line ' + r.line : ''); }
+    let h = '<table class="chk"><tr><th>answer</th><th>you wrote</th>'
+          + '<th>expected</th><th></th></tr>';
+    for (const row of r.rows){
+      const cls = row.ok ? 'y' : (row.blank ? 'b' : 'n');
+      const mk = row.ok ? '\u2713' : (row.blank ? '\u2013' : '\u2717');
+      h += '<tr class="'+cls+'"><td>'+esc(row.name)+'</td><td>'
+         + esc(row.got)+'</td><td>'+esc(row.want)+'</td><td>'+mk+'</td></tr>';
+    }
+    h += '</table>';
+    for (const n of r.notes)
+      h += '<p class="fixmsg"><b>'+esc(n.name)+'</b> &mdash; '+esc(n.msg)+'</p>';
+    if (r.right === r.n)
+      h += '<p class="done">All '+r.n+' right. On to the next one.</p>';
+    res.innerHTML = h;
+    pip(tag, r.right === r.n ? 'y' : (r.tried === 0 ? '' : 'p'));
+  }, 20);
+}
+
+function pip(tag, cls){
+  const p = $('pip_'+tag);
+  p.className = 'pip' + (cls ? ' '+cls : '');
+}
+
+$('go').addEventListener('click', () => {
+  $('go').disabled = true;
+  $('status').textContent = 'Checking\u2026';
+  setTimeout(() => {
+    const payload = TAGS.map(t => [t, givenSrc(t), $('code_'+t).value]);
+    let r;
+    try {
+      r = callPy('grade', [JSON.stringify(payload), $('name').value,
+                           $('uniq').value,
+                           new Date().toISOString().slice(0,10)]);
+    } catch(e){
+      $('status').textContent = 'The grader broke, which is my fault.';
+      $('report').innerHTML = '<pre class="out bad">'+esc(String(e))+'</pre>';
+      $('go').disabled = false; return;
+    }
+    $('go').disabled = false;
+    $('status').textContent = r.right + ' of ' + r.n + ' \u2014 ' + r.verdict;
+    $('report').innerHTML = r.html;
+    $('dl').hidden = false;
+    $('report').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 20);
+});
+
+$('dl').addEventListener('click', () => {
+  // print just the report; the browser's print dialog saves it as a PDF,
+  // and the document title becomes the suggested file name
+  const u = ($('uniq').value || 'you').replace(/[^A-Za-z0-9]/g,'') || 'you';
+  const title = document.title;
+  document.title = 'LING345_tutorial_answers_' + u;
+  document.body.classList.add('printing');
+  const done = () => { document.body.classList.remove('printing');
+                       document.title = title;
+                       window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  window.print();
+  setTimeout(done, 1000);   // Safari does not always fire afterprint
+});
+
+// ---- the microphone -------------------------------------------------
+const SECONDS = 1.5;
+let micStream = null;
+
+async function micSamples(button, say){
+  if (!navigator.mediaDevices || !window.MediaRecorder)
+    throw new Error('This browser will not give the page a microphone. '
+      + 'Open the page from the Canvas link rather than from a file.');
+  if (!micStream)
+    micStream = await navigator.mediaDevices.getUserMedia({audio: true});
+  const chunks = [];
+  const mr = new MediaRecorder(micStream);
+  mr.ondataavailable = e => chunks.push(e.data);
+  const stopped = new Promise(res => { mr.onstop = res; });
+  mr.start();
+  button.dataset.on = '1';
+  say.textContent = 'recording\u2026';
+  await new Promise(r => setTimeout(r, SECONDS * 1000));
+  mr.stop();
+  await stopped;
+  button.dataset.on = '';
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const audio = await ctx.decodeAudioData(await new Blob(chunks).arrayBuffer());
+  ctx.close();
+  return trimAndScale(audio.getChannelData(0));
+}
+
+function trimAndScale(data){
+  let biggest = 0;
+  for (let i = 0; i < data.length; i++){
+    const a = Math.abs(data[i]); if (a > biggest) biggest = a;
+  }
+  if (biggest === 0) return [];
+  const gate = biggest * 0.1;
+  let a = 0, b = data.length - 1;
+  while (a < data.length && Math.abs(data[a]) < gate) a++;
+  while (b > a && Math.abs(data[b]) < gate) b--;
+  const out = [];
+  for (let i = a; i <= b; i++) out.push(data[i] / biggest);
+  return out;
+}
+
+function micShow(o, text, bad){
+  o.hidden = false;
+  o.className = bad ? 'out bad' : 'out';
+  o.textContent = text;
+}
+
+async function micRecord(which){
+  const button = $('mic_rec_' + which);
+  const say = $('mic_say_' + which);
+  const out = which === 'test' ? $('mic_test_out') : $('mic_out');
+  const all = ['a', 'b', 'test'].map(w => $('mic_rec_' + w));
+  all.forEach(b => { b.disabled = true; });
+  try {
+    const samples = await micSamples(button, say);
+    if (samples.length < 800){
+      say.textContent = 'too quiet, try again';
+      micShow(out, 'That came out almost silent. Get closer to the microphone, '
+                 + 'and say the word right after you press the button.', true);
+      return;
+    }
+    if (which === 'test'){
+      say.textContent = samples.length + ' samples';
+      const r = callPy('mic_recognize', [samples]);
+      if (r.err){ micShow(out, r.err, true); return; }
+      const lines = ['it heard: ' + r.answer, ''];
+      for (const w in r.scores)
+        lines.push('score against ' + w + ' (' + r.takes[w] + ' takes): ' + r.scores[w]);
+      micShow(out, lines.join('\n'));
+    } else {
+      const word = ($('mic_word_' + which).value || which).trim();
+      const r = callPy('mic_store', [word, samples]);
+      say.textContent = r.takes + (r.takes === 1 ? ' take' : ' takes');
+      micShow(out, 'stored a take of "' + r.word + '" (' + r.samples + ' samples)'
+                 + '\n\nwords so far: ' + r.words.join(', '));
+    }
+  } catch (e){
+    say.textContent = '';
+    micShow(out, String(e && e.message ? e.message : e), true);
+  } finally {
+    all.forEach(b => { b.disabled = false; });
+  }
+}
+
+['a', 'b', 'test'].forEach(w => {
+  $('mic_rec_' + w).addEventListener('click', () => micRecord(w));
+});
+
+['a', 'b'].forEach(w => {
+  $('mic_clear_' + w).addEventListener('click', () => {
+    const word = ($('mic_word_' + w).value || w).trim();
+    callPy('mic_clear', [word]);
+    $('mic_say_' + w).textContent = 'no takes yet';
+    micShow($('mic_out'), 'forgot every take of "' + word + '"');
+  });
+});
+
+document.querySelectorAll('textarea').forEach(t => {
+  fit(t); t.addEventListener('input', () => fit(t));
+});
+
+document.querySelectorAll('details.given').forEach(d => {
+  d.addEventListener('toggle', () => {
+    if (d.open) d.querySelectorAll('textarea').forEach(fit);
+  });
+});
+boot();
+</script></body></html>
