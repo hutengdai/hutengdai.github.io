@@ -577,7 +577,7 @@ def _e(s):
 
 def _report(secs, right, total, tried, head, notes, name, uniq, today):
     p = ['<div class="l345r">']
-    p.append('<h1>LING 345 &middot; Python tutorial</h1>')
+    p.append('<h1>LING 345 &middot; Python check-up</h1>')
     p.append('<p class="who">%s &middot; %s &middot; %s</p>'
              % (_e(name or "(no name given)"), _e(uniq or "(no uniqname)"),
                 _e(today)))
@@ -783,7 +783,7 @@ $('dl').addEventListener('click', () => {
   // and the document title becomes the suggested file name
   const u = ($('uniq').value || 'you').replace(/[^A-Za-z0-9]/g,'') || 'you';
   const title = document.title;
-  document.title = 'LING345_tutorial_' + u;
+  document.title = 'LING345_check-up_' + u;
   document.body.classList.add('printing');
   const done = () => { document.body.classList.remove('printing');
                        document.title = title;
