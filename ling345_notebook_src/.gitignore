@@ -1,0 +1,5 @@
+# Build byproducts. The shipped notebooks live at the repo root; these are the
+# intermediates build.py and finalize.py pass between each other.
+__pycache__/
+exec_*.ipynb
+LING345_python_tutorial*.ipynb
