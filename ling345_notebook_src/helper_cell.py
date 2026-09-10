@@ -204,7 +204,7 @@ def exercise_3_done():
         print("Go back and finish Exercise 3 first, then run this cell again.")
         return False
     try:
-        answer = here["recognize"](here["demo_no"], here["model"])
+        answer = here["recognize"](here["no_example"], here["model"])
     except Exception as problem:
         print("Exercise 3 is not working yet: %s" % problem)
         print("Fix that cell, run it, then come back here.")

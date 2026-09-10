@@ -146,17 +146,17 @@ Now let's build our first speech recognizer.
 
 Every speech recognizer, from this one to the one in your phone, has the same three jobs:
 
-| | job | when it happens |
-|---|---|---|
-| **1** | **Data processing.** Turn a recording into a handful of numbers that describe it. | training *and* testing |
-| **2** | **Training.** Work out what each word looks like in those numbers. | once |
-| **3** | **Testing.** Score a new recording against every word, and keep the best. | every new recording |
+| | |
+|---|---|
+| **1** | **Data processing.** Turn a recording into a handful of numbers that describe it. |
+| **2** | **Training.** Work out what each word looks like in those numbers. |
+| **3** | **Testing.** Score a new recording against every word, and keep the best. |
 
-Ours cuts each recording into eight slices and turns each slice into one number: how often the waveform crosses zero there. That is what separates **n** from **g**. [g] is a burst and flips sign on nearly every sample; [n] is a slow hum that barely crosses at all. Both words end in the same vowel, so the difference has to be at the onset.
+Our data processing cuts each recording into eight slices and turns each slice into one number: how often the waveform crosses zero there. That is what separates **n** from **g**. Both words end in the same vowel, so the difference has to be at the onset.
 """
 
 S3_DATA = """\
-First, imagine we have recordings of "no" averaged into `demo_no`, and recordings of "go" averaged into `demo_go`. Now we have a new recording stored in `demo_mystery`, and our job is to recognize whether it is a no or a go.
+First, imagine we have recordings of "no" averaged into `no_example`, and recordings of "go" averaged into `go_example`. Now we have a new recording stored in `demo_mystery`, and our job is to recognize whether it is a no or a go.
 """
 
 S3_SEE = """\
@@ -169,10 +169,6 @@ S3_FUNCTIONS_INTRO = """\
 ### The four functions the recognizer is built from
 
 A function can be reused over and over. It takes something in (the input), and it hands something back with `return`. Now let's write some functions as the core components of our recognizer.
-
-Each of the next four cells defines one function, and each is followed by a **try it** cell. Run it, change the numbers, run it again.
-
-A cell containing only a `def` prints nothing. That is normal: Python has learned the function and is waiting for you to call it.
 """
 
 S3_ZC = """\
@@ -188,17 +184,13 @@ Dividing by the length turns the count into a **rate**, so recordings of differe
 S3_SLICES = """\
 #### Function 2 of 4: `slices`
 
-One number for a whole word throws away *where* the wiggling happened, and that is the one thing separating **no** from **go**. So cut the recording into equal pieces and describe each piece separately.
+Cut the recording into equal pieces and describe each piece separately.
 """
 
 S3_FEATURES = """\
 #### Function 3 of 4: `features`
 
-Cut into 8 pieces, measure each piece, then divide every number by the total. What gets compared is the **shape** of the word rather than the overall rate at which it was said.
-
-Loudness never came into it: counting sign changes ignores amplitude, so turning the volume up or down leaves these numbers unchanged.
-
-We call this kind of information **features**, and we store them with the function `features` into a list of values. Eight numbers describing one recording is what everyone in speech technology calls a **feature vector**.
+For each recording, we extract **features** from each slice. Eight numbers describing one recording is what everyone in speech technology calls a **feature vector**.
 """
 
 S3_FEATURES_TABLE = """\
@@ -253,7 +245,7 @@ One blank: `return best_word`.
 
 **Why the answer is `"go"`:** the mystery recording opens with a burst that changes sign on nearly every sample, which is exactly what `features()` measures. Its first two slices come out at `0.2`, close to `"go"`'s `0.182` and far from `"no"`, which opens at `0.0`. The distances follow: `0.007777` to `"go"` against `0.054343` to `"no"`, and the smaller wins.
 
-`answer_self` is the sanity check: `demo_no` scored against a model built from `demo_no` has distance exactly `0`, so a working recognizer has to call it `"no"`.
+`answer_self` is the sanity check: `no_example` scored against a model built from `no_example` has distance exactly `0`, so a working recognizer has to call it `"no"`.
 
 </details>
 """

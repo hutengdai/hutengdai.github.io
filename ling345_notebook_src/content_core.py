@@ -10,11 +10,11 @@ DEMO_DATA = '''\
 # numbers below come out the same for everybody.  Your own voice goes through
 # this very same code later on.
 
-demo_no = [0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5,    # n: one slow swing, up then down
+no_example = [0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5,    # n: one slow swing, up then down
            0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,    # then the vowel: a faster wave
            0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8]    # 24 samples in all
 
-demo_go = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5,    # g: a burst, up down up down
+go_example = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5,    # g: a burst, up down up down
            0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,    # then the very same vowel
            0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8]    # 24 samples in all
 
@@ -23,8 +23,8 @@ demo_mystery = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5,              # a burst again, a
                 0.8, 0.8, -0.8, -0.8, 0.8, 0.8, -0.8, -0.8,
                 0.8, 0.8]                                     # 24 samples, so which word is it?
 
-print("no     ", len(demo_no), "samples")
-print("go     ", len(demo_go), "samples")
+print("no     ", len(no_example), "samples")
+print("go     ", len(go_example), "samples")
 print("mystery", len(demo_mystery), "samples")
 '''
 
@@ -48,8 +48,8 @@ print("a slow wave  [1, 1, -1, -1] ->", zero_crossings([1, 1, -1, -1]))
 print("a fast wave  [1, -1, 1, -1] ->", zero_crossings([1, -1, 1, -1]))
 print("flat silence [0, 0,  0,  0] ->", zero_crossings([0, 0, 0, 0]))
 print()
-print("the whole word 'no' ->", zero_crossings(demo_no))
-print("the whole word 'go' ->", zero_crossings(demo_go))
+print("the whole word 'no' ->", zero_crossings(no_example))
+print("the whole word 'go' ->", zero_crossings(go_example))
 '''
 
 FN_SLICES = '''\
@@ -70,7 +70,7 @@ for piece in slices([1, 2, 3, 4, 5, 6, 7, 8], 4):
 
 print()
 print("the word 'no', cut into 8 pieces:")
-for piece in slices(demo_no, 8):
+for piece in slices(no_example, 8):
     print(piece)
 '''
 
@@ -93,8 +93,8 @@ TRY_FEATURES = '''\
 # Try it.  These three lines are the heart of the recognizer -- read them before
 # you go on.  The words differ at the START, which is where n and g live.
 
-print("no      ->", features(demo_no))
-print("go      ->", features(demo_go))
+print("no      ->", features(no_example))
+print("go      ->", features(go_example))
 print("mystery ->", features(demo_mystery))
 '''
 
@@ -110,13 +110,18 @@ def distance(a, b):
 TRY_DISTANCE = '''\
 # Try it.  A thing is always distance 0 from itself.
 
-print("no      vs no  ->", distance(features(demo_no), features(demo_no)))
-print("no      vs go  ->", distance(features(demo_no), features(demo_go)))
+print("no      vs no  ->", distance(features(no_example), features(no_example)))
+print("no      vs go  ->", distance(features(no_example), features(go_example)))
 print()
-print("mystery vs no  ->", distance(features(demo_mystery), features(demo_no)))
-print("mystery vs go  ->", distance(features(demo_mystery), features(demo_go)))
+print("mystery vs no  ->", distance(features(demo_mystery), features(no_example)))
+print("mystery vs go  ->", distance(features(demo_mystery), features(go_example)))
 print()
 print("Which of the last two is smaller?  That is the answer the recognizer has to give.")
+'''
+
+TRY_ROUND = '''\
+a = [0.7, 0.4, 0.6]
+round((sum(a) / 3), 3)
 '''
 
 PLOT_CELL = '''\
@@ -125,7 +130,7 @@ PLOT_CELL = '''\
 
 import matplotlib.pyplot as plt
 
-recordings = [("no", demo_no), ("go", demo_go), ("mystery", demo_mystery)]
+recordings = [("no", no_example), ("go", go_example), ("mystery", demo_mystery)]
 fig, axes = plt.subplots(2, 3, figsize=(11, 4.6))
 
 for col, (name, rec) in enumerate(recordings):
@@ -142,8 +147,8 @@ for col, (name, rec) in enumerate(recordings):
 fig.tight_layout()
 plt.show()
 
-print("distance from the mystery recording to 'no':", distance(features(demo_mystery), features(demo_no)))
-print("distance from the mystery recording to 'go':", distance(features(demo_mystery), features(demo_go)))
+print("distance from the mystery recording to 'no':", distance(features(demo_mystery), features(no_example)))
+print("distance from the mystery recording to 'go':", distance(features(demo_mystery), features(go_example)))
 print("Smaller means more alike, so the answer has to be 'go'.")
 '''
 
@@ -273,7 +278,7 @@ EX3_BLANK = '''\
 # STEP 2, TRAINING.  The model is everything the machine knows about each
 # word, and ours is just those 8 numbers.
 
-model = {"no": features(demo_no), "go": features(demo_go)}   # one entry per word
+model = {"no": features(no_example), "go": features(go_example)}   # one entry per word
 
 
 # STEP 3, TESTING.  The loop below has the same shape as the demo above.
@@ -295,7 +300,7 @@ def recognize(recording, model):
 # do not change these three lines
 distance_to_no = distance(features(demo_mystery), model["no"])
 answer = recognize(demo_mystery, model)
-answer_self = recognize(demo_no, model)
+answer_self = recognize(no_example, model)
 
 print("distance from the mystery recording to 'no':", distance_to_no)
 print("the recognizer says the mystery word is:    ", answer)

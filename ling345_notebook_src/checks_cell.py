@@ -62,7 +62,7 @@ def check_3(given=None):
         wanted=[("distance_to_no", 0.054343),
                 ("answer", "go"),
                 ("answer_self", "no")],
-        needs=("features", "distance", "recognize", "model", "demo_no", "demo_mystery"),
+        needs=("features", "distance", "recognize", "model", "no_example", "demo_mystery"),
         given=given,
         hints=[
           (lambda n, v: n == "answer" and v == "no",

@@ -126,7 +126,7 @@ def build(answers):
     b.md(P.S3_DATA, cid="s3-data-note")
     b.code(C.DEMO_DATA, cid="s3-data")
     b.md(P.S3_SEE, cid="s3-see")
-    b.code('show_wave(demo_no, "no")\nshow_wave(demo_go, "go")\n', cid="s3-waves")
+    b.code('show_wave(no_example, "no")\nshow_wave(go_example, "go")\n', cid="s3-waves")
     b.md(P.S3_FUNCTIONS_INTRO, cid="s3-functions-intro")
 
     b.md(P.S3_ZC, cid="s3-zc")
@@ -140,9 +140,10 @@ def build(answers):
     b.md(P.S3_FEATURES, cid="s3-features")
     b.code(C.FN_FEATURES, cid="s3-fn-features")
     b.code(C.TRY_FEATURES, cid="s3-try-features")
+    b.code(C.TRY_ROUND, cid="s3-try-round")
     b.md(P.S3_FEATURES_TABLE, cid="s3-features-table-note")
-    b.code('feature_table(demo_go, "demo_go")\n\n'
-           '# TRY: change demo_go to demo_no above and run this again.\n',
+    b.code('feature_table(go_example, "go_example")\n\n'
+           '# TRY: change go_example to no_example above and run this again.\n',
            cid="s3-feature-table")
 
     b.md(P.S3_DISTANCE, cid="s3-distance")
