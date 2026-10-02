@@ -1,0 +1,1428 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Study Abroad Equivalency Review</title>
+<meta name="description" content="Approve or disapprove the closest U-M course for each study-abroad course.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap">
+<style>
+:root {
+  --bg: #f5f3ee; --surface: #fffefb; --surface-2: #eeebe4; --surface-3: #e3dfd5;
+  --ink: #192024; --ink-2: #434f55; --ink-3: #6c777d; --line: #dfd9ce; --line-2: #c8c1b3;
+  --accent: #0c5c63; --accent-ink: #ffffff; --accent-soft: #dbebe9;
+  --ok: #23714a; --ok-hover: #1b5c3b; --ok-ink: #ffffff; --ok-soft: #dcefe2;
+  --no: #a5392c; --no-soft: #f6ddd8;
+  --dept: #24617f; --dept-soft: #dce8f0; --gen: #596067; --gen-soft: #e6e5e1;
+  --warn: #8f5d0e; --warn-soft: #f5e6c8;
+  --mark: #f6e1a0; --mark-ink: #192024; --meter-off: #d8d8d1; --scrim: rgba(18, 24, 27, .42);
+  --shadow: 0 1px 2px rgba(25, 32, 36, .06), 0 10px 30px rgba(25, 32, 36, .12);
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --top-h: 56px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1417; --surface: #161c20; --surface-2: #1d252a; --surface-3: #263138;
+    --ink: #e9e5db; --ink-2: #bbb6aa; --ink-3: #8d897f; --line: #29343a; --line-2: #37444c;
+    --accent: #6bbcbc; --accent-ink: #0a1416; --accent-soft: #173538;
+    --ok: #5fbf8a; --ok-hover: #7ccd9f; --ok-ink: #0b1a12; --ok-soft: #15301f;
+    --no: #ef8a7a; --no-soft: #3b1f1a;
+    --dept: #88bbd9; --dept-soft: #172a36; --gen: #a8acb0; --gen-soft: #252b2f;
+    --warn: #e3ab59; --warn-soft: #382a12;
+    --mark: #5a4912; --mark-ink: #f7eed2; --meter-off: #2c373d; --scrim: rgba(0, 0, 0, .6);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1417; --surface: #161c20; --surface-2: #1d252a; --surface-3: #263138;
+  --ink: #e9e5db; --ink-2: #bbb6aa; --ink-3: #8d897f; --line: #29343a; --line-2: #37444c;
+  --accent: #6bbcbc; --accent-ink: #0a1416; --accent-soft: #173538;
+  --ok: #5fbf8a; --ok-hover: #7ccd9f; --ok-ink: #0b1a12; --ok-soft: #15301f;
+  --no: #ef8a7a; --no-soft: #3b1f1a;
+  --dept: #88bbd9; --dept-soft: #172a36; --gen: #a8acb0; --gen-soft: #252b2f;
+  --warn: #e3ab59; --warn-soft: #382a12;
+  --mark: #5a4912; --mark-ink: #f7eed2; --meter-off: #2c373d; --scrim: rgba(0, 0, 0, .6);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-3); }
+svg.i { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+#app { max-width: 1320px; margin: 0 auto; padding-inline: 24px; }
+
+/* header */
+.top { display: flex; align-items: center; gap: 12px; padding-block: 10px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.brand { display: flex; align-items: center; gap: 9px; white-space: nowrap; }
+.mark { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font: 600 19px/1 var(--serif); flex: none; }
+.bname { font: 600 17px/1 var(--serif); letter-spacing: -.005em; }
+.subj { border: 1px solid var(--line-2); background: var(--surface); border-radius: 999px; padding: 3px 10px 3px 12px; font: 500 13px/1.4 var(--mono); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.subj:hover { border-color: var(--ink-3); }
+.nav { display: flex; align-items: center; gap: 4px; }
+.pos { font-size: 14px; color: var(--ink-2); white-space: nowrap; min-width: 7.5em; text-align: center; }
+.pos b { color: var(--ink); font-weight: 600; }
+.ib { border: 1px solid transparent; background: transparent; border-radius: 8px; height: 34px; min-width: 34px; padding: 0 9px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: var(--ink-2); white-space: nowrap; }
+.ib:hover:not(:disabled) { background: var(--surface-2); color: var(--ink); }
+.ib:disabled { opacity: .35; }
+.ib.framed { border-color: var(--line-2); background: var(--surface); }
+.progsel { max-width: 300px; }
+.donect { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+.filtered { border: 0; background: var(--accent-soft); color: var(--accent); border-radius: 999px; font-size: 12px; font-weight: 600; padding: 2px 9px; }
+.grow { flex: 1; }
+select { background: var(--surface); border: 1px solid var(--line-2); border-radius: 9px; padding: 7px 10px; min-width: 0; color: var(--ink); }
+select:hover { border-color: var(--ink-3); }
+
+/* decision */
+.decide-wrap { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--top-h)); z-index: 25; background: var(--bg); padding-bottom: 2px; }
+.decide { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(0, 0, 0, .04); padding: 12px 14px; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.approve, .reject { border-radius: 10px; padding: 0 18px; height: 42px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap; }
+.approve { background: var(--ok); color: var(--ok-ink); border: 1px solid var(--ok); }
+.approve:hover:not(:disabled) { background: var(--ok-hover); border-color: var(--ok-hover); }
+.reject { background: transparent; color: var(--no); border: 1.5px solid var(--no); }
+.reject:hover:not(:disabled) { background: var(--no-soft); }
+.approve:disabled, .reject:disabled { opacity: .4; }
+.sels { display: contents; }
+.fld { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.fld > span { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+.fld select { height: 42px; }
+.eqsel { width: min(420px, 100%); }
+.crsel { width: 16em; }
+.lnk { border: 0; background: none; color: var(--accent); padding: 0; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.lnk:disabled { color: var(--ink-3); text-decoration: none; }
+.notebox { margin-top: 10px; }
+.notebox textarea { width: 100%; min-height: 58px; resize: vertical; border: 1px solid var(--line-2); border-radius: 9px; padding: 8px 10px; background: var(--surface); font-size: 14px; }
+.verdict { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 999px; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.v-ok { background: var(--ok-soft); color: var(--ok); } .v-dept { background: var(--dept-soft); color: var(--dept); } .v-gen { background: var(--gen-soft); color: var(--gen); }
+.v-no { background: var(--no-soft); color: var(--no); } .v-warn { background: var(--warn-soft); color: var(--warn); }
+.vtext { font-size: 15px; min-width: 0; }
+.vtext b { font-family: var(--mono); font-weight: 500; }
+.who { font-size: 13px; color: var(--ink-3); white-space: nowrap; }
+.btn { border: 1px solid var(--line-2); background: var(--surface); border-radius: 9px; height: 36px; padding: 0 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.dnote { margin-top: 8px; font-size: 14px; color: var(--ink-2); white-space: pre-wrap; }
+.alt { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 4px 0; font-size: 14px; }
+.alt .msg { color: var(--ink-2); }
+.alt .msg b { font-family: var(--mono); font-weight: 500; }
+.alt .lab { color: var(--ink-3); font-size: 13px; }
+.chip { border: 1px solid var(--line-2); background: var(--surface); border-radius: 999px; padding: 4px 12px; font-size: 13.5px; white-space: nowrap; }
+.chip:hover:not(:disabled) { border-color: var(--ink-3); }
+.chip.ro { cursor: default; }
+.sep { color: var(--line-2); }
+
+/* the pair */
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding-block: 20px 72px; }
+.side { min-width: 0; padding-right: 30px; }
+.side.um { padding-right: 0; padding-left: 30px; border-left: 1px solid var(--line); }
+.kick { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; display: flex; gap: 6px 10px; align-items: baseline; flex-wrap: wrap; min-height: 18px; }
+.kick .rk { color: var(--accent); }
+.kick .rj { color: var(--no); }
+.kick .grow { min-width: 8px; }
+.ctitle { font: 500 28px/1.16 var(--serif); letter-spacing: -.012em; margin: 6px 0 6px; text-wrap: balance; overflow-wrap: anywhere; }
+.csub { color: var(--ink-2); font-size: 14px; display: flex; flex-wrap: wrap; gap: 2px 8px; }
+.csub .mono { color: var(--ink); }
+.facts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.fact { background: var(--surface-2); border-radius: 6px; padding: 2px 9px; font-size: 13px; color: var(--ink-2); }
+.fact.warn { background: var(--warn-soft); color: var(--warn); }
+.fact.bad { background: var(--no-soft); color: var(--no); }
+.strength { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 13.5px; color: var(--ink-2); flex-wrap: wrap; }
+.meter { display: inline-grid; grid-template-columns: repeat(5, 7px); gap: 2px; vertical-align: middle; flex: none; }
+.meter i { height: 10px; border-radius: 2px; background: var(--meter-off); }
+.meter i.on { background: var(--accent); }
+.meter.weak i.on { background: var(--ink-3); }
+.desc { font: 400 16.5px/1.62 var(--serif); white-space: pre-wrap; overflow-wrap: anywhere; max-width: 68ch; margin-top: 18px; color: var(--ink); }
+.desc.clamp { max-height: 17em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent); }
+.desc.none { font: italic 15px/1.5 var(--serif); color: var(--ink-3); }
+.more { margin-top: 6px; }
+mark { background: var(--mark); color: var(--mark-ink); border-radius: 2px; padding: 0 1px; }
+.links { display: flex; gap: 6px 16px; flex-wrap: wrap; font-size: 13.5px; margin-top: 14px; }
+.links a { display: inline-flex; align-items: center; gap: 5px; }
+.links svg.i { width: 13px; height: 13px; }
+.req { font-size: 13.5px; color: var(--ink-2); margin-top: 12px; max-width: 68ch; }
+details.more-info { margin-top: 18px; border-top: 1px solid var(--line); }
+details.more-info > summary { list-style: none; cursor: pointer; padding: 10px 0 2px; font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+details.more-info > summary::-webkit-details-marker { display: none; }
+details.more-info > summary::before { content: ""; width: 7px; height: 7px; border-right: 1.6px solid currentColor; border-bottom: 1.6px solid currentColor; transform: rotate(-45deg); margin: 0 3px 0 1px; transition: transform .15s; }
+details.more-info[open] > summary::before { transform: rotate(45deg); }
+details.more-info > summary:hover { color: var(--ink); }
+.dbody { padding: 10px 0 4px; font-size: 14px; display: grid; gap: 10px; }
+.kv { display: grid; grid-template-columns: minmax(96px, 150px) minmax(0, 1fr); gap: 6px 14px; margin: 0; }
+.kv dt { color: var(--ink-3); font-size: 13px; }
+.kv dd { margin: 0; overflow-wrap: anywhere; }
+.why { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; font-size: 13.5px; max-width: 520px; }
+.why .v { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.why .tot { border-top: 1px solid var(--line); padding-top: 4px; font-weight: 600; }
+.small { font-size: 13px; color: var(--ink-3); }
+.sims { display: grid; gap: 2px; }
+.simrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 7px 8px; border-radius: 8px; border: 0; background: none; text-align: left; width: 100%; }
+.simrow:hover { background: var(--surface-2); }
+.simrow .t { font: 500 14.5px/1.3 var(--serif); }
+.simrow .m { font-size: 12.5px; color: var(--ink-3); grid-column: 1 / -1; }
+.pill { display: inline-flex; align-items: center; gap: 5px; height: 21px; padding: 0 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; flex: none; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); } .pill.dept { background: var(--dept-soft); color: var(--dept); } .pill.gen { background: var(--gen-soft); color: var(--gen); }
+.pill.no { background: var(--no-soft); color: var(--no); } .pill.warn { background: var(--warn-soft); color: var(--warn); } .pill.pend { background: var(--surface-2); color: var(--ink-3); }
+
+/* top ten */
+.tops { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 2px; }
+.trow { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; padding: 9px 10px; border-radius: 10px; border: 1px solid transparent; background: none; width: 100%; text-align: left; }
+.trow:hover { background: var(--surface-2); }
+.trow.cur { border-color: var(--accent); background: var(--accent-soft); }
+.trow .n { font: 500 13px var(--mono); color: var(--ink-3); }
+.trow .c { font: 500 13.5px var(--mono); }
+.trow .t { font: 500 15px/1.3 var(--serif); }
+.trow .s { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-3); }
+.trow.rej .c, .trow.rej .t { text-decoration: line-through; text-decoration-color: var(--no); color: var(--ink-3); }
+.trow .m { grid-column: 2 / -1; font-size: 12.5px; color: var(--ink-3); }
+
+.empty { padding: 28px 0; color: var(--ink-2); }
+.empty h3 { font: 500 20px var(--serif); margin: 0 0 6px; color: var(--ink); }
+
+/* loading */
+.loading { min-height: 70vh; display: grid; place-items: center; text-align: center; }
+.loading h1 { font: 500 30px var(--serif); margin: 0 0 8px; }
+.progress { width: 260px; max-width: 70vw; height: 4px; background: var(--surface-3); border-radius: 2px; overflow: hidden; margin: 16px auto 8px; }
+.progress i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+
+/* overlays */
+.scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 50; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 100%); background: var(--bg); z-index: 51; box-shadow: var(--shadow); display: flex; flex-direction: column; padding: calc(14px + env(safe-area-inset-top, 0px)) 18px calc(10px + env(safe-area-inset-bottom, 0px)); gap: 10px; }
+.dhead { display: flex; gap: 8px; align-items: center; }
+.search { position: relative; flex: 1; min-width: 0; }
+.search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--ink-3); }
+.search input { width: 100%; height: 40px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); padding: 0 12px 0 34px; }
+.dfilters { display: grid; gap: 8px; }
+.frow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.frow select { flex: 1 1 0; width: 0; min-width: 0; }
+.frow > .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); font-weight: 600; width: 4.6em; flex: none; }
+.seg { display: inline-flex; background: var(--surface-2); border-radius: 9px; padding: 2px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 4px 10px; border-radius: 7px; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .1); }
+.seg .ct { color: var(--ink-3); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.dcount { font-size: 13px; color: var(--ink-3); display: flex; gap: 10px; align-items: baseline; }
+.vlist { flex: 1; min-height: 0; overflow: auto; position: relative; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.vinner { position: relative; }
+.lrow { position: absolute; left: 0; right: 0; height: 64px; padding: 9px 14px; border-bottom: 1px solid var(--line); display: grid; gap: 2px; cursor: pointer; overflow: hidden; }
+.lrow:hover { background: var(--surface-2); }
+.lrow.cur { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.lrow .l1 { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.lrow .lt { font: 500 15px/1.3 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.lrow .l2 { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lrow .l2 b { font: 500 12px var(--mono); color: var(--ink-2); }
+.sheet-wrap { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; }
+.sheet-wrap .scrim { position: absolute; z-index: 0; }
+.sheet { position: relative; z-index: 1; background: var(--bg); border-radius: 16px; box-shadow: var(--shadow); width: min(760px, 100%); max-height: calc(100% - 8px); display: flex; flex-direction: column; min-height: 0; }
+.sheet.wide { width: min(1120px, 100%); }
+.shead { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.shead h2 { font: 600 19px var(--serif); margin: 0; flex: 1; min-width: 0; }
+.sbody { overflow: auto; padding: 18px; min-height: 0; }
+.prose { font: 400 16px/1.6 var(--serif); max-width: 72ch; display: grid; gap: 14px; }
+.prose h3 { font: 600 13px/1.3 var(--sans); text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); margin: 8px 0 -8px; }
+.prose p { margin: 0; }
+.prose code, .formula { font: 13.5px/1.5 var(--mono); }
+.formula { background: var(--surface-2); border-radius: 8px; padding: 10px 12px; overflow-x: auto; white-space: nowrap; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; font-family: var(--sans); }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.stat b { display: block; font: 600 22px/1.2 var(--serif); }
+.stat span { display: block; font-size: 12.5px; line-height: 1.35; color: var(--ink-3); margin-top: 2px; }
+.tablewrap { overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--surface-2); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+tr.click { cursor: pointer; }
+tr.click:hover td { background: var(--surface-2); }
+.tt { font: 500 14.5px/1.3 var(--serif); }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.toolbar input { height: 36px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--surface); padding: 0 10px; }
+.plist { display: grid; gap: 2px; margin-top: 12px; }
+.prow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 8px 10px; border-radius: 9px; border: 0; background: none; text-align: left; width: 100%; }
+.prow:hover { background: var(--surface-2); }
+.prow .c { font: 500 13.5px var(--mono); }
+.prow .t { font: 500 15px/1.3 var(--serif); }
+.prow .m { font-size: 12.5px; color: var(--ink-3); grid-column: 1 / -1; }
+.menu { position: fixed; z-index: 60; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 6px; min-width: 230px; display: grid; }
+.menu button { border: 0; background: none; text-align: left; padding: 9px 12px; border-radius: 8px; font-size: 14.5px; display: flex; justify-content: space-between; gap: 16px; }
+.menu button:hover { background: var(--surface-2); }
+.menu button span { color: var(--ink-3); font-size: 13px; }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: max-content; background: var(--ink); color: var(--bg); padding: 10px 14px 10px 16px; border-radius: 12px; font-size: 14px; z-index: 70; box-shadow: var(--shadow); max-width: calc(100% - 32px); display: flex; gap: 14px; align-items: center; }
+.toast button { border: 0; background: none; color: var(--bg); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; padding: 0; }
+.banner { margin: 0 0 10px; padding: 8px 12px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 13.5px; }
+
+@media (max-width: 1080px) {
+  .bname { display: none; }
+  .crsel { width: 12.5em; }
+}
+@media (max-width: 860px) {
+  .pair { grid-template-columns: minmax(0, 1fr); padding-top: 14px; }
+  .side, .side.um { padding: 0; border: 0; }
+  .side.um { border-top: 1px solid var(--line); padding-top: 22px; margin-top: 24px; }
+  .progsel, .donect { display: none; }
+  .fld > span { display: none; }
+}
+@media (max-width: 640px) {
+  #app { padding-inline: 16px; }
+  .top { position: static; gap: 6px; flex-wrap: wrap; }
+  .decide-wrap { top: env(safe-area-inset-top, 0px); padding-top: 6px; }
+  .pos { min-width: 0; }
+  .bar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; }
+  .approve, .reject { padding: 0 10px; }
+  .bar .sels { grid-column: 1 / -1; display: flex; gap: 8px; min-width: 0; }
+  .bar .fld.eq { flex: 1 1 0; min-width: 0; }
+  .bar .fld.cr { flex: 0 0 7.6em; }
+  .eqsel, .crsel { width: 100%; }
+  .bar .notebtn { grid-column: 3 / 4; grid-row: 1; }
+  .bar.decided { display: flex; }
+  .lbl { display: none; }
+  .ctitle { font-size: 24px; }
+  .kv { grid-template-columns: minmax(0, 1fr); gap: 0 14px; }
+  .kv dd { margin-bottom: 6px; }
+  .sheet-wrap { padding: 0; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sheet { border-radius: 0; height: 100%; max-height: 100%; width: 100%; }
+}
+</style>
+
+<div id="app">
+  <header class="top" id="top">
+    <div class="brand"><span class="mark" aria-hidden="true">&#8776;</span><span class="bname">Equivalency Review</span></div>
+    <button class="subj" id="subjBtn" data-act="subject" title="Change the U-M subject you review for" hidden></button>
+    <nav class="nav" aria-label="Courses to review" id="nav" hidden>
+      <button class="ib" data-act="prev" id="prevBtn" aria-label="Previous course" title="Previous course (left arrow)"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <span class="pos" id="pos" aria-live="polite"></span>
+      <button class="ib" data-act="next" id="nextBtn" aria-label="Next course" title="Next course (right arrow)"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </nav>
+    <select class="progsel" id="progSel" aria-label="Program" hidden></select>
+    <span class="donect" id="doneCt"></span>
+    <button class="filtered" id="filteredBtn" data-act="list" hidden>Filtered</button>
+    <span class="grow"></span>
+    <button class="ib framed" data-act="list" id="listBtn" title="All courses in this list (L)" hidden><svg class="i" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span class="lbl">List</span></button>
+    <button class="ib framed" data-act="menu" id="menuBtn" aria-label="Menu" aria-haspopup="true" hidden><svg class="i" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button>
+  </header>
+  <section class="loading" id="loading">
+    <div>
+      <h1>Equivalency Review</h1>
+      <div class="muted" id="loadMsg">Loading course data</div>
+      <div class="progress"><i id="loadBar"></i></div>
+    </div>
+  </section>
+  <div class="decide-wrap" id="decideWrap" hidden><section class="decide" id="decide" aria-label="Decision"></section></div>
+  <div id="altRow"></div>
+  <main class="pair" id="pair" hidden>
+    <article class="side abroad" id="abroad" aria-label="Course abroad"></article>
+    <article class="side um" id="um" aria-label="U-M course"></article>
+  </main>
+</div>
+<div id="menu" class="menu" hidden role="menu"></div>
+<div id="drawer" hidden></div>
+<div id="sheet" class="sheet-wrap" hidden></div>
+<div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* Equivalency Review. All suggestions are precomputed (cgis_courses/nlp.py) and shipped as data:
+   data/<name>.json when served, data/<name>.js when the page is opened from disk (file://). */
+const LOCAL = location.protocol === 'file:';
+const TERM = { FA: 'Fall', WN: 'Winter', 'FA;WN': 'Fall or Winter', AY: 'Academic year', SPSU: 'Spring/Summer', outside: 'Not a CGIS term', '': 'Term not published' };
+const ACCESS = { open: 'Open to visiting students', restricted: 'Restricted for visiting students', closed: 'Closed to visiting students', unknown: 'Visiting-student access not stated' };
+const LANG = { en: 'English', es: 'Spanish', de: 'German', sv: 'Swedish', ja: 'Japanese', fr: 'French', it: 'Italian', nl: 'Dutch', pt: 'Portuguese', da: 'Danish',
+  ca: 'Catalan', cs: 'Czech', 'zh-cn': 'Chinese', 'zh-tw': 'Chinese', ko: 'Korean', no: 'Norwegian', fi: 'Finnish', pl: 'Polish', ru: 'Russian', ro: 'Romanian',
+  tr: 'Turkish', id: 'Indonesian', cy: 'Welsh', hu: 'Hungarian', el: 'Greek', ar: 'Arabic', vi: 'Vietnamese' };
+const OUT = {
+  equivalent: { label: 'Approved', cls: 'ok' },
+  dept: { label: 'Elective credit', cls: 'dept' },
+  general: { label: 'General credit only', cls: 'gen' },
+  no: { label: 'Not approved', cls: 'no' },
+  info: { label: 'Needs information', cls: 'warn' },
+};
+const ORD = ['', 'Closest', '2nd closest', '3rd closest', '4th closest', '5th closest', '6th closest', '7th closest', '8th closest', '9th closest', '10th closest'];
+let STRONG = 0.055, MODERATE = 0.02, TITLE_W = 0.5, TITLE_REF = 0.85;
+
+/* ------------------------------------------------------------------ helpers */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const fmt = n => Number(n).toLocaleString('en-US');
+const trunc = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s; };
+function b64bytes(s) { const bin = atob(s); const a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return a; }
+const u16 = s => new Uint16Array(b64bytes(s).buffer);
+const u8 = s => b64bytes(s);
+const f32 = s => new Float32Array(b64bytes(s).buffer);
+const s16 = q => 0.5 + q / 10000;
+const s8 = q => 0.5 + q / 500;
+const dv = (col, r) => col.v[col.i[r]];
+const ls = {
+  ok: (() => { try { localStorage.setItem('eqr.t', '1'); localStorage.removeItem('eqr.t'); return true; } catch (e) { return false; } })(),
+  get(k, d) { try { const v = localStorage.getItem('eqr.' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('eqr.' + k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+};
+const icon = {
+  check: '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  x: '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  ext: '<svg class="i" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>',
+  search: '<svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>',
+  note: '<svg class="i" viewBox="0 0 24 24"><path d="M5 19h4L19.5 8.5a2.1 2.1 0 0 0-3-3L6 16v3z"/></svg>',
+  caret: '<svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M7 10l5 5 5-5"/></svg>',
+};
+
+/* ------------------------------------------------------------------ data */
+const D = { detail: new Map(), done: new Map() };
+const Q = { code: '' };
+window.EQR = window.EQR || {};
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = () => resolve(); s.onerror = () => reject(new Error('could not read ' + src));
+    (document.head || document.body).appendChild(s);
+  });
+}
+async function getData(name) {
+  if (!LOCAL) {
+    try { const r = await fetch('data/' + name + '.json'); if (r.ok) return await r.json(); } catch (e) { /* fall back to the script form */ }
+  }
+  if (!(name in window.EQR)) await loadScript('data/' + name + '.js');
+  const v = window.EQR[name]; delete window.EQR[name];
+  if (v == null) throw new Error('data/' + name + ' is empty');
+  return v;
+}
+function progress(f, msg) { $('#loadBar').style.width = Math.round(f * 100) + '%'; if (msg) $('#loadMsg').textContent = msg; }
+
+async function loadAll() {
+  progress(.04, 'Loading programs');
+  const meta = await getData('meta');
+  progress(.12, 'Loading courses abroad');
+  const H = await getData('host');
+  progress(.6, 'Loading the U-M catalog');
+  const U = await getData('um');
+  progress(.85, 'Preparing');
+  Object.assign(D, { meta, H, U, n: H.n, nu: U.n, progs: meta.programs, subjects: meta.subjects, queues: meta.queues || {} });
+  if (meta.thresholds) { STRONG = meta.thresholds.strong; MODERATE = meta.thresholds.moderate; }
+  if (meta.match_score) { TITLE_W = meta.match_score.title_weight; TITLE_REF = meta.match_score.title_ref; }
+  D.m = u16(H.m); D.ms = u16(H.ms); D.mt = u16(H.mt); D.km = H.k_match;
+  D.cls = u8(H.subj_p); D.clsP = u8(H.subj_pp); D.kc = H.k_class;
+  D.hh = u16(H.hh); D.hhs = u8(H.hhs); D.khh = H.k_hh;
+  D.rU = f32(H.rU); D.lg = u8(H.lgroup); D.rH = U.rH.map(f32);
+  D.subjByCode = new Map(D.subjects.map(s => [s.code, s]));
+  D.umIndex = new Map();
+  U.id.forEach((id, j) => D.umIndex.set(id, j));
+  U.codes.forEach((c, j) => c.split(' / ').forEach(code => { if (!D.umIndex.has(code)) D.umIndex.set(code, j); }));
+  /* the same course offered in several terms is one row per term but one course to review (one key) */
+  D.keyRows = new Map();
+  for (let r = 0; r < D.n; r++) { const k = H.key[r], a = D.keyRows.get(k); if (a) a.push(r); else D.keyRows.set(k, [r]); }
+  D.allRows = [];
+  for (let r = 0; r < D.n; r++) if (D.keyRows.get(H.key[r])[0] === r) D.allRows.push(r);
+}
+async function loadFocus(code) {
+  const F = await getData('focus/' + code);
+  Object.assign(Q, { code, k: F.k, n: F.n, rows: u16(F.rows), lvl: u8(F.lvl), pct: u8(F.pct), rank: u8(F.rank), u: u16(F.u), cs: u16(F.cs), ct: u16(F.ct) });
+  Q.at = new Int32Array(D.n).fill(-1);
+  for (let i = 0; i < Q.n; i++) Q.at[Q.rows[i]] = i;
+  Q.member = new Uint8Array(D.nu); Q.listed = new Uint8Array(D.nu);
+  for (let u = 0; u < D.nu; u++) if (D.U.codes[u].split(' / ').some(c => c.split(' ')[0] === code)) { Q.listed[u] = 1; if (!D.U.admin[u]) Q.member[u] = 1; }
+  Q.cands = new Map(); Q.bestCache = new Map();
+}
+function loadDetail(pi) {
+  const p = D.progs[pi];
+  if (!D.detail.has(p.id)) {
+    const pr = getData('detail/' + p.id).then(j => { j.byRow = new Map(j.rows.map((r, k) => [r, k])); D.done.set(p.id, j); return j; });
+    pr.catch(() => D.detail.delete(p.id));
+    D.detail.set(p.id, pr);
+  }
+  return D.detail.get(p.id);
+}
+function pickDetail(j, r) {
+  const k = j.byRow.get(r);
+  return { desc: j.desc[k], prereq: j.prereq[k], notes: j.notes[k], course_url: j.course_url[k], syllabus_url: j.syllabus_url[k], catalog_year: j.catalog_year[k], host: j.host[k], retrieved: j.retrieved[k], kw: j.kw ? j.kw[k] : '' };
+}
+async function hostDetail(r) { return pickDetail(await loadDetail(D.H.prog[r]), r); }
+function detailNow(r) { const j = D.done.get(D.progs[D.H.prog[r]].id); return j ? pickDetail(j, r) : null; }
+
+/* ------------------------------------------------------------------ scoring */
+/* Match score = CSLS + TITLE_W x (title cosine - TITLE_REF), CSLS = 2 cos - rU(course abroad) - rH(U-M course):
+   the cosine discounted by how close each side is to everything. Every list is ordered by it. */
+function parts(r, u, cos, tcos) {
+  const rU = D.rU[r], rH = D.rH[D.lg[r]][u], title = TITLE_W * (tcos - TITLE_REF);
+  return { cos, tcos, rU, rH, title, score: 2 * cos - rU - rH + title };
+}
+const mscore = (r, u, cos, tcos) => parts(r, u, cos, tcos).score;
+const strengthOf = c => c >= STRONG ? 'Strong' : c >= MODERATE ? 'Moderate' : 'Weak';
+function meter(c) {
+  if (c == null || !isFinite(c)) return '';
+  const lo = MODERATE - 2 * (STRONG - MODERATE), hi = STRONG + (STRONG - MODERATE);
+  const k = Math.max(1, Math.min(5, Math.round(1 + 4 * (c - lo) / (hi - lo))));
+  return `<span class="meter${c < MODERATE ? ' weak' : ''}" aria-hidden="true">${[1, 2, 3, 4, 5].map(i => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</span>`;
+}
+/* The focus subject's ten closest courses: from the subject's queue file, else the course's overall top ten. */
+function candidates(r) {
+  let c = Q.cands.get(r);
+  if (c) return c;
+  c = [];
+  const i = Q.at[r];
+  if (i >= 0) {
+    for (let k = 0; k < Q.k; k++) {
+      const u = Q.u[i * Q.k + k]; if (u === 65535) break;
+      const cos = s16(Q.cs[i * Q.k + k]), tcos = s16(Q.ct[i * Q.k + k]);
+      c.push({ u, cos, tcos, score: mscore(r, u, cos, tcos), rank: k + 1 });
+    }
+  } else {
+    for (let k = 0; k < D.km; k++) {
+      const u = D.m[r * D.km + k]; if (!Q.member[u]) continue;
+      const cos = s16(D.ms[r * D.km + k]), tcos = s16(D.mt[r * D.km + k]);
+      c.push({ u, cos, tcos, score: mscore(r, u, cos, tcos), rank: c.length + 1 });
+    }
+  }
+  Q.cands.set(r, c);
+  return c;
+}
+function bestScore(r) { const c = candidates(r); return c.length ? c[0].score : -9; }
+function umCode(u) { const c = D.U.codes[u].split(' / ').find(x => x.split(' ')[0] === Q.code); return c || D.U.id[u]; }
+function umLevel(u) { const n = parseInt(D.U.number[u], 10) || 0; return n ? Math.min(5, Math.max(1, Math.floor(n / 100))) : 0; }
+const fmtCredits = c => !c ? '' : /^\d/.test(c) ? c.replace(/^(\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)/, (m) => m + (m === '1' ? ' credit' : ' credits')) : c;
+function umCredit(u) { const m = /\d+(?:\.\d+)?/.exec(D.U.credits[u] || ''); return m ? m[0] : ''; }
+const bandLabel = b => { if (!b) return ''; const l = x => x === 5 ? 'graduate' : x + '00'; return b[0] === b[1] ? l(b[0]) : l(b[0]) + '–' + l(b[1]); };
+const shortProg = p => p.name.replace(/^University Study in (the )?/, '').replace(/, (Spain|Argentina|Denmark|Sweden|Czechia)$/, '');
+const queueLevel = r => { const i = Q.at[r]; return i >= 0 ? Q.lvl[i] : -1; };
+
+/* ------------------------------------------------------------------ decisions store */
+/* shared: the page's database (one document per course and subject, visible to everyone who can open the page);
+   local: this browser (opened from disk, or signed out); memory: nothing persists. */
+const cap = { db: null, user: null, downloads: null, me: null, canWrite: null, readOnly: false };
+const store = { kind: ls.ok ? 'local' : 'memory', map: new Map(), unsub: null, all: null };
+const LS_REVIEWS = 'reviews.v1';
+const names = new Map();
+const docId = key => Q.code + '~' + key;
+const getDoc = r => store.map.get(D.H.key[r]) || null;
+function statusOf(r) { const d = getDoc(r); if (!d || !d.decision) return 'todo'; return d.decision === 'info' ? 'info' : 'done'; }
+
+async function initShared() {
+  const cl = window.claude;
+  if (!cl || typeof cl.use !== 'function') return;
+  const use = n => Promise.resolve(cl.use(n)).catch(() => null);
+  const [db, user, downloads] = await Promise.all([use('db'), use('user'), use('downloads')]);
+  cap.user = user; cap.downloads = downloads;
+  if (user) {
+    try { cap.me = await user.me(); } catch (e) { cap.me = null; }
+    try { cap.canWrite = await user.can('data.write'); } catch (e) { cap.canWrite = null; }
+  }
+  if (db) { cap.db = db; store.kind = 'shared'; cap.readOnly = cap.canWrite === false; }
+}
+function localAll() { if (!store.all) store.all = (ls.ok && ls.get(LS_REVIEWS, {})) || {}; return store.all; }
+function subscribe() {
+  if (store.unsub) { store.unsub(); store.unsub = null; }
+  store.map = new Map();
+  const subject = Q.code;
+  if (store.kind !== 'shared') {
+    for (const [id, doc] of Object.entries(localAll())) if (doc && doc.subject === subject && doc.key) store.map.set(doc.key, doc);
+    return Promise.resolve();
+  }
+  return new Promise(resolve => {
+    let first = true;
+    const done = () => { if (first) { first = false; resolve(); } };
+    setTimeout(done, 8000);
+    try {
+      store.unsub = cap.db.collection('reviews').where('subject', '==', subject).onSnapshot(snap => {
+        if (subject !== Q.code) return;
+        const m = new Map();
+        snap.docs.forEach(d => { const x = d.data(); if (x && x.key) m.set(x.key, x); });
+        store.map = m;
+        resolveNames();
+        if (first) done(); else onDecisionsChanged();
+      }, err => { toast('Shared decisions are unavailable right now (' + (err && err.code) + ').'); done(); });
+    } catch (e) { done(); }
+  });
+}
+async function putDoc(key, body) {
+  if (body) store.map.set(key, body); else store.map.delete(key);
+  const id = docId(key);
+  if (store.kind === 'shared') {
+    if (body) await cap.db.doc('reviews/' + id).set(body); else await cap.db.doc('reviews/' + id).delete();
+  } else if (store.kind === 'local') {
+    const all = localAll();
+    if (body) all[id] = body; else delete all[id];
+    if (!ls.set(LS_REVIEWS, all)) throw { code: 'local_storage' };
+  }
+}
+async function resolveNames() {
+  if (!cap.user || typeof cap.user.profiles !== 'function') return;
+  const ids = new Set();
+  store.map.forEach(d => { if (d.reviewer) ids.add(d.reviewer); });
+  const missing = [...ids].filter(id => !names.has(id));
+  if (!missing.length) return;
+  try { const ps = await cap.user.profiles(missing); for (const id of missing) if (ps[id]) names.set(id, ps[id].name || ''); } catch (e) { return; }
+  if (state.r >= 0) renderDecide();
+}
+function whoName(doc) {
+  if (!doc) return '';
+  if (store.kind !== 'shared') return doc.reviewer_name || ls.get('name', '');
+  if (cap.me && doc.reviewer === cap.me.id) return 'you';
+  return names.get(doc.reviewer) || 'Someone';
+}
+function timeAgo(iso) {
+  if (!iso) return '';
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (s < 60) return 'just now'; if (s < 3600) return Math.round(s / 60) + ' min ago'; if (s < 86400) return Math.round(s / 3600) + ' h ago';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/* ------------------------------------------------------------------ queue */
+const state = {
+  focus: ls.get('focus', 'LING'), scope: ls.get('scope', 'likely'), status: 'all', sort: ls.get('sort', 'prog'), prog: -1, q: '',
+  queue: [], r: -1, d: null, lastPos: 0, counts: null, progCounts: null, det: null,
+};
+function searchText(r) {
+  if (!D.search) D.search = new Array(D.n);
+  let s = D.search[r];
+  if (s == null) { const H = D.H, p = D.progs[H.prog[r]]; s = D.search[r] = norm([H.code[r], H.title[r], dv(H.dept, r), p.name, p.country, p.city].join(' ')); }
+  return s;
+}
+function umQuery() {
+  const m = /^\s*([A-Za-z]{2,9})\s*(\d{3}[A-Za-z]?)\s*$/.exec(state.q);
+  if (!m) return null;
+  const u = D.umIndex.get(m[1].toUpperCase() + ' ' + m[2].toUpperCase());
+  return u == null ? -2 : u;
+}
+function scopeRows(scope) {
+  if (scope === 'all') return D.allRows;
+  const min = scope === 'likely' ? 1 : 0, out = [];
+  for (let i = 0; i < Q.n; i++) if (Q.lvl[i] >= min) out.push(Q.rows[i]);
+  return out;
+}
+function buildQueue() {
+  const terms = state.q && umQuery() == null ? norm(state.q).split(/\s+/).filter(Boolean) : [];
+  const uq = umQuery();
+  const pass = r => {
+    if (uq != null) { if (uq < 0) return false; return candidates(r).some(c => c.u === uq); }
+    if (terms.length) { const s = searchText(r); for (const t of terms) if (!s.includes(t)) return false; }
+    return true;
+  };
+  const counts = { likely: 0, possible: 0, all: 0, todo: 0, info: 0, done: 0 }, progCounts = new Map();
+  const out = [];
+  for (const scope of ['likely', 'possible', 'all']) {
+    const seen = new Set();
+    for (const r of scopeRows(scope)) {
+      const k = D.H.key[r]; if (seen.has(k)) continue; seen.add(k);
+      if (state.prog >= 0 && D.H.prog[r] !== state.prog) { if (scope === state.scope && pass(r)) progCounts.set(D.H.prog[r], (progCounts.get(D.H.prog[r]) || 0) + 1); continue; }
+      if (!pass(r)) continue;
+      counts[scope]++;
+      if (scope !== state.scope) continue;
+      progCounts.set(D.H.prog[r], (progCounts.get(D.H.prog[r]) || 0) + 1);
+      const st = statusOf(r); counts[st]++;
+      if (state.status !== 'all' && st !== state.status) continue;
+      out.push(r);
+    }
+  }
+  const lvl = r => queueLevel(r);
+  if (uq != null && uq >= 0) out.sort((a, b) => candidates(a).findIndex(c => c.u === uq) - candidates(b).findIndex(c => c.u === uq) || bestScore(b) - bestScore(a));
+  else if (state.sort === 'best') out.sort((a, b) => bestScore(b) - bestScore(a) || a - b);
+  else out.sort((a, b) => D.H.prog[a] - D.H.prog[b] || lvl(b) - lvl(a) || bestScore(b) - bestScore(a) || a - b);
+  state.queue = out; state.counts = counts; state.progCounts = progCounts;
+}
+function isFiltered() { return !!state.q || state.status !== 'all' || state.scope !== 'likely'; }
+function firstTodo(from = 0) {
+  const q = state.queue;
+  for (let k = 0; k < q.length; k++) { const r = q[(from + k) % q.length]; if (statusOf(r) === 'todo') return r; }
+  return -1;
+}
+
+/* ------------------------------------------------------------------ draft (the decision being made) */
+function rejectedOf(r) { const d = getDoc(r); return new Set((d && d.rejected) || []); }
+function electiveDefault(r, sel) {
+  const b = D.H.band[r];
+  if (b) return Math.min(4, Math.max(1, b[0]));
+  if (sel && sel.kind === 'c') { const l = umLevel(sel.u); if (l) return Math.min(4, l); }
+  return 3;
+}
+const electiveLabel = l => `${Q.code} ${l}XX elective`;
+function defaultCredits(r, sel) {
+  const h = dv(D.H.cred_um, r);
+  if (h) return h;
+  if (sel && sel.kind === 'c') return umCredit(sel.u);
+  return '';
+}
+function firstOpen(r, rej) { const c = candidates(r).find(x => !rej.has(umCode(x.u))); return c ? { kind: 'c', u: c.u } : null; }
+function makeDraft(r) {
+  const doc = getDoc(r), rej = rejectedOf(r);
+  let sel = null;
+  if (doc && doc.decision === 'equivalent' && doc.equivalent) { const u = D.umIndex.get(doc.equivalent); if (u != null) sel = { kind: 'c', u }; }
+  else if (doc && doc.decision === 'dept') { const m = /(\d)XX/.exec(doc.equivalent || ''); sel = { kind: 'e', lvl: m ? +m[1] : electiveDefault(r, null) }; }
+  if (!sel) sel = firstOpen(r, rej);
+  const picked = sel && sel.kind === 'c' && !candidates(r).some(c => c.u === sel.u) ? [sel.u] : [];
+  const keep = doc && doc.decision && doc.credits;
+  return { r, sel, picked, stamp: doc ? doc.updated_at : '', view: 'cand', changing: false, note: (doc && doc.notes) || '', noteOpen: false, credits: keep ? String(doc.credits) : defaultCredits(r, sel), creditsTouched: !!keep, lastRejected: '' };
+}
+function creditOptions(r, d) {
+  const opts = new Map(), add = (v, note) => { if (!v) return; const a = opts.get(v) || []; if (note && !a.includes(note)) a.push(note); opts.set(v, a); };
+  const h = dv(D.H.cred_um, r);
+  if (h) add(h, 'from ' + dv(D.H.credits, r));
+  if (d.sel && d.sel.kind === 'c') { const c = umCredit(d.sel.u); if (c) add(c, 'as ' + umCode(d.sel.u)); }
+  for (let i = 1; i <= 8; i++) add(String(i));
+  if (d.credits) add(d.credits);
+  return [...opts.entries()].sort((a, b) => (parseFloat(a[0]) || 0) - (parseFloat(b[0]) || 0) || a[0].localeCompare(b[0]));
+}
+const selValue = sel => !sel ? '' : sel.kind === 'c' ? 'c:' + sel.u : 'e:' + sel.lvl;
+
+/* ------------------------------------------------------------------ render: header */
+function renderHeader() {
+  const n = state.queue.length, pos = state.queue.indexOf(state.r);
+  $('#subjBtn').innerHTML = esc(Q.code) + icon.caret;
+  $('#subjBtn').title = 'Reviewing for ' + Q.code + ((D.subjByCode.get(Q.code) || {}).name ? ' (' + D.subjByCode.get(Q.code).name + ')' : '') + '. Click to change.';
+  $('#pos').innerHTML = !n ? 'No courses' : pos >= 0 ? `<b>${fmt(pos + 1)}</b> of ${fmt(n)}` : `Not in list · ${fmt(n)}`;
+  $('#prevBtn').disabled = !n || (pos === 0) || (pos < 0 && state.lastPos <= 0);
+  $('#nextBtn').disabled = !n || (pos >= 0 && pos >= n - 1);
+  const c = state.counts || {};
+  $('#doneCt').textContent = n ? `${fmt((c.done || 0) + (c.info || 0))} decided` : '';
+  $('#filteredBtn').hidden = !isFiltered();
+  const ps = $('#progSel');
+  const total = [...state.progCounts.values()].reduce((a, b) => a + b, 0);
+  ps.innerHTML = `<option value="-1">All programs (${fmt(total)})</option>` + D.progs.map((p, i) => `<option value="${i}" ${i === state.prog ? 'selected' : ''}>${esc(shortProg(p))} (${fmt(state.progCounts.get(i) || 0)})</option>`).join('');
+  ps.value = String(state.prog);
+}
+
+/* ------------------------------------------------------------------ render: decision */
+function renderDecide() {
+  const el = $('#decide'), r = state.r, d = state.d, alt = $('#altRow');
+  if (r < 0 || !d) { el.innerHTML = `<div class="bar"><span class="muted">No course to review in this list.</span><button class="btn" data-act="list">Open the list</button></div>`; alt.innerHTML = ''; return; }
+  const doc = getDoc(r), ro = cap.readOnly;
+  const banner = store.kind === 'memory' ? '<div class="banner">This browser does not allow saving: decisions will be lost when the page closes. Copy them from Decisions before you leave.</div>'
+    : store.kind === 'local' && window.claude ? '<div class="banner">Shared decisions are not available to you here, so yours are saved in this browser only.</div>' : '';
+  if (doc && doc.decision && !d.changing) {
+    const o = OUT[doc.decision] || { label: doc.decision, cls: 'gen' };
+    const what = doc.decision === 'equivalent' ? `as <b>${esc(doc.equivalent)}</b> ${esc(doc.um_title || '')}` : doc.decision === 'dept' ? `<b>${esc(doc.equivalent)}</b>` : '';
+    const cr = doc.credits && doc.decision !== 'no' && doc.decision !== 'info' ? `${what ? ' · ' : ''}${esc(doc.credits)} credit${doc.credits === '1' ? '' : 's'}` : '';
+    const who = whoName(doc);
+    el.innerHTML = banner + `<div class="bar decided">
+      <span class="verdict v-${o.cls}">${doc.decision === 'equivalent' ? icon.check : ''}${esc(o.label)}</span>
+      <span class="vtext">${what}${cr}</span>
+      <span class="who">${esc([who, timeAgo(doc.updated_at)].filter(Boolean).join(' · '))}</span>
+      <span class="grow"></span>
+      ${ro ? '' : '<button class="btn" data-act="change">Change</button>'}
+      <button class="btn primary" data-act="next-todo">Next to review</button>
+    </div>${doc.notes ? `<div class="dnote">${esc(doc.notes)}</div>` : ''}`;
+    alt.innerHTML = '';
+    return;
+  }
+  const cands = candidates(r), rej = rejectedOf(r);
+  const sv = selValue(d.sel);
+  let eq = '';
+  if (!d.sel) eq += `<option value="" selected>Choose…</option>`;
+  eq += `<optgroup label="Closest ${esc(Q.code)} courses">` + cands.map(c => `<option value="c:${c.u}" ${sv === 'c:' + c.u ? 'selected' : ''}>${esc(umCode(c.u))} · ${esc(trunc(D.U.title[c.u], 46))}${rej.has(umCode(c.u)) ? ' (disapproved)' : ''}</option>`).join('')
+    + d.picked.map(u => `<option value="c:${u}" ${sv === 'c:' + u ? 'selected' : ''}>${esc(umCode(u))} · ${esc(trunc(D.U.title[u], 46))} (chosen)</option>`).join('') + '</optgroup>';
+  eq += `<optgroup label="${esc(Q.code)} credit, no specific course">` + [1, 2, 3, 4].map(l => `<option value="e:${l}" ${sv === 'e:' + l ? 'selected' : ''}>${esc(electiveLabel(l))}</option>`).join('') + '</optgroup>';
+  eq += `<option value="pick">Another ${esc(Q.code)} course…</option>`;
+  const cr = creditOptions(r, d);
+  let crh = d.credits ? '' : `<option value="" selected>Credits?</option>`;
+  const narrow = matchMedia('(max-width: 640px)').matches;
+  crh += cr.map(([v, notes]) => `<option value="${esc(v)}" ${v === d.credits ? 'selected' : ''}>${narrow
+    ? `${esc(v)} cr${notes.length ? ' · ' + esc(notes.map(x => x.replace(/^(from|as) /, '')).join(', ')) : ''}`
+    : `${esc(v)} credit${v === '1' ? '' : 's'}${notes.length ? ' (' + esc(notes.join(', ')) + ')' : ''}`}</option>`).join('');
+  const target = !d.sel ? '' : d.sel.kind === 'c' ? umCode(d.sel.u) : electiveLabel(d.sel.lvl);
+  el.innerHTML = banner + `<div class="bar">
+    <button class="approve" data-act="approve" ${!d.sel || ro ? 'disabled' : ''} title="${esc(target ? 'Approve ' + target + ' (A)' : 'Choose a U-M equivalent first')}">${icon.check}Approve</button>
+    <button class="reject" data-act="disapprove" ${!d.sel || ro ? 'disabled' : ''} title="${esc(d.sel && d.sel.kind === 'c' ? 'Not ' + target + ': show the next closest (D)' : 'Show the closest courses (D)')}">${icon.x}Disapprove</button>
+    <div class="sels"><label class="fld eq"><span>U-M equivalent</span><select class="eqsel" id="eqSel" aria-label="U-M equivalent" ${ro ? 'disabled' : ''}>${eq}</select></label>
+    <label class="fld cr"><span>Credits</span><select class="crsel" id="crSel" aria-label="U-M credits" ${ro ? 'disabled' : ''}>${crh}</select></label></div>
+    <button class="ib notebtn" data-act="note" title="${d.noteOpen ? 'Hide the note' : 'Add a note'}" aria-label="Note" aria-pressed="${d.noteOpen}" ${ro ? 'disabled' : ''}>${icon.note}<span class="lnk" style="text-decoration:none">${d.note && !d.noteOpen ? 'Note' : ''}</span></button>
+    ${d.changing ? '<button class="lnk" data-act="cancel-change">Cancel</button><button class="lnk" data-act="clear">Clear decision</button>' : ''}
+  </div>${d.noteOpen ? `<div class="notebox"><textarea id="noteTa" placeholder="Conditions, what to ask for, who to consult" aria-label="Note">${esc(d.note)}</textarea></div>` : ''}${ro ? '<div class="small" style="margin-top:8px">You can view decisions on this page but not record them.</div>' : ''}`;
+  /* other options appear only after a disapproval (or when nothing is left to propose) */
+  if (rej.size || !d.sel || d.view === 'top') {
+    const list = [...rej];
+    const curRank = d.sel && d.sel.kind === 'c' ? (cands.find(c => c.u === d.sel.u) || {}).rank || 0 : 0;
+    const showing = curRank > 1 ? ` Showing the ${ORD[curRank].toLowerCase()}.` : '';
+    const msg = !cands.length ? `No ${esc(Q.code)} course is close to this one.`
+      : d.lastRejected ? `<b>${esc(d.lastRejected)}</b> disapproved.${showing}`
+      : list.length ? `Disapproved: ${list.map(x => `<b>${esc(x)}</b>`).join(', ')}.${showing}` : '';
+    const left = cands.filter(c => !rej.has(umCode(c.u))).length;
+    alt.innerHTML = `<div class="alt">
+      ${msg ? `<span class="msg">${msg}${cands.length && !left ? ` All ${cands.length} disapproved.` : ''}</span>` : ''}
+      ${cands.length ? `<button class="lnk" data-act="top">${d.view === 'top' ? 'Hide the top ten' : 'See the top ten'}</button><span class="sep">|</span>` : `<button class="lnk" data-act="pick">Choose a ${esc(Q.code)} course</button><span class="sep">|</span>`}
+      <span class="lab">No ${esc(Q.code)} equivalent:</span>
+      <button class="chip" data-act="elective" ${ro ? 'disabled' : ''}>${esc(Q.code)} elective</button>
+      <button class="chip" data-act="out" data-k="general" ${ro ? 'disabled' : ''}>General credit only</button>
+      <button class="chip" data-act="out" data-k="no" ${ro ? 'disabled' : ''}>Not approved</button>
+      <button class="chip" data-act="out" data-k="info" ${ro ? 'disabled' : ''}>Needs syllabus</button>
+    </div>`;
+  } else alt.innerHTML = '';
+  const es = $('#eqSel');
+  if (es) es.addEventListener('change', () => onEquivalent(es.value));
+  const cs = $('#crSel');
+  if (cs) cs.addEventListener('change', () => { d.credits = cs.value; d.creditsTouched = true; });
+  const ta = $('#noteTa');
+  if (ta) ta.addEventListener('input', () => { d.note = ta.value; });
+}
+function onEquivalent(v) {
+  const d = state.d;
+  if (v === 'pick') { renderDecide(); openPicker(); return; }
+  if (v.startsWith('c:')) d.sel = { kind: 'c', u: +v.slice(2) };
+  else if (v.startsWith('e:')) d.sel = { kind: 'e', lvl: +v.slice(2) };
+  else return;
+  d.view = 'cand';
+  if (!d.creditsTouched) d.credits = defaultCredits(state.r, d.sel);
+  renderDecide(); renderUM();
+}
+
+/* ------------------------------------------------------------------ render: course abroad */
+function abroadHTML(r, det) {
+  const H = D.H, p = D.progs[H.prog[r]], t = dv(H.um_term, r), acc = dv(H.access, r), b = H.band[r];
+  const credits = dv(H.credits, r), cu = dv(H.cred_um, r), lang = dv(H.lang, r);
+  const facts = [];
+  facts.push([TERM[t] ?? t, t === 'outside' ? 'bad' : t === 'AY' ? 'warn' : '']);
+  if (b) facts.push([`U-M ${bandLabel(b)} level`, '']);
+  if (credits) facts.push([cu ? `${credits} ≈ ${cu} U-M credit${cu === '1' ? '' : 's'}` : credits, '']);
+  if (lang && lang !== 'English') facts.push([`Taught in ${lang}`, '']);
+  if (acc === 'closed' || acc === 'restricted') facts.push([ACCESS[acc], acc === 'closed' ? 'bad' : 'warn']);
+  const others = D.keyRows.get(H.key[r]).filter(x => x !== r);
+  if (others.length) facts.push([`Also ${others.map(x => dv(H.term, x) || TERM[dv(H.um_term, x)]).join(', ')}`, '']);
+  const desc = det ? det.desc : null;
+  const links = det ? [det.course_url && `<a href="${esc(det.course_url)}" target="_blank" rel="noopener">Course page${icon.ext}</a>`,
+    det.syllabus_url && `<a href="${esc(det.syllabus_url)}" target="_blank" rel="noopener">Syllabus${icon.ext}</a>`,
+    p.mcompass && `<a href="${esc(p.mcompass)}" target="_blank" rel="noopener">Program on M-Compass${icon.ext}</a>`].filter(Boolean).join('') : '';
+  const shared = state.shared;
+  return `<div class="kick"><span>${esc(p.country)}</span><span>${esc(shortProg(p))}</span></div>
+    <h2 class="ctitle">${esc(H.title[r])}</h2>
+    ${H.code[r] ? `<div class="csub"><span class="mono">${esc(H.code[r])}</span></div>` : ''}
+    <div class="csub">${[dv(H.dept, r), det ? det.host : p.host].filter(Boolean).map(esc).join(' · ')}</div>
+    <div class="facts">${facts.map(([f, c]) => `<span class="fact ${c}">${esc(f)}</span>`).join('')}</div>
+    ${desc == null ? '<div class="desc muted">Loading the description…</div>' : desc ? `<div class="desc clamp" id="descA">${highlight(desc, shared)}</div><button class="lnk more" data-act="expand" data-t="descA" hidden>Show all</button>` : `<div class="desc none">The host publishes no description for this course; the suggestions rest on its title${dv(H.dept, r) ? ' and department' : ''}.${det && (det.course_url || det.syllabus_url) ? ' The course page or syllabus may say more.' : ''}</div>`}
+    ${links ? `<div class="links">${links}</div>` : ''}
+    <details class="more-info" data-sect="details"><summary>Details</summary><div class="dbody">${det ? detailsHTML(r, det) : ''}</div></details>
+    <details class="more-info" data-sect="similar"><summary>Similar courses on other programs</summary><div class="dbody" id="simBody"></div></details>`;
+}
+function detailsHTML(r, det) {
+  const H = D.H, t = dv(H.um_term, r), acc = dv(H.access, r), b = H.band[r], hint = H.lvl_hint[r], dl = dv(H.dlang, r);
+  const kc = D.kc, cls = [];
+  for (let k = 0; k < 3; k++) { const p = D.clsP[r * kc + k]; if (p >= 1) cls.push(`${D.subjects[D.cls[r * kc + k]].code} ${p}%`); }
+  const rows = [
+    ['Term', `${esc(dv(H.term, r) || 'Not published')} → ${esc(TERM[t] ?? t)}${t === 'outside' ? '. CGIS students on this program are not there in that term.' : t === 'AY' ? '. Runs across both semesters: academic-year students only.' : ''}`],
+    ['Level', `${esc(dv(H.level, r) || 'Not stated')}${b ? ` → U-M ${bandLabel(b)} level (${esc(dv(H.band_basis, r))})` : ''}${hint ? `. The closest U-M courses are mostly ${['', '100', '200', '300', '400', 'graduate'][Math.min(5, Math.max(1, Math.round(hint)))]}-level.` : ''}`],
+    ['Credits', `${esc(dv(H.credits, r) || 'Not stated')}${dv(H.cred_um, r) ? ` → about ${esc(dv(H.cred_um, r))} U-M credits (${esc(dv(H.cred_rule, r))})` : ''}`],
+    ['Language', `${esc(dv(H.lang, r) || 'Not stated')}${dl && LANG[dl] && LANG[dl] !== dv(H.lang, r) ? `; description in ${esc(LANG[dl])}` : ''}`],
+    ['Visiting students', esc(ACCESS[acc] || acc)],
+    det.prereq && ['Prerequisites', esc(det.prereq)],
+    det.notes && ['Notes', esc(det.notes)],
+    det.kw && ['Key terms', esc(det.kw.split(' | ').join(', '))],
+    ['Subject classifier', esc(cls.join(' · ') || 'No clear subject')],
+    ['Source', `${esc(dv(H.coverage, r) === 'catalog' ? 'Full catalog' : 'Found by a linguistics search of a catalog not exported in full')}${det.catalog_year ? ', ' + esc(det.catalog_year) + ' catalog' : ''}${det.retrieved ? ', retrieved ' + esc(det.retrieved) : ''}`],
+  ].filter(Boolean);
+  return `<dl class="kv">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+}
+function similarHTML(r) {
+  const H = D.H, out = [];
+  for (let k = 0; k < D.khh; k++) {
+    const i = D.hh[r * D.khh + k], cos = s8(D.hhs[r * D.khh + k]); if (cos <= 0.5) continue;
+    const doc = store.map.get(H.key[i]), o = doc && doc.decision ? OUT[doc.decision] : null;
+    out.push(`<button class="simrow" data-act="goto" data-r="${i}">
+      <span class="t">${esc(H.title[i])}</span>${o ? `<span class="pill ${o.cls}">${esc(o.label)}${doc.decision === 'equivalent' || doc.decision === 'dept' ? ' ' + esc(doc.equivalent) : ''}</span>` : '<span></span>'}
+      <span class="m">${esc(shortProg(D.progs[H.prog[i]]))}${H.code[i] ? ' · ' + esc(H.code[i]) : ''} · text similarity ${cos.toFixed(3)}</span></button>`);
+  }
+  return out.length ? `<div class="small">Courses with the most similar descriptions, with any ${esc(Q.code)} decision already made, to keep decisions consistent.</div><div class="sims">${out.join('')}</div>` : '<div class="small">None.</div>';
+}
+
+/* ------------------------------------------------------------------ render: U-M side */
+function renderUM() {
+  const el = $('#um'), r = state.r, d = state.d;
+  if (r < 0 || !d) { el.innerHTML = ''; return; }
+  if (d.view === 'top') { el.innerHTML = topHTML(r, d); return; }
+  if (!d.sel) { el.innerHTML = noneHTML(r); return; }
+  if (d.sel.kind === 'e') { el.innerHTML = electiveHTML(r, d); return; }
+  el.innerHTML = umHTML(r, d.sel.u);
+  fitClamp();
+}
+function umHTML(r, u) {
+  const U = D.U, c = candidates(r).find(x => x.u === u), rej = rejectedOf(r).has(umCode(u));
+  const lv = umLevel(u), cr = U.credits[u];
+  const shared = state.shared;
+  const sub = [fmtCredits(cr), lv && (lv === 5 ? 'Graduate' : lv + '00-level'), dv(U.dist, u)].filter(Boolean);
+  const b = D.H.band[r];
+  const lvlFlag = !lv || !b ? '' : lv > b[1] ? (lv === 5 ? 'Graduate course' : 'Higher level than the course abroad') : lv < b[0] ? 'Lower level than the course abroad' : '';
+  const p = c ? parts(r, u, c.cos, c.tcos) : null;
+  return `<div class="kick"><span>U-M · ${esc(Q.code)}</span>${c ? `<span class="rk">${esc(ORD[c.rank] || '')} ${esc(Q.code)} course</span>` : '<span class="rk">Chosen</span>'}${rej ? '<span class="rj">Disapproved</span>' : ''}</div>
+    <h2 class="ctitle">${esc(U.title[u])}</h2>
+    <div class="csub"><span class="mono">${esc(U.codes[u])}</span></div>
+    <div class="csub">${sub.map(esc).join(' · ')}</div>
+    <div class="strength">${c ? `${meter(c.score)}<span>${strengthOf(c.score)} text match</span>` : `<span>Not among the ten closest ${esc(Q.code)} courses</span>`}${lvlFlag ? `<span class="fact warn">${esc(lvlFlag)}</span>` : ''}</div>
+    ${U.desc[u] ? `<div class="desc clamp" id="descU">${highlight(U.desc[u], shared)}</div><button class="lnk more" data-act="expand" data-t="descU" hidden>Show all</button>` : '<div class="desc none">The LSA catalog has no description for this course.</div>'}
+    ${U.req[u] ? `<div class="req"><span class="muted">Requirements:</span> ${esc(U.req[u])}</div>` : ''}
+    <div class="links"><a href="${esc(U.url[u])}" target="_blank" rel="noopener">LSA Course Guide${icon.ext}</a>${U.terms[u] ? `<span class="muted">Offered ${esc(U.terms[u])}</span>` : `<span class="muted">Last offered ${esc(dv(U.last, u) || 'not listed')}</span>`}</div>
+    ${p ? `<details class="more-info"><summary>Why this match?</summary><div class="dbody">${whyHTML(r, u, p, c)}</div></details>` : ''}`;
+}
+function whyHTML(r, u, p, c) {
+  const kc = D.kc, i = Q.at[r];
+  const cls = []; for (let k = 0; k < 3; k++) { const pc = D.clsP[r * kc + k]; if (pc >= 1) cls.push(`${D.subjects[D.cls[r * kc + k]].code} ${pc}%`); }
+  const langName = ['English', 'Spanish', 'other languages'][D.lg[r]];
+  const b = D.H.band[r], ul = umLevel(u);
+  const lvlNote = !b ? 'The host does not state a level.' : ul >= b[0] && ul <= b[1] ? 'The levels line up.' : ul > b[1] ? `${umCode(u)} is a higher level than the course abroad (U-M ${bandLabel(b)}).` : `The course abroad reads as a higher level (U-M ${bandLabel(b)}) than ${umCode(u)}.`;
+  const terms = state.sharedList || [];
+  const f = x => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(3);
+  return `<div class="why">
+      <span>2 × text similarity (2 × ${p.cos.toFixed(3)})</span><span class="v">${(2 * p.cos).toFixed(3)}</span>
+      <span>− how close this course is to U-M courses in general</span><span class="v">−${p.rU.toFixed(3)}</span>
+      <span>− how close ${esc(umCode(u))} is to courses abroad in ${langName}</span><span class="v">−${p.rH.toFixed(3)}</span>
+      <span>+ ${TITLE_W} × (title similarity ${p.tcos.toFixed(3)} − ${TITLE_REF})</span><span class="v">${f(p.title)}</span>
+      <span class="tot">Match score: ${strengthOf(p.score).toLowerCase()} (strong ≥ ${STRONG.toFixed(3)}, moderate ≥ ${MODERATE.toFixed(3)})</span><span class="v tot">${p.score.toFixed(3)}</span>
+    </div>
+    <div class="small">Rank ${c.rank} of the ${esc(Q.code)} courses by this score.${candidates(r)[1] && c.rank === 1 ? ` The second, ${esc(umCode(candidates(r)[1].u))}, scores ${candidates(r)[1].score.toFixed(3)}.` : ''} ${esc(lvlNote)}</div>
+    <div class="small">Shared terms: ${terms.length ? terms.map(t => `<mark>${esc(t)}</mark>`).join(' ') : 'none in English (often a description in another language, or other words for the same topic)'}.</div>
+    <div class="small">Subject classifier for the course abroad: ${esc(cls.join(' · ') || 'no clear subject')}${i >= 0 && Q.rank[i] ? '' : ` (${esc(Q.code)} is not among its first six)`}. <button class="lnk" data-act="about">How this works</button></div>`;
+}
+function topHTML(r, d) {
+  const cands = candidates(r), rej = rejectedOf(r), sv = selValue(d.sel);
+  const rows = cands.map(c => {
+    const code = umCode(c.u), isRej = rej.has(code), lv = umLevel(c.u);
+    return `<li><button class="trow ${sv === 'c:' + c.u ? 'cur' : ''} ${isRej ? 'rej' : ''}" data-act="pick-cand" data-u="${c.u}">
+      <span class="n">${c.rank}</span>
+      <span><span class="c">${esc(code)}</span> <span class="t">${esc(D.U.title[c.u])}</span></span>
+      <span class="s">${meter(c.score)}${strengthOf(c.score)}</span>
+      <span class="m">${[fmtCredits(D.U.credits[c.u]), lv && (lv === 5 ? 'Graduate' : lv + '00-level'), isRej && 'disapproved', !D.U.desc[c.u] && 'no catalog description'].filter(Boolean).map(esc).join(' · ')}</span>
+    </button></li>`;
+  }).join('');
+  return `<div class="kick"><span>U-M · ${esc(Q.code)}</span><span class="rk">The ten closest ${esc(Q.code)} courses</span><span class="grow"></span><button class="lnk" data-act="top">Back</button></div>
+    <ol class="tops">${rows}</ol>
+    <div class="links"><button class="lnk" data-act="pick">Another ${esc(Q.code)} course…</button></div>`;
+}
+function noneHTML(r) {
+  const cands = candidates(r);
+  const near = [];
+  for (let k = 0; k < Math.min(3, D.km); k++) { const u = D.m[r * D.km + k]; near.push(`<span class="mono">${esc(D.U.id[u])}</span> ${esc(D.U.title[u])}`); }
+  return `<div class="kick"><span>U-M · ${esc(Q.code)}</span></div>
+    <div class="empty"><h3>${cands.length ? `All ${cands.length} closest ${esc(Q.code)} courses disapproved` : `No ${esc(Q.code)} course is close to this one`}</h3>
+    <div>Choose another ${esc(Q.code)} course, an elective, or one of the options above.</div>
+    <div class="small" style="margin-top:12px">Its closest U-M courses in any subject: ${near.join('; ')}.</div>
+    <div class="links"><button class="lnk" data-act="pick">Choose a ${esc(Q.code)} course…</button>${cands.length ? '<button class="lnk" data-act="top">See the top ten</button>' : ''}</div></div>`;
+}
+function electiveHTML(r, d) {
+  const c = candidates(r)[0];
+  return `<div class="kick"><span>U-M · ${esc(Q.code)}</span><span class="rk">Departmental credit</span></div>
+    <h2 class="ctitle">${esc(electiveLabel(d.sel.lvl))}</h2>
+    <div class="csub">${esc(Q.code)} credit at the ${d.sel.lvl}00 level without a specific U-M course. Change the level in the U-M equivalent menu.</div>
+    ${c ? `<div class="links"><button class="lnk" data-act="pick-cand" data-u="${c.u}">Back to the closest course, ${esc(umCode(c.u))}</button><button class="lnk" data-act="top">See the top ten</button></div>` : ''}`;
+}
+
+/* shared terms between the two descriptions, highlighted in both */
+const STOP = new Set(('introduce introduces introduced introducing fundamental fundamentals concept concepts aims students the and for with from into this that these those their there which will also such than then they them have has had are was were been being its our your can may must not but all any each more most other some only over under upon about between within across through using used use based including include includes study studies course courses module modules unit units student learn learning introduction introductory topics topic semester term week weeks lecture lectures seminar seminars class classes assessment exam essay credit credits level part year years hours work research analysis understanding knowledge skills develop development explore explores examine examines focus focuses provide provides overview approach approaches area areas issues issue main key basic advanced different various first second third range well both able ability practice practical will would should could general introduction').split(' '));
+const stem = w => w.replace(/(ations?|itions?|ments?|ness|ities|ity|ical|ically|ics|ic|ing|ings|ed|ies|es|s|al|ly)$/, '');
+function termSet(text, surf) {
+  const s = new Map();
+  for (const w of norm(text).match(/[a-z]{4,}/g) || []) {
+    if (STOP.has(w)) continue; const k = stem(w); if (k.length < 4) continue;
+    s.set(k, (s.get(k) || 0) + 1);
+    if (surf) { const m = surf.get(k) || new Map(); m.set(w, (m.get(w) || 0) + 1); surf.set(k, m); }
+  }
+  return s;
+}
+function computeShared(r, u, det) {
+  state.shared = new Set(); state.sharedList = [];
+  if (u == null || !det) return;
+  const surf = new Map(), a = termSet(D.H.title[r] + ' ' + (det.desc || ''), surf), b = termSet(D.U.title[u] + ' ' + (D.U.desc[u] || ''), surf);
+  const both = [...a.keys()].filter(k => b.has(k)).sort((x, y) => (a.get(y) + b.get(y)) - (a.get(x) + b.get(x))).slice(0, 14);
+  state.shared = new Set(both);
+  state.sharedList = both.map(k => [...surf.get(k).entries()].sort((x, y) => y[1] - x[1])[0][0]);
+}
+function highlight(text, shared) {
+  if (!shared || !shared.size) return esc(text);
+  return esc(text).replace(/[A-Za-zÀ-ÿ]{4,}/g, w => { const n = norm(w); return !STOP.has(n) && shared.has(stem(n)) ? `<mark>${w}</mark>` : w; });
+}
+function fitClamp() {
+  for (const id of ['descA', 'descU']) {
+    const el = document.getElementById(id); if (!el) continue;
+    const btn = el.nextElementSibling;
+    if (btn && btn.dataset.act === 'expand') btn.hidden = el.scrollHeight <= el.clientHeight + 4;
+  }
+}
+
+/* ------------------------------------------------------------------ render all */
+let renderToken = 0;
+async function renderAll() {
+  renderHeader();
+  const r = state.r, token = ++renderToken;
+  if (r < 0) { renderDecide(); $('#abroad').innerHTML = `<div class="empty"><h3>Nothing to review here</h3>No course matches this list. <button class="lnk" data-act="list">Open the list</button> to change it.</div>`; $('#um').innerHTML = ''; return; }
+  renderDecide();
+  let det = detailNow(r);
+  const u = () => state.d && state.d.sel && state.d.sel.kind === 'c' ? state.d.sel.u : null;
+  if (!det) {
+    computeShared(r, null, null);
+    $('#abroad').innerHTML = abroadHTML(r, null); renderUM();
+    det = await hostDetail(r).catch(() => null);
+    if (token !== renderToken || state.r !== r) return;
+  }
+  state.det = det;
+  computeShared(r, u(), det);
+  $('#abroad').innerHTML = abroadHTML(r, det);
+  renderUM();
+  fitClamp();
+  const q = state.queue, i = q.indexOf(r);
+  if (i >= 0 && q[i + 1] != null) loadDetail(D.H.prog[q[i + 1]]).catch(() => {});
+}
+function rerenderSides() {
+  const r = state.r; if (r < 0) return;
+  computeShared(r, state.d && state.d.sel && state.d.sel.kind === 'c' ? state.d.sel.u : null, state.det);
+  $('#abroad').innerHTML = abroadHTML(r, state.det);
+  renderUM(); fitClamp();
+}
+
+/* ------------------------------------------------------------------ navigation */
+function openCourse(r, opts = {}) {
+  state.r = r;
+  const pos = state.queue.indexOf(r); if (pos >= 0) state.lastPos = pos;
+  state.d = r >= 0 ? makeDraft(r) : null;
+  state.det = null;
+  if (r >= 0) ls.set('cur.' + Q.code, D.H.key[r]);
+  renderAll();
+  if (!opts.keepScroll) window.scrollTo({ top: 0 });
+}
+function step(delta) {
+  const q = state.queue; if (!q.length) return;
+  let i = q.indexOf(state.r);
+  i = i >= 0 ? i + delta : Math.min(q.length - 1, Math.max(0, state.lastPos + (delta > 0 ? 0 : -1)));
+  if (q[i] != null) openCourse(q[i]);
+}
+function advance(fromIdx) {
+  const q = state.queue;
+  if (!q.length) { openCourse(-1); return; }
+  const start = q.indexOf(state.r) >= 0 ? q.indexOf(state.r) + 1 : Math.min(fromIdx, q.length - 1);
+  const next = firstTodo(start);
+  if (next >= 0) openCourse(next);
+  else { renderAll(); toast('Every course in this list has a decision.'); }
+}
+function refreshQueue() { buildQueue(); renderHeader(); }
+function onDecisionsChanged() {
+  refreshQueue();
+  if (state.r >= 0 && state.d && !state.d.changing) {
+    const doc = getDoc(state.r);
+    if ((doc ? doc.updated_at : '') !== state.d.stamp) { state.d = makeDraft(state.r); renderDecide(); rerenderSides(); }  /* someone else decided this course */
+    else renderDecide();
+  }
+  if (!$('#drawer').hidden) drawList(true);
+}
+
+/* ------------------------------------------------------------------ actions */
+let lastAction = null;
+async function commit(r, patch, message) {
+  const H = D.H, key = H.key[r], prev = getDoc(r);
+  const now = new Date().toISOString();
+  const me = store.kind === 'shared' ? (cap.me && cap.me.id) || null : 'local';
+  const body = {
+    subject: Q.code, key, program_id: D.progs[H.prog[r]].id, program: D.progs[H.prog[r]].name, code: H.code[r], title: H.title[r],
+    decision: patch.decision, equivalent: patch.equivalent || '', um_title: patch.um_title || '', credits: patch.credits || '',
+    notes: patch.notes || '', rejected: patch.rejected || [], reviewer: me, updated_at: now,
+    history: [...((prev && prev.history) || []), { action: patch.action, equivalent: patch.equivalent || '', by: me, at: now }].slice(-20),
+  };
+  if (store.kind !== 'shared') body.reviewer_name = ls.get('name', '');
+  try {
+    await putDoc(key, body);
+  } catch (e) {
+    if (prev) store.map.set(key, prev); else store.map.delete(key);
+    if (e && e.code === 'invalid_argument') { cap.readOnly = true; toast('You can view decisions on this page but not record them.'); }
+    else if (e && e.code === 'quota_exceeded') toast('The decision store is full: ' + (e.message || 'contact the page owner') + '.');
+    else if (e && e.code === 'local_storage') toast('This browser refused to save the decision.');
+    else toast('Could not save (' + ((e && e.code) || 'error') + '). Try again.');
+    renderDecide();
+    return false;
+  }
+  lastAction = { key, prev, r, subject: Q.code };
+  if (state.d && state.r === r) state.d.stamp = body.updated_at;
+  if (message) toast(message, true);
+  return true;
+}
+async function undo() {
+  const a = lastAction; if (!a) return;
+  lastAction = null;
+  if (a.subject !== Q.code) { toast('That decision was for ' + a.subject + '; switch back to undo it.'); return; }
+  try { await putDoc(a.key, a.prev); } catch (e) { toast('Could not undo (' + ((e && e.code) || 'error') + ').'); return; }
+  refreshQueue();
+  openCourse(a.r);
+  toast('Undone.');
+}
+async function approve() {
+  const r = state.r, d = state.d;
+  if (r < 0 || !d || !d.sel || cap.readOnly) return;
+  const doc = getDoc(r), idx = state.queue.indexOf(r);
+  let rejected = ((doc && doc.rejected) || []).slice(), patch;
+  if (d.sel.kind === 'c') {
+    const code = umCode(d.sel.u);
+    rejected = rejected.filter(x => x !== code);
+    patch = { decision: 'equivalent', equivalent: code, um_title: D.U.title[d.sel.u], action: 'approved' };
+  } else patch = { decision: 'dept', equivalent: electiveLabel(d.sel.lvl), action: 'elective' };
+  Object.assign(patch, { credits: d.credits, notes: d.note.trim(), rejected });
+  const label = patch.decision === 'equivalent' ? `Approved ${patch.equivalent}` : patch.equivalent;
+  if (await commit(r, patch, `${label} for “${trunc(D.H.title[r], 40)}”.`)) { refreshQueue(); advance(idx); }
+}
+async function disapprove() {
+  const r = state.r, d = state.d;
+  if (r < 0 || !d || cap.readOnly) return;
+  if (!d.sel || d.sel.kind !== 'c') { d.sel = firstOpen(r, rejectedOf(r)); d.view = d.sel ? 'cand' : 'top'; renderDecide(); renderUM(); return; }
+  const doc = getDoc(r), code = umCode(d.sel.u);
+  const rejected = [...new Set([...((doc && doc.rejected) || []), code])];
+  const ok = await commit(r, { decision: '', equivalent: '', credits: '', notes: d.note.trim() || (doc && doc.notes) || '', rejected, action: 'disapproved' }, `${code} disapproved.`);
+  if (!ok) return;
+  d.lastRejected = code; d.changing = false;
+  d.sel = firstOpen(r, new Set(rejected));
+  d.view = 'cand';
+  if (!d.creditsTouched) d.credits = defaultCredits(r, d.sel);
+  refreshQueue();
+  computeShared(r, d.sel && d.sel.kind === 'c' ? d.sel.u : null, state.det);
+  renderDecide(); rerenderSides();
+}
+async function outcome(kind) {
+  const r = state.r, d = state.d;
+  if (r < 0 || !d || cap.readOnly) return;
+  const doc = getDoc(r), idx = state.queue.indexOf(r);
+  const patch = { decision: kind, equivalent: kind === 'general' ? 'General credit' : '', credits: kind === 'general' ? d.credits : '', notes: d.note.trim(), rejected: (doc && doc.rejected) || [], action: kind };
+  if (await commit(r, patch, `${OUT[kind].label} for “${trunc(D.H.title[r], 40)}”.`)) { refreshQueue(); advance(idx); }
+}
+async function clearDecision() {
+  const r = state.r; if (r < 0 || cap.readOnly) return;
+  const prev = getDoc(r); if (!prev) return;
+  try { await putDoc(D.H.key[r], null); } catch (e) { toast('Could not clear (' + ((e && e.code) || 'error') + ').'); return; }
+  lastAction = { key: D.H.key[r], prev, r, subject: Q.code };
+  toast('Decision cleared.', true);
+  refreshQueue(); openCourse(r, { keepScroll: true });
+}
+
+/* ------------------------------------------------------------------ list drawer */
+const ROW_H = 64;
+function openList() {
+  closeMenu();
+  const dr = $('#drawer');
+  dr.hidden = false;
+  dr.innerHTML = `<div class="scrim" data-act="close-drawer"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Course list">
+    <div class="dhead"><div class="search">${icon.search}<input id="lq" type="search" placeholder="Title, code, program, or a U-M course like ${esc(Q.code)} 315" value="${esc(state.q)}" aria-label="Search"></div><button class="ib" data-act="close-drawer" aria-label="Close">${icon.x}</button></div>
+    <div class="dfilters" id="dfilters"></div>
+    <div class="dcount" id="dcount"></div>
+    <div class="vlist" id="vlist"><div class="vinner" id="vinner"></div></div>
+  </aside>`;
+  const inp = $('#lq');
+  let t; inp.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { state.q = inp.value.trim(); refreshQueue(); drawList(false); }, 150); });
+  $('#vlist').addEventListener('scroll', () => drawRows(false), { passive: true });
+  drawList(false, true);
+  if (matchMedia('(min-width: 700px)').matches) inp.focus();
+}
+function closeList() { $('#drawer').hidden = true; $('#drawer').innerHTML = ''; }
+function drawList(keepScroll, scrollToCur) {
+  const c = state.counts, f = $('#dfilters'); if (!f) return;
+  const segBtn = (grp, v, label, ct) => `<button data-act="seg" data-g="${grp}" data-v="${v}" aria-pressed="${state[grp] === v}">${esc(label)}${ct != null ? `<span class="ct">${fmt(ct)}</span>` : ''}</button>`;
+  f.innerHTML = `
+    <div class="frow"><span class="lab">Courses</span><div class="seg">${segBtn('scope', 'likely', 'Likely ' + Q.code, c.likely)}${segBtn('scope', 'possible', 'Possible too', c.possible)}${segBtn('scope', 'all', 'All', c.all)}</div></div>
+    <div class="frow"><span class="lab">Status</span><div class="seg">${segBtn('status', 'all', 'Any')}${segBtn('status', 'todo', 'To review', c.todo)}${segBtn('status', 'info', 'Needs info', c.info)}${segBtn('status', 'done', 'Decided', c.done)}</div></div>
+    <div class="frow"><span class="lab">Order</span><div class="seg">${segBtn('sort', 'prog', 'By program')}${segBtn('sort', 'best', 'Closest match first')}</div></div>
+    <div class="frow"><span class="lab">Program</span><select id="lprog" aria-label="Program">${$('#progSel').innerHTML}</select></div>`;
+  const lp = $('#lprog'); lp.value = String(state.prog);
+  lp.addEventListener('change', () => setProg(+lp.value));
+  const uq = umQuery();
+  $('#dcount').innerHTML = `<span>${fmt(state.queue.length)} course${state.queue.length === 1 ? '' : 's'}</span>${uq != null ? `<span>${uq >= 0 ? `with ${esc(D.U.id[uq])} among their ten closest ${esc(Q.code)} courses` : 'no U-M course with that code'}</span>` : ''}${isFiltered() || state.prog >= 0 ? '<button class="lnk" data-act="reset-list">Reset</button>' : ''}`;
+  const inner = $('#vinner'), box = $('#vlist');
+  inner.style.height = (state.queue.length * ROW_H) + 'px';
+  if (!keepScroll) box.scrollTop = 0;
+  if (scrollToCur) { const i = state.queue.indexOf(state.r); if (i >= 0) box.scrollTop = Math.max(0, i * ROW_H - box.clientHeight / 3); }
+  drawRows(true);
+  if (!state.queue.length) inner.innerHTML = `<div class="empty" style="padding:24px">No course matches. <button class="lnk" data-act="reset-list">Reset the list</button></div>`;
+}
+let lastRange = '';
+function drawRows(force) {
+  const box = $('#vlist'), inner = $('#vinner'); if (!box) return;
+  const q = state.queue, n = q.length; if (!n) return;
+  const first = Math.max(0, Math.floor(box.scrollTop / ROW_H) - 6), last = Math.min(n, Math.ceil((box.scrollTop + box.clientHeight) / ROW_H) + 6);
+  const key = first + ':' + last + ':' + state.r;
+  if (!force && key === lastRange) return;
+  lastRange = key;
+  let h = '';
+  for (let i = first; i < last; i++) {
+    const r = q[i], H = D.H, doc = getDoc(r), o = doc && doc.decision ? OUT[doc.decision] : null, rej = new Set((doc && doc.rejected) || []), c = candidates(r).find(x => !rej.has(umCode(x.u)));
+    const pill = o ? `<span class="pill ${o.cls}">${esc(doc.decision === 'equivalent' || doc.decision === 'dept' ? doc.equivalent : o.label)}</span>` : doc && doc.rejected && doc.rejected.length ? `<span class="pill pend">${doc.rejected.length} disapproved</span>` : '';
+    h += `<div class="lrow ${r === state.r ? 'cur' : ''}" data-act="goto" data-r="${r}" style="transform:translateY(${i * ROW_H}px)" role="button" tabindex="0">
+      <div class="l1"><span class="lt">${esc(H.title[r])}</span>${pill}</div>
+      <div class="l2">${c ? `<b>${esc(umCode(c.u))}</b> ${strengthOf(c.score).toLowerCase()}` : `no close ${esc(Q.code)} course`} · ${esc(shortProg(D.progs[H.prog[r]]))}${H.code[r] ? ' · ' + esc(H.code[r]) : ''}</div></div>`;
+  }
+  inner.innerHTML = h;
+}
+function setProg(i) {
+  state.prog = i; ls.set('prog.' + Q.code, i >= 0 ? D.progs[i].id : '');
+  refreshQueue();
+  const cur = state.queue.indexOf(state.r);
+  if (cur < 0) { const nx = firstTodo(0); openCourse(nx >= 0 ? nx : (state.queue[0] ?? -1)); } else renderHeader();
+  if (!$('#drawer').hidden) drawList(false, true);
+}
+
+/* ------------------------------------------------------------------ menu and sheets */
+function openMenu() {
+  const m = $('#menu'), b = $('#menuBtn').getBoundingClientRect();
+  const decided = [...store.map.values()].filter(x => x.decision).length;
+  m.innerHTML = `<button data-act="subject">Reviewing for <span>${esc(Q.code)}</span></button>
+    <button data-act="decisions">Decisions <span>${fmt(decided)}</span></button>
+    <button data-act="about">About this tool</button>`;
+  m.hidden = false;
+  m.style.top = (b.bottom + 6) + 'px';
+  m.style.right = Math.max(8, innerWidth - b.right) + 'px';
+}
+function closeMenu() { $('#menu').hidden = true; }
+function openSheet(title, body, wide) {
+  closeMenu();
+  const s = $('#sheet');
+  s.hidden = false;
+  s.innerHTML = `<div class="scrim" data-act="close-sheet"></div><div class="sheet ${wide ? 'wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+    <div class="shead"><h2>${esc(title)}</h2><button class="ib" data-act="close-sheet" aria-label="Close">${icon.x}</button></div>
+    <div class="sbody" id="sbody">${body}</div></div>`;
+}
+function closeSheet() { $('#sheet').hidden = true; $('#sheet').innerHTML = ''; }
+
+function weakShare() {
+  let n = 0, weak = 0;
+  for (let i = 0; i < Q.n; i++) if (Q.lvl[i] >= 1) { n++; if (bestScore(Q.rows[i]) < MODERATE) weak++; }
+  return n ? Math.round(100 * weak / n) : 0;
+}
+function openAbout() {
+  const m = D.meta, c = m.counts, cl = m.classifier || {}, spot = (m.checks || {}).ling_spot;
+  const host = store.kind === 'shared' ? 'Decisions are saved with this page and visible to everyone who can open it.'
+    : store.kind === 'local' ? 'Decisions are saved in this browser on this computer only. To pass them on, open Decisions in the menu and download the CSV.'
+      : 'This browser does not allow saving, so decisions last only until the page closes. Download them from Decisions before you leave.';
+  openSheet('How the suggestions are made', `<div class="prose">
+    <p>Every suggestion here is a real course from a published catalog, put in order by a fixed formula. The page writes nothing of its own: course descriptions are the catalogs' own text, and the same course always gets the same suggestions.</p>
+    <div class="stats">
+      <div class="stat"><b>${fmt(c.host)}</b><span>courses abroad, from ${m.programs.length} programs' catalogs</span></div>
+      <div class="stat"><b>${fmt(c.um)}</b><span>U-M courses, from the LSA catalogs</span></div>
+      <div class="stat"><b>${Math.round((cl.top1 || 0) * 100)}%</b><span>first-choice subject right on ${fmt(cl.heldout_courses || 0)} unseen U-M courses</span></div>
+      <div class="stat"><b>${esc(new Date(m.built + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }))}</b><span>date the data was built</span></div>
+    </div>
+    <h3>Sources</h3>
+    <p>Each course abroad links to its catalog page where the catalog has one, and each U-M course to the LSA Course Guide, so the text can be checked at the source. ${fmt(c.um_admin || 0)} U-M independent-study, thesis and instructor-training courses, and topics courses without a description, are never suggested.</p>
+    <h3>Similarity</h3>
+    <p>Each course's title, department and description is turned into a list of 768 numbers by <code>${esc(m.model)}</code>, an openly published text-embedding model trained on text in about 100 languages. Courses on the same topic get similar numbers even in different languages, so a Spanish or German description is compared with U-M's English ones directly, without translation. Text similarity is the cosine between the two lists (1 means the same direction). Titles are compared the same way on their own, after dropping frames like “Introduction to”.</p>
+    <h3>The match score</h3>
+    <p>Raw similarity favors generic courses that sit close to everything, and it runs lower for text that is not in English. The score corrects both, using the hubness correction from cross-lingual word-embedding research (CSLS, Conneau et al. 2018):</p>
+    <div class="formula">score = 2 × similarity − (course abroad: mean similarity to its 10 nearest U-M courses)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;− (U-M course: mean similarity to its 10 nearest courses abroad in the same language, at least the median)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ ${TITLE_W} × (title similarity − ${TITLE_REF})</div>
+    <p>The ${esc(Q.code)} course with the highest score is shown first; Disapprove moves to the next. “Strong” means a score of ${STRONG.toFixed(3)} or more and “moderate” ${MODERATE.toFixed(3)} or more, cut-offs set by reading about 70 sampled pairs. Scores run lower for descriptions in other languages: in the ${esc(Q.code)} list, ${weakShare()}% of courses have no ${esc(Q.code)} match above “weak”, so treat the label as a rough guide and the order as the main signal. “Why this match?” under each suggestion shows the arithmetic for that pair.</p>
+    <h3>Which courses are in the ${esc(Q.code)} list</h3>
+    <p>A classifier (${esc(cl.model || 'logistic regression')}) learned from the U-M catalog which subject each course text belongs to. On ${fmt(cl.heldout_courses || 0)} U-M courses it never saw, its first choice was right ${Math.round((cl.top1 || 0) * 100)}% of the time and the right subject was among its first three ${Math.round((cl.top3 || 0) * 100)}% of the time. A course abroad is a likely ${esc(Q.code)} course when ${esc(Q.code)} is the classifier's first choice or at least half as probable as it (and at least ${m.class_floor || 4}%), or when a ${esc(Q.code)} course matches it at “strong”. “Possible too” adds courses where ${esc(Q.code)} is among its first three choices or a ${esc(Q.code)} course matches at “moderate”. Courses that sit between two departments often read as the other one's${Q.code === 'LING' ? ' (a language\'s grammar or sound system, such as Sintaxis del español, reads as SPANISH)' : ''} and appear only under “Possible too” or “All”.</p>
+    ${spot && Q.code === 'LING' ? `<h3>How often the first suggestion is right</h3>
+    <p>A check on the ${fmt(spot.courses)} courses abroad whose titles name a core subfield (syntax, phonology, phonetics, semantics, sociolinguistics, acquisition, computational linguistics, neurolinguistics, bilingualism, historical linguistics): the U-M LING course that teaches that subfield is the first suggestion for ${Math.round(spot.top1 * 100)}% of them, among the first three for ${Math.round(spot.top3 * 100)}% and among the ten for ${Math.round(spot.top10 * 100)}%. When it is not first, the course most often ahead of it is LING 398 (Introduction to Spanish Linguistics), which ranks high for courses described in Spanish.</p>` : ''}
+    <h3>Levels and credits</h3>
+    <p>Host levels are read into U-M levels by fixed rules: in three-year degrees (England, Australia, the Netherlands) final-year courses read as 400-level and second-year as 300-level; in four-year degrees the year sets the level. Credits default to the host's credits at 2 ECTS = 1 U-M credit (2 UK credits = 1 ECTS) where the host's unit allows; otherwise to the U-M course's credits. Both are defaults for you to confirm.</p>
+    <h3>What the score does not see</h3>
+    <p>Workload, contact hours, assessment, prerequisites in practice, or whether the course abroad is an introduction or an advanced seminar on the same topic. It puts the likely equivalent first; the decision is yours.</p>
+    <h3>Your decisions</h3>
+    <p>${host}</p>
+    <h3>Keyboard</h3>
+    <p class="small" style="font-family:var(--sans)">A approve · D disapprove · T top ten · ← → previous and next course · L list · Esc close</p>
+  </div>`);
+}
+function openSubjects() {
+  const list = D.subjects.filter(s => D.queues[s.code]).map(s => ({ ...s, q: D.queues[s.code] }));
+  openSheet('Review for which U-M subject?', `<div class="search">${icon.search}<input id="sq" type="search" placeholder="Code or name, for example LING or Linguistics" aria-label="Search subjects"></div><div class="plist" id="slist"></div>`);
+  const draw = () => {
+    const t = norm($('#sq').value);
+    const items = list.filter(s => !t || norm(s.code + ' ' + s.name).includes(t)).sort((a, b) => (b.code === Q.code) - (a.code === Q.code) || b.q.likely - a.q.likely);
+    $('#slist').innerHTML = items.map(s => `<button class="prow" data-act="set-subject" data-c="${esc(s.code)}"><span><span class="c">${esc(s.code)}</span> <span class="t">${esc(s.name || '')}</span></span><span class="small">${s.code === Q.code ? 'current' : ''}</span><span class="m">${fmt(s.q.likely)} likely courses abroad, ${fmt(s.q.n)} with “possible”</span></button>`).join('') || '<div class="small">No subject matches.</div>';
+  };
+  $('#sq').addEventListener('input', draw); draw();
+  if (matchMedia('(min-width: 700px)').matches) $('#sq').focus();
+}
+async function setSubject(code) {
+  if (code === Q.code) { closeSheet(); return; }
+  closeSheet();
+  toast('Loading ' + code + '…');
+  try { await loadFocus(code); } catch (e) { toast('Could not load ' + code + ' (' + e.message + ').'); return; }
+  state.focus = code; ls.set('focus', code);
+  state.q = ''; state.status = 'all';
+  const pid = ls.get('prog.' + code, '');
+  state.prog = pid ? D.progs.findIndex(p => p.id === pid) : -1;
+  await subscribe();
+  buildQueue();
+  startPosition();
+  hideToast();
+}
+function openPicker() {
+  let other = false;
+  openSheet(`Choose a U-M course`, `<div class="toolbar"><div class="search" style="flex:1">${icon.search}<input id="pq" type="search" placeholder="Code or words from the title" aria-label="Search U-M courses"></div><label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="pother"> Other subjects too</label></div><div class="plist" id="plist"></div>`);
+  const draw = () => {
+    const t = norm($('#pq').value).split(/\s+/).filter(Boolean), out = [];
+    for (let u = 0; u < D.nu; u++) {
+      if (!other && !Q.listed[u]) continue;
+      if (t.length) { const s = norm(D.U.codes[u] + ' ' + D.U.title[u]); if (!t.every(w => s.includes(w))) continue; }
+      out.push(u);
+    }
+    out.sort((a, b) => (Q.listed[b] - Q.listed[a]) || umCode(a).localeCompare(umCode(b), 'en', { numeric: true }));
+    $('#plist').innerHTML = out.slice(0, 300).map(u => `<button class="prow" data-act="pick-u" data-u="${u}"><span><span class="c">${esc(Q.listed[u] ? umCode(u) : D.U.id[u])}</span> <span class="t">${esc(D.U.title[u])}</span></span><span class="small">${esc(D.U.credits[u] || '')}</span><span class="m">${esc(D.U.codes[u].includes(' / ') ? D.U.codes[u] : dv(D.U.level, u))}${D.U.admin[u] ? ' · independent study, thesis or topics course' : ''}</span></button>`).join('') + (out.length > 300 ? `<div class="small">${fmt(out.length - 300)} more: type to narrow.</div>` : '') || '<div class="small">No U-M course matches.</div>';
+  };
+  $('#pq').addEventListener('input', draw);
+  $('#pother').addEventListener('change', e => { other = e.target.checked; draw(); });
+  draw();
+  if (matchMedia('(min-width: 700px)').matches) $('#pq').focus();
+}
+function pickCourse(u) {
+  const d = state.d; if (!d) return;
+  if (!candidates(state.r).some(c => c.u === u) && !d.picked.includes(u)) d.picked.push(u);
+  d.sel = { kind: 'c', u }; d.view = 'cand';
+  if (!d.creditsTouched) d.credits = defaultCredits(state.r, d.sel);
+  closeSheet();
+  renderDecide(); rerenderSides();
+}
+function openDecisions() {
+  const H = D.H, list = [...store.map.values()].filter(x => x.decision).sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+  const pend = [...store.map.values()].filter(x => !x.decision && x.rejected && x.rejected.length).length;
+  const rowOf = key => (D.keyRows.get(key) || [])[0];
+  const where = store.kind === 'shared' ? 'Saved with this page, visible to everyone who can open it.' : store.kind === 'local' ? 'Saved in this browser only.' : 'Not saved: download before closing the page.';
+  const body = `<div class="toolbar">
+      <span class="small">${fmt(list.length)} decided${pend ? `, ${fmt(pend)} in progress` : ''} for ${esc(Q.code)}. ${esc(where)}</span><span class="grow"></span>
+      ${store.kind !== 'shared' ? `<label class="small" style="display:flex;gap:6px;align-items:center">Your name <input id="myname" value="${esc(ls.get('name', ''))}" placeholder="for the CSV" style="width:12em"></label>` : ''}
+      <button class="btn" data-act="copy-csv" ${list.length ? '' : 'disabled'}>Copy CSV</button>
+      ${cap.downloads || !window.claude ? `<button class="btn primary" data-act="download-csv" ${list.length ? '' : 'disabled'}>Download CSV</button>` : ''}
+    </div>
+    ${list.length ? `<div class="tablewrap"><table><thead><tr><th>Course abroad</th><th>Program</th><th>Decision</th><th>U-M equivalent</th><th>Credits</th><th>Disapproved</th><th>Note</th><th>By</th><th>When</th></tr></thead><tbody>${list.map(x => {
+      const r = rowOf(x.key), o = OUT[x.decision] || { label: x.decision, cls: 'gen' };
+      return `<tr class="${r != null ? 'click' : ''}" ${r != null ? `data-act="goto" data-r="${r}"` : ''}><td><div class="tt">${esc(x.title)}</div><div class="small mono">${esc(x.code || '')}</div></td><td class="small">${r != null ? esc(shortProg(D.progs[H.prog[r]])) : esc(x.program || '')}</td><td><span class="pill ${o.cls}">${esc(o.label)}</span></td><td class="mono small">${esc(x.equivalent || '')}</td><td class="num">${esc(x.credits || '')}</td><td class="small mono">${esc((x.rejected || []).join(', '))}</td><td class="small" style="max-width:280px">${esc(x.notes || '')}</td><td class="small">${esc(whoName(x))}</td><td class="small muted">${esc(timeAgo(x.updated_at))}</td></tr>`;
+    }).join('')}</tbody></table></div>` : `<div class="empty"><h3>No ${esc(Q.code)} decisions yet</h3>Approve or disapprove a course and it appears here.</div>`}`;
+  openSheet('Decisions for ' + Q.code, body, true);
+  const nm = $('#myname'); if (nm) nm.addEventListener('change', () => ls.set('name', nm.value.trim()));
+}
+function decisionsCSV() {
+  const H = D.H, rowOf = key => (D.keyRows.get(key) || [])[0];
+  const head = ['subject', 'decision', 'um_equivalent', 'um_title', 'um_credits', 'disapproved', 'notes', 'program', 'country', 'course_code', 'title', 'host_term', 'host_level', 'host_credits', 'course_url', 'reviewer', 'updated'];
+  const rows = [...store.map.values()].filter(x => x.decision).sort((a, b) => String(a.program).localeCompare(String(b.program)) || String(a.title).localeCompare(String(b.title))).map(x => {
+    const r = rowOf(x.key), p = r != null ? D.progs[H.prog[r]] : null, det = r != null ? detailNow(r) : null;
+    return [x.subject, (OUT[x.decision] || {}).label || x.decision, x.equivalent, x.um_title, x.credits, (x.rejected || []).join('; '), x.notes, p ? p.name : x.program, p ? p.country : '', x.code, x.title,
+      r != null ? dv(H.term, r) : '', r != null ? dv(H.level, r) : '', r != null ? dv(H.credits, r) : '', det ? det.course_url : '', whoName(x) === 'you' ? (cap.me && cap.me.name) || 'you' : whoName(x), x.updated_at];
+  });
+  return [head, ...rows].map(r => r.map(v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(',')).join('\n') + '\n';
+}
+async function downloadCSV() {
+  await Promise.all([...new Set([...store.map.values()].map(x => (D.keyRows.get(x.key) || [])[0]).filter(r => r != null).map(r => D.H.prog[r]))].map(pi => loadDetail(pi).catch(() => null)));
+  const name = `decisions-${Q.code}-${new Date().toISOString().slice(0, 10)}.csv`, data = decisionsCSV();
+  if (cap.downloads) {
+    try { await cap.downloads.save({ filename: name, data }); } catch (e) { if (e && e.code !== 'declined') toast('Download failed (' + ((e && e.code) || 'error') + '). Use Copy CSV instead.'); }
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + data], { type: 'text/csv;charset=utf-8' }));
+  a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+async function copyCSV() {
+  const data = decisionsCSV();
+  try { await navigator.clipboard.writeText(data); toast('Copied. Paste into a spreadsheet.'); }
+  catch (e) {
+    $('#sbody').insertAdjacentHTML('beforeend', `<textarea style="width:100%;height:160px;margin-top:12px;font:12px var(--mono)" readonly id="csvTa">${esc(data)}</textarea>`);
+    const ta = $('#csvTa'); ta.focus(); ta.select(); toast('Select all and copy.');
+  }
+}
+
+/* ------------------------------------------------------------------ toast */
+let toastTimer;
+function toast(msg, withUndo) {
+  const t = $('#toast');
+  t.innerHTML = `<span>${esc(msg)}</span>${withUndo && lastAction ? '<button data-act="undo">Undo</button>' : ''}`;
+  t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, withUndo ? 7000 : 3800);
+}
+function hideToast() { $('#toast').hidden = true; }
+
+/* ------------------------------------------------------------------ events */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]');
+  if (!$('#menu').hidden && !e.target.closest('#menu') && !(el && el.dataset.act === 'menu')) closeMenu();
+  if (!el) return;
+  const act = el.dataset.act, d = state.d;
+  switch (act) {
+    case 'prev': step(-1); break;
+    case 'next': step(1); break;
+    case 'approve': await approve(); break;
+    case 'disapprove': await disapprove(); break;
+    case 'out': await outcome(el.dataset.k); break;
+    case 'elective': if (d) { d.sel = { kind: 'e', lvl: electiveDefault(state.r, d.sel) }; d.view = 'cand'; if (!d.creditsTouched) d.credits = defaultCredits(state.r, d.sel); renderDecide(); renderUM(); const b = $('.approve'); if (b) b.focus(); } break;
+    case 'top': if (d) { d.view = d.view === 'top' ? 'cand' : 'top'; renderDecide(); renderUM(); if (d.view === 'top' && matchMedia('(max-width: 860px)').matches) $('#um').scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
+    case 'pick-cand': if (d) { pickCourse(+el.dataset.u); } break;
+    case 'pick': openPicker(); break;
+    case 'pick-u': pickCourse(+el.dataset.u); break;
+    case 'note': if (d) { d.noteOpen = !d.noteOpen; renderDecide(); if (d.noteOpen) $('#noteTa').focus(); } break;
+    case 'change': if (d) { d.changing = true; renderDecide(); } break;
+    case 'cancel-change': openCourse(state.r, { keepScroll: true }); break;
+    case 'next-todo': { const i = state.queue.indexOf(state.r); const nx = firstTodo(i >= 0 ? i + 1 : state.lastPos); if (nx >= 0) openCourse(nx); else toast('Every course in this list has a decision.'); break; }
+    case 'goto': { const r = +el.dataset.r; closeList(); closeSheet(); openCourse(r); break; }
+    case 'expand': { const t = document.getElementById(el.dataset.t); t.classList.toggle('clamp'); el.textContent = t.classList.contains('clamp') ? 'Show all' : 'Show less'; break; }
+    case 'list': openList(); break;
+    case 'close-drawer': closeList(); break;
+    case 'seg': {
+      const g = el.dataset.g, v = el.dataset.v;
+      state[g] = v; if (g !== 'status') ls.set(g, v);
+      refreshQueue(); drawList(false, true);
+      if (state.queue.indexOf(state.r) < 0 && state.queue.length) { const nx = firstTodo(0); openCourse(nx >= 0 ? nx : state.queue[0]); }
+      break;
+    }
+    case 'reset-list': { state.q = ''; state.status = 'all'; state.scope = 'likely'; ls.set('scope', 'likely'); state.prog = -1; ls.set('prog.' + Q.code, ''); const inp = $('#lq'); if (inp) inp.value = ''; refreshQueue(); drawList(false, true); break; }
+    case 'menu': $('#menu').hidden ? openMenu() : closeMenu(); break;
+    case 'subject': openSubjects(); break;
+    case 'set-subject': await setSubject(el.dataset.c); break;
+    case 'decisions': openDecisions(); break;
+    case 'about': openAbout(); break;
+    case 'close-sheet': closeSheet(); break;
+    case 'download-csv': await downloadCSV(); break;
+    case 'copy-csv': await copyCSV(); break;
+    case 'undo': hideToast(); await undo(); break;
+    case 'clear': await clearDecision(); break;
+  }
+});
+document.addEventListener('toggle', e => {
+  const t = e.target;
+  if (t.matches && t.matches('details[data-sect="similar"]') && t.open) { const b = $('#simBody'); if (b && state.r >= 0) b.innerHTML = similarHTML(state.r); }
+}, true);
+document.addEventListener('keydown', async e => {
+  if (e.key === 'Escape') { if (!$('#menu').hidden) closeMenu(); else if (!$('#sheet').hidden) closeSheet(); else if (!$('#drawer').hidden) closeList(); return; }
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.metaKey || e.ctrlKey || e.altKey) return;
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.lrow')) { e.preventDefault(); e.target.click(); return; }
+  if (!$('#sheet').hidden || !$('#drawer').hidden || state.r < 0 && !['l', 'L'].includes(e.key)) return;
+  const k = e.key.toLowerCase();
+  if (e.key === 'ArrowRight' || k === 'j') { e.preventDefault(); step(1); }
+  else if (e.key === 'ArrowLeft' || k === 'k') { e.preventDefault(); step(-1); }
+  else if (k === 'a') { const doc = getDoc(state.r); if (!(doc && doc.decision && !state.d.changing)) await approve(); }
+  else if (k === 'd' || k === 'x') { const doc = getDoc(state.r); if (!(doc && doc.decision && !state.d.changing)) await disapprove(); }
+  else if (k === 't' && state.d) { state.d.view = state.d.view === 'top' ? 'cand' : 'top'; renderDecide(); renderUM(); }
+  else if (k === 'l') { e.preventDefault(); openList(); }
+});
+$('#progSel').addEventListener('change', e => setProg(+e.target.value));
+new ResizeObserver(() => { document.documentElement.style.setProperty('--top-h', $('#top').offsetHeight + 'px'); }).observe($('#top'));
+addEventListener('resize', () => { fitClamp(); closeMenu(); });
+
+/* ------------------------------------------------------------------ boot */
+function startPosition() {
+  const key = ls.get('cur.' + Q.code, '');
+  const saved = key ? state.queue.find(r => D.H.key[r] === key) : undefined;
+  if (saved != null) { openCourse(saved); return; }
+  const nx = firstTodo(0);
+  openCourse(nx >= 0 ? nx : (state.queue[0] ?? -1));
+}
+function loadError(e) {
+  $('#loadMsg').innerHTML = `The course data could not be loaded (${esc(e && e.message || e)}).` + (LOCAL ? '<br>Open index.html from the unzipped folder, with the data folder next to it.' : '');
+  $('#loadBar').parentElement.hidden = true;
+}
+async function boot() {
+  const shared = initShared().catch(() => {});
+  try { await loadAll(); } catch (e) { loadError(e); return; }
+  if (!D.queues[state.focus]) state.focus = D.queues.LING ? 'LING' : Object.keys(D.queues)[0];
+  try { progress(.9, 'Loading the ' + state.focus + ' list'); await loadFocus(state.focus); } catch (e) { loadError(e); return; }
+  if (window.claude) progress(.95, 'Loading decisions');
+  await shared;
+  await subscribe();
+  const pid = ls.get('prog.' + Q.code, '');
+  state.prog = pid ? D.progs.findIndex(p => p.id === pid) : -1;
+  if (!['likely', 'possible', 'all'].includes(state.scope)) state.scope = 'likely';
+  if (!['prog', 'best'].includes(state.sort)) state.sort = 'prog';
+  buildQueue();
+  $('#loading').hidden = true;
+  ['decideWrap', 'pair', 'subjBtn', 'nav', 'progSel', 'listBtn', 'menuBtn'].forEach(id => { $('#' + id).hidden = false; });
+  document.documentElement.style.setProperty('--top-h', $('#top').offsetHeight + 'px');
+  startPosition();
+  if (location.hash === '#about') openAbout();
+}
+boot();
+</script>
+
+</body></html>
