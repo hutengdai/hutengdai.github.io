@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Study Abroad Equivalency Review</title>
 <meta name="description" content="Approve or disapprove the closest U-M course for each study-abroad course.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -110,6 +110,7 @@ select:hover { border-color: var(--ink-3); }
 .btn { border: 1px solid var(--line-2); background: var(--surface); border-radius: 9px; height: 36px; padding: 0 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .btn:hover { border-color: var(--ink-3); }
 .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+a.btn { text-decoration: none; color: var(--ink); }
 .dnote { margin-top: 8px; font-size: 14px; color: var(--ink-2); white-space: pre-wrap; }
 .alt { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 4px 0; font-size: 14px; }
 .alt .msg { color: var(--ink-2); }
@@ -330,7 +331,8 @@ tr.click:hover td { background: var(--surface-2); }
 <script>
 'use strict';
 /* Equivalency Review. All suggestions are precomputed (cgis_courses/nlp.py) and shipped as data:
-   data/<name>.json when served, data/<name>.js when the page is opened from disk (file://). */
+   data/<name>.json when served; in the offline copy (one file) as gzip + base64 blocks after the page,
+   <script type="application/gzip" data-name="<name>">, unpacked on demand. */
 const LOCAL = location.protocol === 'file:';
 const TERM = { FA: 'Fall', WN: 'Winter', 'FA;WN': 'Fall or Winter', AY: 'Academic year', SPSU: 'Spring/Summer', outside: 'Not a CGIS term', '': 'Term not published' };
 const ACCESS = { open: 'Open to visiting students', restricted: 'Restricted for visiting students', closed: 'Closed to visiting students', unknown: 'Visiting-student access not stated' };
@@ -385,7 +387,16 @@ function loadScript(src) {
     (document.head || document.body).appendChild(s);
   });
 }
+const domReady = new Promise(res => { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => res(), { once: true }); else res(); });
+async function inflateJSON(b64) {
+  if (typeof DecompressionStream !== 'function') throw new Error('this browser cannot unpack the data; use a current Chrome, Edge, Firefox or Safari');
+  const stream = new Blob([b64bytes(b64)]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return JSON.parse(await new Response(stream).text());
+}
 async function getData(name) {
+  await domReady;
+  const packed = document.querySelector(`script[type="application/gzip"][data-name="${name}"]`);
+  if (packed) return inflateJSON(packed.textContent);
   if (!LOCAL) {
     try { const r = await fetch('data/' + name + '.json'); if (r.ok) return await r.json(); } catch (e) { /* fall back to the script form */ }
   }
@@ -516,12 +527,17 @@ async function initShared() {
   if (db) { cap.db = db; store.kind = 'shared'; cap.readOnly = cap.canWrite === false; }
 }
 function localAll() { if (!store.all) store.all = (ls.ok && ls.get(LS_REVIEWS, {})) || {}; return store.all; }
+function reloadLocalMap() {
+  store.map = new Map();
+  for (const doc of Object.values(localAll())) if (doc && doc.subject === Q.code && doc.key) store.map.set(doc.key, doc);
+}
 function subscribe() {
   if (store.unsub) { store.unsub(); store.unsub = null; }
   store.map = new Map();
   const subject = Q.code;
   if (store.kind !== 'shared') {
-    for (const [id, doc] of Object.entries(localAll())) if (doc && doc.subject === subject && doc.key) store.map.set(doc.key, doc);
+    reloadLocalMap();
+    if (siteOn()) scheduleSync(50);
     return Promise.resolve();
   }
   return new Promise(resolve => {
@@ -545,12 +561,193 @@ async function putDoc(key, body) {
   const id = docId(key);
   if (store.kind === 'shared') {
     if (body) await cap.db.doc('reviews/' + id).set(body); else await cap.db.doc('reviews/' + id).delete();
-  } else if (store.kind === 'local') {
+  } else {
     const all = localAll();
     if (body) all[id] = body; else delete all[id];
-    if (!ls.set(LS_REVIEWS, all)) throw { code: 'local_storage' };
+    if (store.kind === 'local' && !ls.set(LS_REVIEWS, all)) throw { code: 'local_storage' };
+    if (siteOn()) {
+      const tomb = syncState().tomb;
+      if (body) delete tomb[id]; else tomb[id] = new Date().toISOString();
+      saveSyncState();
+      scheduleSync(COMMIT_DELAY);
+    }
   }
 }
+
+/* ------------------------------------------------------------------ the website's decisions file */
+/* On the website (and in the offline file built for it) decisions also live in one CSV in the site's GitHub
+   repository (SITE.path, served at SITE.url), one row per course and subject. Every copy of the page reads it;
+   a browser holding a GitHub token also writes it, through the GitHub contents API, with the file's sha so
+   that two writers cannot overwrite each other (a stale write is refused, re-read and merged). Writes are
+   batched (COMMIT_GAP) because each commit rebuilds the GitHub Pages site. Each side keeps the newer version
+   of a row; a row removed from the file is removed here. A hosted artifact cannot do this: its frame blocks
+   requests to other sites. */
+const SITE_BUILTIN = {"repo": "hutengdai/hutengdai.github.io", "branch": "master", "path": "data/decisions.csv", "url": "https://hutengdai.com/data/decisions.csv"};
+const SITE = SITE_BUILTIN;
+const FILE_COLS = ['updated', 'subject', 'decision', 'um_equivalent', 'um_title', 'credits', 'disapproved', 'notes', 'reviewer', 'program', 'course_code', 'title', 'course_key'];
+const OUT_BY_LABEL = { Approved: 'equivalent', 'Elective credit': 'dept', 'General credit only': 'general', 'Not approved': 'no', 'Needs information': 'info', 'In progress': '' };
+const COMMIT_DELAY = 15000, COMMIT_GAP = 6 * 60000, GH_API = 'https://api.github.com';
+const sync = { token: '', login: '', busy: false, again: false, last: 0, lastCommit: 0, rows: 0, pending: 0, error: '', warned: false, st: null };
+const siteOn = () => !!SITE && store.kind !== 'shared';
+function syncState() { if (!sync.st) sync.st = { meta: ls.get('site.meta', {}) || {}, tomb: ls.get('site.tomb', {}) || {} }; return sync.st; }
+function saveSyncState() { ls.set('site.meta', sync.st.meta); ls.set('site.tomb', sync.st.tomb); }
+let syncTimer = null;
+function scheduleSync(ms) { clearTimeout(syncTimer); syncTimer = setTimeout(() => syncSite(false), ms); }
+function rowFromDoc(d) {
+  return { updated: d.updated_at, subject: d.subject, decision: d.decision ? (OUT[d.decision] || {}).label || d.decision : 'In progress',
+    um_equivalent: d.equivalent || '', um_title: d.um_title || '', credits: d.credits || '', disapproved: (d.rejected || []).join('; '),
+    notes: d.notes || '', reviewer: d.reviewer_name || (d.reviewer === 'local' ? ls.get('name', '') : ''), program: d.program || '',
+    course_code: d.code || '', title: d.title || '', course_key: d.key };
+}
+function docFromRow(x) {
+  return { subject: x.subject, key: x.course_key, decision: x.decision in OUT_BY_LABEL ? OUT_BY_LABEL[x.decision] : x.decision,
+    equivalent: x.um_equivalent, um_title: x.um_title, credits: x.credits, notes: x.notes, rejected: x.disapproved ? x.disapproved.split(/;\s*/).filter(Boolean) : [],
+    reviewer: 'file', reviewer_name: x.reviewer, updated_at: x.updated, program: x.program, code: x.course_code, title: x.title, history: [] };
+}
+function parseCSV(text) {
+  const rows = []; let row = [], f = '', q = false;
+  text = String(text || '').replace(/^﻿/, '');
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; continue; }
+    if (c === '"') q = true;
+    else if (c === ',') { row.push(f); f = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); f = ''; rows.push(row); row = []; }
+    else f += c;
+  }
+  if (f !== '' || row.length) { row.push(f); rows.push(row); }
+  const head = rows.shift() || [];
+  return rows.filter(r => r.some(v => v !== '')).map(r => Object.fromEntries(head.map((h, i) => [h, r[i] == null ? '' : r[i]])));
+}
+function csvOf(rows) {
+  const cell = v => { const t = String(v == null ? '' : v); return /[",\r\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  return [FILE_COLS.join(','), ...rows.map(r => FILE_COLS.map(c => cell(r[c])).join(','))].join('\n') + '\n';
+}
+function b64utf8(t) { const b = new TextEncoder().encode(t); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); }
+async function timed(url, init, what) {
+  const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 25000);
+  try { return await fetch(url, { ...init, signal: ctl.signal, cache: 'no-store' }); }
+  catch (e) { throw new Error(e && e.name === 'AbortError' ? what + ' did not answer' : 'could not reach ' + what); }
+  finally { clearTimeout(t); }
+}
+const gh = (path, init = {}) => timed(GH_API + path, { ...init, headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + sync.token, 'X-GitHub-Api-Version': '2022-11-28', ...(init.headers || {}) } }, 'GitHub');
+const contentsPath = () => `/repos/${SITE.repo}/contents/${SITE.path.split('/').map(encodeURIComponent).join('/')}`;
+async function readSite() {
+  if (sync.token) {  /* the repository itself: current to the second, with the sha a write needs */
+    const r = await gh(contentsPath() + '?ref=' + encodeURIComponent(SITE.branch));
+    if (r.status === 404) return { rows: [], sha: null };
+    if (r.status === 401) throw new Error('GitHub refused the token (expired or revoked?)');
+    if (!r.ok) throw new Error('GitHub answered ' + r.status);
+    const j = await r.json();
+    return { rows: parseCSV(new TextDecoder().decode(b64bytes((j.content || '').replace(/\s+/g, '')))), sha: j.sha };
+  }
+  const r = await timed(SITE.url + '?t=' + Date.now(), {}, 'the website');  /* the published copy: current within a minute or two of a save */
+  if (r.status === 404) return { rows: [], sha: null };
+  if (!r.ok) throw new Error('the website answered ' + r.status);
+  return { rows: parseCSV(await r.text()), sha: null };
+}
+async function writeSite(subject, ups, dels) {
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const cur = await readSite(), map = new Map();
+    cur.rows.forEach(x => { if (x.course_key) map.set(x.subject + '~' + x.course_key, x); });
+    ups.forEach(d => { const row = rowFromDoc(d), id = subject + '~' + d.key, x = map.get(id); if (!x || !(x.updated > row.updated)) map.set(id, row); });
+    dels.forEach(key => map.delete(subject + '~' + key));
+    const rows = [...map.values()].sort((a, b) => a.subject.localeCompare(b.subject) || a.program.localeCompare(b.program) || a.title.localeCompare(b.title) || a.course_key.localeCompare(b.course_key));
+    const n = ups.length + dels.length;
+    const body = { message: `Course review: ${n} ${subject} decision${n === 1 ? '' : 's'}`, content: b64utf8(csvOf(rows)), branch: SITE.branch };
+    if (cur.sha) body.sha = cur.sha;
+    const r = await gh(contentsPath(), { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (r.ok) return rows.length;
+    if (r.status === 409 || r.status === 422) continue;  /* saved by someone else meanwhile: read again, merge, retry */
+    if (r.status === 401) throw new Error('GitHub refused the token (expired or revoked?)');
+    if (r.status === 403 || r.status === 404) throw new Error(`the token cannot write to ${SITE.repo}; it needs Contents: Read and write on that repository`);
+    throw new Error('GitHub answered ' + r.status);
+  }
+  throw new Error('the file kept changing while saving; it will be tried again');
+}
+function mergeRemote(subject, remoteRows) {
+  const all = localAll(), { meta, tomb } = syncState(), pre = subject + '~';
+  const remote = new Map(remoteRows.filter(x => x.subject === subject && x.course_key).map(x => [pre + x.course_key, x]));
+  const ids = new Set([...remote.keys(), ...Object.keys(all).filter(id => id.startsWith(pre)), ...Object.keys(tomb).filter(id => id.startsWith(pre))]);
+  const ups = [], dels = [];
+  let changed = false;
+  for (const id of ids) {
+    const s = remote.get(id), l = all[id], t = tomb[id];
+    if (!l && t) {  /* cleared here */
+      if (s && s.updated > t) { all[id] = docFromRow(s); meta[id] = s.updated; delete tomb[id]; changed = true; }
+      else if (s) dels.push(id);
+      else delete tomb[id];
+    } else if (l && s) {
+      if (l.updated_at > s.updated) ups.push(id);
+      else if (s.updated > l.updated_at) { all[id] = docFromRow(s); meta[id] = s.updated; changed = true; }
+      else meta[id] = s.updated;
+    } else if (l) {
+      if (meta[id] && l.updated_at <= meta[id]) { delete all[id]; delete meta[id]; changed = true; }  /* removed from the file */
+      else ups.push(id);
+    } else if (s) { all[id] = docFromRow(s); meta[id] = s.updated; changed = true; }
+  }
+  return { ups, dels, changed, count: remote.size };
+}
+async function syncSite(now) {
+  if (!siteOn()) return;
+  if (sync.busy) { sync.again = true; return; }
+  sync.busy = true; sync.again = false;
+  const subject = Q.code;
+  try {
+    const got = await readSite();
+    if (subject !== Q.code) return;
+    const m = mergeRemote(subject, got.rows);
+    sync.rows = m.count; sync.pending = m.ups.length + m.dels.length;
+    if (sync.token && sync.pending) {
+      const wait = sync.lastCommit + COMMIT_GAP - Date.now();
+      if (wait > 0 && !now) scheduleSync(wait + 1000);
+      else {
+        const all = localAll(), { meta, tomb } = syncState();
+        const total = await writeSite(subject, m.ups.map(id => all[id]).filter(Boolean), m.dels.map(id => id.slice(subject.length + 1)));
+        m.ups.forEach(id => { if (all[id]) meta[id] = all[id].updated_at; });
+        m.dels.forEach(id => { delete tomb[id]; delete meta[id]; });
+        sync.lastCommit = Date.now(); ls.set('site.lastCommit', sync.lastCommit);
+        sync.pending = 0; sync.rows = total;
+      }
+    }
+    if (store.kind === 'local') ls.set(LS_REVIEWS, localAll());
+    saveSyncState();
+    sync.last = Date.now(); sync.error = ''; sync.warned = false;
+    if (m.changed && subject === Q.code) { reloadLocalMap(); onDecisionsChanged(); }
+  } catch (e) {
+    sync.error = (e && e.message) || String(e);
+    if (!sync.warned) { sync.warned = true; toast('Decisions file not updated: ' + sync.error + '. Decisions stay in this browser and are saved when it works again.'); }
+  } finally {
+    sync.busy = false;
+    renderSyncStatus();
+    if (sync.again) scheduleSync(800);
+  }
+}
+function syncLabel() {
+  if (!siteOn()) return '';
+  if (sync.error) return 'not saving';
+  if (!sync.token) return 'read only';
+  if (sync.pending) return sync.pending + ' to save';
+  return sync.last ? 'saved' : 'connecting…';
+}
+function renderSyncStatus() {
+  if (!siteOn()) return;
+  const lbl = syncLabel(), dc = $('#doneCt');
+  if (dc && state.counts) dc.textContent = `${fmt((state.counts.done || 0) + (state.counts.info || 0))} decided · file: ${lbl}`;
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  const next = sync.pending && sync.token ? Math.max(0, Math.ceil((sync.lastCommit + COMMIT_GAP - Date.now()) / 60000)) : 0;
+  el.innerHTML = sync.error ? `<span style="color:var(--no)">Not saving: ${esc(sync.error)}.</span> Decisions stay in this browser until it works again.`
+    : !sync.last ? 'Reading the file…'
+    : `${fmt(sync.rows)} ${esc(Q.code)} row${sync.rows === 1 ? '' : 's'} in the file. ` + (!sync.token ? 'This browser only reads it: decisions you record stay here until you add a token below.'
+      : sync.pending ? `${fmt(sync.pending)} change${sync.pending === 1 ? '' : 's'} to save, ${next ? 'in about ' + next + ' min' : 'now'}.` : `Everything saved${sync.login ? ' as ' + esc(sync.login) : ''}.`);
+}
+setInterval(() => { if (siteOn() && !document.hidden) syncSite(false); }, 60000);
+document.addEventListener('visibilitychange', () => {
+  if (!siteOn()) return;
+  if (document.hidden) { if (sync.pending && sync.token && Date.now() - sync.lastCommit > 60000) syncSite(true); }  /* leaving: save what is waiting */
+  else scheduleSync(300);
+});
 async function resolveNames() {
   if (!cap.user || typeof cap.user.profiles !== 'function') return;
   const ids = new Set();
@@ -562,7 +759,7 @@ async function resolveNames() {
 }
 function whoName(doc) {
   if (!doc) return '';
-  if (store.kind !== 'shared') return doc.reviewer_name || ls.get('name', '');
+  if (store.kind !== 'shared') return doc.reviewer_name || (doc.reviewer === 'local' ? ls.get('name', '') : '');
   if (cap.me && doc.reviewer === cap.me.id) return 'you';
   return names.get(doc.reviewer) || 'Someone';
 }
@@ -679,7 +876,7 @@ function renderHeader() {
   $('#prevBtn').disabled = !n || (pos === 0) || (pos < 0 && state.lastPos <= 0);
   $('#nextBtn').disabled = !n || (pos >= 0 && pos >= n - 1);
   const c = state.counts || {};
-  $('#doneCt').textContent = n ? `${fmt((c.done || 0) + (c.info || 0))} decided` : '';
+  $('#doneCt').textContent = n ? `${fmt((c.done || 0) + (c.info || 0))} decided${siteOn() ? ' · file: ' + syncLabel() : ''}` : '';
   $('#filteredBtn').hidden = !isFiltered();
   const ps = $('#progSel');
   const total = [...state.progCounts.values()].reduce((a, b) => a + b, 0);
@@ -1158,6 +1355,7 @@ function openMenu() {
   const decided = [...store.map.values()].filter(x => x.decision).length;
   m.innerHTML = `<button data-act="subject">Reviewing for <span>${esc(Q.code)}</span></button>
     <button data-act="decisions">Decisions <span>${fmt(decided)}</span></button>
+    ${siteOn() ? `<button data-act="sitefile">Decisions file <span>${esc(syncLabel())}</span></button>` : ''}
     <button data-act="about">About this tool</button>`;
   m.hidden = false;
   m.style.top = (b.bottom + 6) + 'px';
@@ -1174,6 +1372,56 @@ function openSheet(title, body, wide) {
 }
 function closeSheet() { $('#sheet').hidden = true; $('#sheet').innerHTML = ''; }
 
+function openSiteFile() {
+  const fileLink = `<a href="${esc(SITE.url)}" target="_blank" rel="noopener">${esc(SITE.url.replace(/^https?:\/\//, ''))}</a>`;
+  const fld = 'height:40px;border:1px solid var(--line-2);border-radius:9px;background:var(--surface);padding:0 10px';
+  openSheet('Decisions file', `<div class="prose" style="font-family:var(--sans);font-size:15px;line-height:1.55">
+    <p>Decisions are kept in ${fileLink}, one row per course, which every copy of this page reads. A browser with a GitHub token for <span class="mono">${esc(SITE.repo)}</span> also writes to it: each decision is saved there within a few minutes (the site is rebuilt on every save, so saves are batched). Without a token, decisions recorded here stay in this browser.</p>
+    <p id="syncStatus" class="small" style="font-family:var(--sans)"></p>
+    <div class="toolbar" style="margin:0">${sync.token ? '<button class="btn primary" data-act="site-save-now">Save now</button>' : ''}<a class="btn" href="${esc(SITE.url)}" download>Download the file</a></div>
+    <div style="display:grid;gap:10px">
+      <label class="small" style="display:grid;gap:4px;font-family:var(--sans)">GitHub token${sync.login ? ' (saving as ' + esc(sync.login) + ')' : ''}
+        <input id="ghToken" type="password" autocomplete="off" spellcheck="false" value="${esc(sync.token)}" placeholder="github_pat_…" style="${fld};font:13px var(--mono)"></label>
+      <label class="small" style="display:grid;gap:4px;font-family:var(--sans)">Your name, for the file's reviewer column
+        <input id="ghName" value="${esc(ls.get('name', ''))}" placeholder="First Last" style="${fld};max-width:22em"></label>
+      <div class="toolbar" style="margin:0"><button class="btn primary" data-act="site-token">${sync.token ? 'Save changes' : 'Save token'}</button>${sync.token ? '<button class="btn" data-act="site-forget">Forget token</button>' : ''}</div>
+    </div>
+    <h3>Making a token (once per person who records decisions)</h3>
+    <ol style="margin:0;padding-left:1.3em;display:grid;gap:4px">
+      <li>On GitHub: Settings › Developer settings › Personal access tokens › Fine-grained tokens › <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Generate new token</a>.</li>
+      <li>Repository access: Only select repositories › <span class="mono">${esc(SITE.repo.split('/')[1])}</span>. An expiry of a few months is fine.</li>
+      <li>Permissions › Repository permissions › Contents: Read and write. Generate, copy, and paste it above.</li>
+    </ol>
+    <p class="small" style="font-family:var(--sans)">The token stays in this browser's storage for this site and can change that one repository, so keep it to people who record decisions (collaborators on the repository can make their own). The file is public, like the rest of the site.</p>
+  </div>`);
+  renderSyncStatus();
+}
+async function siteToken() {
+  const token = ($('#ghToken').value || '').trim(), name = ($('#ghName').value || '').trim();
+  ls.set('name', name);
+  if (token === sync.token) { if (sync.token) await syncSite(true); openSiteFile(); return; }
+  if (!token) { siteForget(); return; }
+  const prev = sync.token; sync.token = token;
+  try {
+    const r = await gh('/user');
+    if (r.status === 401) throw new Error('GitHub does not accept this token');
+    if (!r.ok) throw new Error('GitHub answered ' + r.status);
+    const u = await r.json();
+    sync.login = u.login || ''; ls.set('site.login', sync.login);
+    if (!name && u.name) ls.set('name', u.name);
+  } catch (e) { sync.token = prev; toast((e && e.message) || 'Could not check the token.'); return; }
+  ls.set('site.token', token);
+  sync.error = ''; sync.warned = false;
+  await syncSite(true);
+  if (!sync.error) toast('Token saved: decisions now go to the file.');
+  openSiteFile();
+}
+function siteForget() {
+  sync.token = ''; sync.login = ''; ls.set('site.token', ''); ls.set('site.login', '');
+  toast('Token removed from this browser.');
+  openSiteFile();
+}
+
 function weakShare() {
   let n = 0, weak = 0;
   for (let i = 0; i < Q.n; i++) if (Q.lvl[i] >= 1) { n++; if (bestScore(Q.rows[i]) < MODERATE) weak++; }
@@ -1182,7 +1430,8 @@ function weakShare() {
 function openAbout() {
   const m = D.meta, c = m.counts, cl = m.classifier || {}, spot = (m.checks || {}).ling_spot;
   const host = store.kind === 'shared' ? 'Decisions are saved with this page and visible to everyone who can open it.'
-    : store.kind === 'local' ? 'Decisions are saved in this browser on this computer only. To pass them on, open Decisions in the menu and download the CSV.'
+    : siteOn() ? 'Decisions are kept in a file on the website that every copy of this page reads, and are saved to it from browsers that hold a GitHub token (menu › Decisions file). Without one they stay in this browser.'
+    : store.kind === 'local' ? 'Decisions are saved in this browser on this computer only. To pass them on, download the CSV from Decisions in the menu.'
       : 'This browser does not allow saving, so decisions last only until the page closes. Download them from Decisions before you leave.';
   openSheet('How the suggestions are made', `<div class="prose">
     <p>Every suggestion here is a real course from a published catalog, put in order by a fixed formula. The page writes nothing of its own: course descriptions are the catalogs' own text, and the same course always gets the same suggestions.</p>
@@ -1269,11 +1518,11 @@ function openDecisions() {
   const H = D.H, list = [...store.map.values()].filter(x => x.decision).sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
   const pend = [...store.map.values()].filter(x => !x.decision && x.rejected && x.rejected.length).length;
   const rowOf = key => (D.keyRows.get(key) || [])[0];
-  const where = store.kind === 'shared' ? 'Saved with this page, visible to everyone who can open it.' : store.kind === 'local' ? 'Saved in this browser only.' : 'Not saved: download before closing the page.';
+  const where = store.kind === 'shared' ? 'Saved with this page, visible to everyone who can open it.' : siteOn() ? (sync.token ? 'Saved in this browser and the website file (' + syncLabel() + ').' : 'The website file is read here; decisions recorded here stay in this browser.') : store.kind === 'local' ? 'Saved in this browser only.' : 'Not saved: copy them before closing the page.';
   const body = `<div class="toolbar">
       <span class="small">${fmt(list.length)} decided${pend ? `, ${fmt(pend)} in progress` : ''} for ${esc(Q.code)}. ${esc(where)}</span><span class="grow"></span>
       ${store.kind !== 'shared' ? `<label class="small" style="display:flex;gap:6px;align-items:center">Your name <input id="myname" value="${esc(ls.get('name', ''))}" placeholder="for the CSV" style="width:12em"></label>` : ''}
-      <button class="btn" data-act="copy-csv" ${list.length ? '' : 'disabled'}>Copy CSV</button>
+      <button class="btn" data-act="copy-csv" ${list.length ? '' : 'disabled'} title="Tab-separated: pastes into Google Sheets or Excel as columns">Copy for a spreadsheet</button>
       ${cap.downloads || !window.claude ? `<button class="btn primary" data-act="download-csv" ${list.length ? '' : 'disabled'}>Download CSV</button>` : ''}
     </div>
     ${list.length ? `<div class="tablewrap"><table><thead><tr><th>Course abroad</th><th>Program</th><th>Decision</th><th>U-M equivalent</th><th>Credits</th><th>Disapproved</th><th>Note</th><th>By</th><th>When</th></tr></thead><tbody>${list.map(x => {
@@ -1283,7 +1532,7 @@ function openDecisions() {
   openSheet('Decisions for ' + Q.code, body, true);
   const nm = $('#myname'); if (nm) nm.addEventListener('change', () => ls.set('name', nm.value.trim()));
 }
-function decisionsCSV() {
+function decisionsCSV(tsv) {
   const H = D.H, rowOf = key => (D.keyRows.get(key) || [])[0];
   const head = ['subject', 'decision', 'um_equivalent', 'um_title', 'um_credits', 'disapproved', 'notes', 'program', 'country', 'course_code', 'title', 'host_term', 'host_level', 'host_credits', 'course_url', 'reviewer', 'updated'];
   const rows = [...store.map.values()].filter(x => x.decision).sort((a, b) => String(a.program).localeCompare(String(b.program)) || String(a.title).localeCompare(String(b.title))).map(x => {
@@ -1291,13 +1540,14 @@ function decisionsCSV() {
     return [x.subject, (OUT[x.decision] || {}).label || x.decision, x.equivalent, x.um_title, x.credits, (x.rejected || []).join('; '), x.notes, p ? p.name : x.program, p ? p.country : '', x.code, x.title,
       r != null ? dv(H.term, r) : '', r != null ? dv(H.level, r) : '', r != null ? dv(H.credits, r) : '', det ? det.course_url : '', whoName(x) === 'you' ? (cap.me && cap.me.name) || 'you' : whoName(x), x.updated_at];
   });
+  if (tsv) return [head, ...rows].map(r => r.map(v => String(v ?? '').replace(/[\t\r\n]+/g, ' ')).join('\t')).join('\n') + '\n';
   return [head, ...rows].map(r => r.map(v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }).join(',')).join('\n') + '\n';
 }
 async function downloadCSV() {
   await Promise.all([...new Set([...store.map.values()].map(x => (D.keyRows.get(x.key) || [])[0]).filter(r => r != null).map(r => D.H.prog[r]))].map(pi => loadDetail(pi).catch(() => null)));
   const name = `decisions-${Q.code}-${new Date().toISOString().slice(0, 10)}.csv`, data = decisionsCSV();
   if (cap.downloads) {
-    try { await cap.downloads.save({ filename: name, data }); } catch (e) { if (e && e.code !== 'declined') toast('Download failed (' + ((e && e.code) || 'error') + '). Use Copy CSV instead.'); }
+    try { await cap.downloads.save({ filename: name, data }); } catch (e) { if (e && e.code !== 'declined') toast('Download failed (' + ((e && e.code) || 'error') + '). Use Copy for a spreadsheet instead.'); }
     return;
   }
   const a = document.createElement('a');
@@ -1306,8 +1556,8 @@ async function downloadCSV() {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
 async function copyCSV() {
-  const data = decisionsCSV();
-  try { await navigator.clipboard.writeText(data); toast('Copied. Paste into a spreadsheet.'); }
+  const data = decisionsCSV(true);
+  try { await navigator.clipboard.writeText(data); toast('Copied. Paste into the first cell of a sheet: it fills the columns.'); }
   catch (e) {
     $('#sbody').insertAdjacentHTML('beforeend', `<textarea style="width:100%;height:160px;margin-top:12px;font:12px var(--mono)" readonly id="csvTa">${esc(data)}</textarea>`);
     const ta = $('#csvTa'); ta.focus(); ta.select(); toast('Select all and copy.');
@@ -1365,6 +1615,10 @@ document.addEventListener('click', async e => {
     case 'close-sheet': closeSheet(); break;
     case 'download-csv': await downloadCSV(); break;
     case 'copy-csv': await copyCSV(); break;
+    case 'sitefile': openSiteFile(); break;
+    case 'site-token': await siteToken(); break;
+    case 'site-forget': siteForget(); break;
+    case 'site-save-now': await syncSite(true); renderSyncStatus(); if (!sync.error && !sync.pending) toast('Saved to the decisions file.'); break;
     case 'undo': hideToast(); await undo(); break;
     case 'clear': await clearDecision(); break;
   }
@@ -1400,7 +1654,8 @@ function startPosition() {
   openCourse(nx >= 0 ? nx : (state.queue[0] ?? -1));
 }
 function loadError(e) {
-  $('#loadMsg').innerHTML = `The course data could not be loaded (${esc(e && e.message || e)}).` + (LOCAL ? '<br>Open index.html from the unzipped folder, with the data folder next to it.' : '');
+  const packed = !!document.querySelector('script[type="application/gzip"]');
+  $('#loadMsg').innerHTML = `The course data could not be loaded (${esc(e && e.message || e)}).` + (LOCAL && !packed ? '<br>This copy has no data inside it. Open equivalency-review.html, the single-file version.' : '');
   $('#loadBar').parentElement.hidden = true;
 }
 async function boot() {
@@ -1410,6 +1665,7 @@ async function boot() {
   try { progress(.9, 'Loading the ' + state.focus + ' list'); await loadFocus(state.focus); } catch (e) { loadError(e); return; }
   if (window.claude) progress(.95, 'Loading decisions');
   await shared;
+  if (SITE) { sync.token = ls.get('site.token', '') || ''; sync.login = ls.get('site.login', '') || ''; sync.lastCommit = +ls.get('site.lastCommit', 0) || 0; }
   await subscribe();
   const pid = ls.get('prog.' + Q.code, '');
   state.prog = pid ? D.progs.findIndex(p => p.id === pid) : -1;
